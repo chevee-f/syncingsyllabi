@@ -1,0 +1,6 @@
+module Pods_SyncingSyllabi {
+  umbrella header "Pods-SyncingSyllabi-umbrella.h"
+
+  export *
+  module * { export * }
+}

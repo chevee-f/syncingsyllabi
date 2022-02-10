@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "SyncingSyllabi",
+    "slug": "SyncingSyllabi",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "SyncingSyllabi"
+}
