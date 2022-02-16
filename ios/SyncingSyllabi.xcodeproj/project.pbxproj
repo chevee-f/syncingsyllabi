@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03977FEC27BCAEF00010FBBB /* manrope-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE227BCAE5F0010FBBB /* manrope-light.otf */; };
+		03977FED27BCAEF00010FBBB /* manrope-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE327BCAE960010FBBB /* manrope-medium.otf */; };
+		03977FEE27BCAEF00010FBBB /* manrope-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE427BCAE960010FBBB /* manrope-bold.otf */; };
+		03977FEF27BCAEF00010FBBB /* manrope-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE527BCAE960010FBBB /* manrope-semibold.otf */; };
+		03977FF027BCAEF00010FBBB /* manrope-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE627BCAEBB0010FBBB /* manrope-regular.otf */; };
+		03977FF127BCAEF00010FBBB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE827BCAED70010FBBB /* README.md */; };
+		03977FF227BCAEF00010FBBB /* manrope-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FEA27BCAEF00010FBBB /* manrope-thin.otf */; };
+		03977FF327BCAEF00010FBBB /* manrope-extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -18,6 +26,16 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
+		03977FE227BCAE5F0010FBBB /* manrope-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-light.otf"; path = "../../../manrope/manrope-light.otf"; sourceTree = "<group>"; };
+		03977FE327BCAE960010FBBB /* manrope-medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-medium.otf"; sourceTree = "<group>"; };
+		03977FE427BCAE960010FBBB /* manrope-bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-bold.otf"; path = "../../../manrope/manrope-bold.otf"; sourceTree = "<group>"; };
+		03977FE527BCAE960010FBBB /* manrope-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-semibold.otf"; path = "../../../manrope/manrope-semibold.otf"; sourceTree = "<group>"; };
+		03977FE627BCAEBB0010FBBB /* manrope-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-regular.otf"; sourceTree = "<group>"; };
+		03977FE827BCAED70010FBBB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		03977FEA27BCAEF00010FBBB /* manrope-thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-thin.otf"; sourceTree = "<group>"; };
+		03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-extrabold.otf"; path = "../../../manrope/manrope-extrabold.otf"; sourceTree = "<group>"; };
+		03AE7FB527BCAC98008B02F6 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = OFL.txt; path = "New Group/OFL.txt"; sourceTree = SOURCE_ROOT; };
+		03AE7FB827BCAD01008B02F6 /* manrope.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = manrope.pdf; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SyncingSyllabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SyncingSyllabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SyncingSyllabi/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SyncingSyllabi/AppDelegate.m; sourceTree = "<group>"; };
@@ -45,9 +63,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		03AE7FB427BCAC3F008B02F6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				03977FE427BCAE960010FBBB /* manrope-bold.otf */,
+				03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */,
+				03977FE227BCAE5F0010FBBB /* manrope-light.otf */,
+				03977FE327BCAE960010FBBB /* manrope-medium.otf */,
+				03977FE627BCAEBB0010FBBB /* manrope-regular.otf */,
+				03977FE527BCAE960010FBBB /* manrope-semibold.otf */,
+				03977FEA27BCAEF00010FBBB /* manrope-thin.otf */,
+				03AE7FB827BCAD01008B02F6 /* manrope.pdf */,
+				03AE7FB527BCAC98008B02F6 /* OFL.txt */,
+				03977FE827BCAED70010FBBB /* README.md */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		13B07FAE1A68108700A75B9A /* SyncingSyllabi */ = {
 			isa = PBXGroup;
 			children = (
+				03AE7FB427BCAC3F008B02F6 /* Resources */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -194,8 +230,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
+				03977FEF27BCAEF00010FBBB /* manrope-semibold.otf in Resources */,
+				03977FED27BCAEF00010FBBB /* manrope-medium.otf in Resources */,
+				03977FF227BCAEF00010FBBB /* manrope-thin.otf in Resources */,
+				03977FF327BCAEF00010FBBB /* manrope-extrabold.otf in Resources */,
+				03977FF027BCAEF00010FBBB /* manrope-regular.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				03977FEE27BCAEF00010FBBB /* manrope-bold.otf in Resources */,
+				03977FF127BCAEF00010FBBB /* README.md in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
+				03977FEC27BCAEF00010FBBB /* manrope-light.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,11 +290,43 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-SyncingSyllabi/Pods-SyncingSyllabi-resources.sh",
 				"${PODS_CONFIGURATION_BUILD_DIR}/EXConstants/EXConstants.bundle",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Feather.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Brands.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Fontisto.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Foundation.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Octicons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf",
+				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Zocial.ttf",
 				"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EXConstants.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Feather.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Brands.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Regular.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FontAwesome5_Solid.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Fontisto.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Foundation.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Ionicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialCommunityIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/MaterialIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Octicons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SimpleLineIcons.ttf",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Zocial.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AccessibilityResources.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
