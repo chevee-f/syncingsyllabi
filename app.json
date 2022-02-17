@@ -5,7 +5,18 @@
     "version": "1.0.0",
     "assetBundlePatterns": [
       "**/*"
-    ]
-  },
-  "name": "SyncingSyllabi"
+    ],
+    "sdkVersion": "44.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "android": {
+      "package": "com.creativeinterlace.SyncingSyllabi"
+    },
+    "ios": {
+      "bundleIdentifier": "com.creativeinterlace.SyncingSyllabi"
+    }
+  }
 }

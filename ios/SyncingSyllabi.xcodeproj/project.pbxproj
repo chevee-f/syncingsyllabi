@@ -7,14 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		03977FEC27BCAEF00010FBBB /* manrope-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE227BCAE5F0010FBBB /* manrope-light.otf */; };
-		03977FED27BCAEF00010FBBB /* manrope-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE327BCAE960010FBBB /* manrope-medium.otf */; };
-		03977FEE27BCAEF00010FBBB /* manrope-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE427BCAE960010FBBB /* manrope-bold.otf */; };
-		03977FEF27BCAEF00010FBBB /* manrope-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE527BCAE960010FBBB /* manrope-semibold.otf */; };
-		03977FF027BCAEF00010FBBB /* manrope-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE627BCAEBB0010FBBB /* manrope-regular.otf */; };
-		03977FF127BCAEF00010FBBB /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03977FE827BCAED70010FBBB /* README.md */; };
-		03977FF227BCAEF00010FBBB /* manrope-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FEA27BCAEF00010FBBB /* manrope-thin.otf */; };
-		03977FF327BCAEF00010FBBB /* manrope-extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */; };
+		03D6E1B227BE59D900A0DC13 /* manrope-extrabold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1A827BE59D700A0DC13 /* manrope-extrabold.otf */; };
+		03D6E1B327BE59D900A0DC13 /* manrope-thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1A927BE59D700A0DC13 /* manrope-thin.otf */; };
+		03D6E1B427BE59D900A0DC13 /* manrope-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AA27BE59D700A0DC13 /* manrope-light.otf */; };
+		03D6E1B527BE59D900A0DC13 /* manrope.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AB27BE59D800A0DC13 /* manrope.pdf */; };
+		03D6E1B627BE59D900A0DC13 /* manrope-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AC27BE59D800A0DC13 /* manrope-bold.otf */; };
+		03D6E1B727BE59D900A0DC13 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AD27BE59D800A0DC13 /* OFL.txt */; };
+		03D6E1B827BE59D900A0DC13 /* manrope-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AE27BE59D800A0DC13 /* manrope-semibold.otf */; };
+		03D6E1B927BE59D900A0DC13 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1AF27BE59D800A0DC13 /* README.md */; };
+		03D6E1BA27BE59D900A0DC13 /* manrope-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1B027BE59D800A0DC13 /* manrope-medium.otf */; };
+		03D6E1BB27BE59D900A0DC13 /* manrope-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03D6E1B127BE59D900A0DC13 /* manrope-regular.otf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -26,16 +28,16 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		03977FE227BCAE5F0010FBBB /* manrope-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-light.otf"; path = "../../../manrope/manrope-light.otf"; sourceTree = "<group>"; };
-		03977FE327BCAE960010FBBB /* manrope-medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-medium.otf"; sourceTree = "<group>"; };
-		03977FE427BCAE960010FBBB /* manrope-bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-bold.otf"; path = "../../../manrope/manrope-bold.otf"; sourceTree = "<group>"; };
-		03977FE527BCAE960010FBBB /* manrope-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-semibold.otf"; path = "../../../manrope/manrope-semibold.otf"; sourceTree = "<group>"; };
-		03977FE627BCAEBB0010FBBB /* manrope-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-regular.otf"; sourceTree = "<group>"; };
-		03977FE827BCAED70010FBBB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		03977FEA27BCAEF00010FBBB /* manrope-thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-thin.otf"; sourceTree = "<group>"; };
-		03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "manrope-extrabold.otf"; path = "../../../manrope/manrope-extrabold.otf"; sourceTree = "<group>"; };
-		03AE7FB527BCAC98008B02F6 /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = OFL.txt; path = "New Group/OFL.txt"; sourceTree = SOURCE_ROOT; };
-		03AE7FB827BCAD01008B02F6 /* manrope.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = manrope.pdf; sourceTree = "<group>"; };
+		03D6E1A827BE59D700A0DC13 /* manrope-extrabold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-extrabold.otf"; sourceTree = "<group>"; };
+		03D6E1A927BE59D700A0DC13 /* manrope-thin.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-thin.otf"; sourceTree = "<group>"; };
+		03D6E1AA27BE59D700A0DC13 /* manrope-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-light.otf"; sourceTree = "<group>"; };
+		03D6E1AB27BE59D800A0DC13 /* manrope.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = manrope.pdf; sourceTree = "<group>"; };
+		03D6E1AC27BE59D800A0DC13 /* manrope-bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-bold.otf"; sourceTree = "<group>"; };
+		03D6E1AD27BE59D800A0DC13 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
+		03D6E1AE27BE59D800A0DC13 /* manrope-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-semibold.otf"; sourceTree = "<group>"; };
+		03D6E1AF27BE59D800A0DC13 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		03D6E1B027BE59D800A0DC13 /* manrope-medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-medium.otf"; sourceTree = "<group>"; };
+		03D6E1B127BE59D900A0DC13 /* manrope-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "manrope-regular.otf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* SyncingSyllabi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SyncingSyllabi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = SyncingSyllabi/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = SyncingSyllabi/AppDelegate.m; sourceTree = "<group>"; };
@@ -63,19 +65,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		03AE7FB427BCAC3F008B02F6 /* Resources */ = {
+		03D6E1A727BE59C100A0DC13 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				03977FE427BCAE960010FBBB /* manrope-bold.otf */,
-				03977FEB27BCAEF00010FBBB /* manrope-extrabold.otf */,
-				03977FE227BCAE5F0010FBBB /* manrope-light.otf */,
-				03977FE327BCAE960010FBBB /* manrope-medium.otf */,
-				03977FE627BCAEBB0010FBBB /* manrope-regular.otf */,
-				03977FE527BCAE960010FBBB /* manrope-semibold.otf */,
-				03977FEA27BCAEF00010FBBB /* manrope-thin.otf */,
-				03AE7FB827BCAD01008B02F6 /* manrope.pdf */,
-				03AE7FB527BCAC98008B02F6 /* OFL.txt */,
-				03977FE827BCAED70010FBBB /* README.md */,
+				03D6E1AC27BE59D800A0DC13 /* manrope-bold.otf */,
+				03D6E1A827BE59D700A0DC13 /* manrope-extrabold.otf */,
+				03D6E1AA27BE59D700A0DC13 /* manrope-light.otf */,
+				03D6E1B027BE59D800A0DC13 /* manrope-medium.otf */,
+				03D6E1B127BE59D900A0DC13 /* manrope-regular.otf */,
+				03D6E1AE27BE59D800A0DC13 /* manrope-semibold.otf */,
+				03D6E1A927BE59D700A0DC13 /* manrope-thin.otf */,
+				03D6E1AB27BE59D800A0DC13 /* manrope.pdf */,
+				03D6E1AD27BE59D800A0DC13 /* OFL.txt */,
+				03D6E1AF27BE59D800A0DC13 /* README.md */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -83,7 +85,7 @@
 		13B07FAE1A68108700A75B9A /* SyncingSyllabi */ = {
 			isa = PBXGroup;
 			children = (
-				03AE7FB427BCAC3F008B02F6 /* Resources */,
+				03D6E1A727BE59C100A0DC13 /* Resources */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -229,17 +231,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03D6E1B527BE59D900A0DC13 /* manrope.pdf in Resources */,
+				03D6E1B827BE59D900A0DC13 /* manrope-semibold.otf in Resources */,
+				03D6E1B227BE59D900A0DC13 /* manrope-extrabold.otf in Resources */,
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
-				03977FEF27BCAEF00010FBBB /* manrope-semibold.otf in Resources */,
-				03977FED27BCAEF00010FBBB /* manrope-medium.otf in Resources */,
-				03977FF227BCAEF00010FBBB /* manrope-thin.otf in Resources */,
-				03977FF327BCAEF00010FBBB /* manrope-extrabold.otf in Resources */,
-				03977FF027BCAEF00010FBBB /* manrope-regular.otf in Resources */,
+				03D6E1B727BE59D900A0DC13 /* OFL.txt in Resources */,
+				03D6E1BA27BE59D900A0DC13 /* manrope-medium.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				03977FEE27BCAEF00010FBBB /* manrope-bold.otf in Resources */,
-				03977FF127BCAEF00010FBBB /* README.md in Resources */,
+				03D6E1B327BE59D900A0DC13 /* manrope-thin.otf in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				03977FEC27BCAEF00010FBBB /* manrope-light.otf in Resources */,
+				03D6E1BB27BE59D900A0DC13 /* manrope-regular.otf in Resources */,
+				03D6E1B427BE59D900A0DC13 /* manrope-light.otf in Resources */,
+				03D6E1B927BE59D900A0DC13 /* README.md in Resources */,
+				03D6E1B627BE59D900A0DC13 /* manrope-bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -375,6 +379,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SyncingSyllabi/SyncingSyllabi.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -389,10 +394,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.SyncingSyllabi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.creativeinterlace.SyncingSyllabi;
 				PRODUCT_NAME = SyncingSyllabi;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -403,6 +409,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = SyncingSyllabi/SyncingSyllabi.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = SyncingSyllabi/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -412,9 +419,10 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.SyncingSyllabi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.creativeinterlace.SyncingSyllabi;
 				PRODUCT_NAME = SyncingSyllabi;
 				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -447,6 +455,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = SyncingSyllabi/SyncingSyllabi.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -504,6 +513,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_ENTITLEMENTS = SyncingSyllabi/SyncingSyllabi.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;

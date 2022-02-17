@@ -9,9 +9,7 @@ console.disableYellowBox = true;
 
 const RootStackScreen = ({navigation}) => (
     <RootStack.Navigator headerMode='none'>
-        {/*
         <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
-        */}
         <RootStack.Screen name="SignInSignUpScreen" component={SignInSignUpScreen}/>
     </RootStack.Navigator>
 );

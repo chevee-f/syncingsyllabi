@@ -1,10 +1,20 @@
 import React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Dimensions, Text, View } from 'react-native';
+import Video from 'react-native-video';
 
-const SplashScreen = () => {
+var {height, width} = Dimensions.get('window');
+
+const SplashScreen = ({navigation}) => {
     return (
       <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
-        <Text>Splash Screen</Text>
+        {
+          <Video
+            source={require('./../assets/SplashScreen.mp4')}
+            style={{ width: width, height: height }}
+            resizeMode="cover"
+            onEnd={() => navigation.navigate('SignInSignUpScreen')}
+          />
+        }
       </View>
     )
 }

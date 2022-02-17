@@ -1,4 +1,4 @@
-package com.syncingsyllabi;
+package com.creativeinterlace.SyncingSyllabi;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "SyncingSyllabi";
+    return "main";
   }
 
   @Override
