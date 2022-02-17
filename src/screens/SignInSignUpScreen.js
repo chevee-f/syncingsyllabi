@@ -22,6 +22,7 @@ var {height, width} = Dimensions.get('window');
 
 const SignUpScreen = ({navigation}) => {
     const [isFocused, setIsFocused] = React.useState(false);
+    const [isSignUp, setIsSignUp] = React.useState(false);
     const [data, setData] = React.useState({
         username: '',
         password: '',
@@ -82,7 +83,9 @@ const SignUpScreen = ({navigation}) => {
         </View>
         <Animatable.View animation="fadeInUpBig" style={styles.mainContainer}>
             <ScrollView>
-                <Text style={[label.boldSmallHeading2, {color:color.primary,marginBottom:height * 0.01}]}>Sign Up</Text>  
+                <Text style={[label.boldSmallHeading2, {color:color.primary,marginBottom:height * 0.01}]}>
+                    {isSignUp ? 'Sign Up' : 'Sign In'}   
+                </Text>  
                 <DefaultInput 
                     label="Email Address"
                     onChangeText={(val) => textInputChange(val)}
@@ -97,7 +100,7 @@ const SignUpScreen = ({navigation}) => {
                             onChangeText={(val) => handlePasswordChange(val)}
                             secureTextEntry={data.secureTextEntry ? true : false}
                             autoCapitalize="none"
-                            style={[styles.input,{marginTop: isFocused || data.password.length ? -5 : 0}]}
+                            style={[styles.input,{marginTop: isFocused || data.password.length ? -5 : -2}]}
                             selectionColor={color.primary}
                             activeUnderlineColor={color.primary}
                             theme={{ colors: { text: color.primary, placeholder: data.password.length ? color.primary : color.default } }}
@@ -118,14 +121,19 @@ const SignUpScreen = ({navigation}) => {
             
                 <View style={styles.button}>
                     <DefaultButton 
-                        title="Sign Up"
+                        title={isSignUp ? 'Sign Up' : 'Sign In'}
                     />
                 </View>
+                {!isSignUp &&
+                    <TouchableOpacity style={{padding:10,marginBottom:Platform.OS === 'ios' ? height * -0.02 : height * -0.06}}>
+                        <Text style={[label.boldExtraSmallHeading,{color:color.default}]}>Forgot Password</Text>
+                    </TouchableOpacity>   
+                }
                 <View style={styles.otherOptionContainer}>
                     <View style={styles.horizontalLine} />
                     <View>
                         <Text style={[styles.textOtherOption, label.smallHeading]}>
-                            Or sign up using
+                            Or {isSignUp ? 'sign up' : 'sign in'} using
                         </Text>
                     </View>
                     <View style={styles.horizontalLine} />
@@ -143,8 +151,12 @@ const SignUpScreen = ({navigation}) => {
                     />
                 </View> 
                 <View style={styles.signInContainer}>
-                    <Text style={[label.smallHeading2,{color:color.default}]}>Already have an account? </Text>
-                    <Text style={[label.boldSmallHeading2,{color:color.primary}]}>Sign in</Text>
+                    <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
+                    <TouchableOpacity onPress={() => {setIsSignUp(!isSignUp)}}>
+                        <Text style={[label.boldSmallHeading,{color:color.primary}]}>
+                            {!isSignUp ? 'Sign Up' : 'Sign In'}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             </ScrollView>
         </Animatable.View>
@@ -196,7 +208,7 @@ const styles = StyleSheet.create({
     otherOptionContainer:{
         flexDirection: 'row', 
         alignItems: 'center',
-        marginTop: height * 0.048
+        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.05
     },
     horizontalLine:{
         flex: 1, 
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
         width:25,
         height:25,
         marginVertical:height * 0.016,
-        marginHorizontal:10 
+        marginHorizontal:13 
     },
     button: {
         alignItems: 'center',
@@ -216,7 +228,7 @@ const styles = StyleSheet.create({
     signInContainer:{
         flexDirection:'row',
         justifyContent:'center',
-        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.02
+        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.018
     },
     topLineContainer:{
         position:'absolute',

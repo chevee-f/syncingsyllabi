@@ -24,6 +24,11 @@ export default {
         fontSize: 16,
         fontWeight: "bold"
     },
+    boldExtraSmallHeading: {
+        fontFamily: "Manrope",
+        fontSize: 12,
+        fontWeight: "bold"
+    },
     mediumHeading: {
         fontFamily: "Manrope",
         fontSize: 18,

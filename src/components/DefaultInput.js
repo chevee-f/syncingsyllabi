@@ -29,7 +29,7 @@ const PrimaryTextInput = props => {
 const styles = StyleSheet.create({
     inputContainer: {
         borderRadius: 4,
-        height: height * 0.056,
+        height: height * 0.055,
         overflow: 'hidden',
         borderWidth:1,
         borderRadius:16,
