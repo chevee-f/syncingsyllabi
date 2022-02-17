@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, Dimensions } from 'react-native';
 import color from '../styles/colors';
+
+var {height, width} = Dimensions.get('window');
 
 const Button = props => {
   return (
@@ -23,13 +25,14 @@ const styles = StyleSheet.create({
         backgroundColor: color.primary,
         justifyContent: 'center',
         alignItems:'center',
-        height:50,
+        height: height * 0.058,
         borderRadius:16
     },
     text: {
-      color: '#F7F9FA',
-      fontSize: 14,
-      fontWeight:'bold'
+      color: color.textDefault,
+      fontSize: height * 0.017,
+      fontWeight:'bold',
+      fontFamily:'Manrope'
     }, 
 });
 

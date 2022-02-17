@@ -19,6 +19,11 @@ export default {
         fontSize: 14,
         fontWeight: "bold"
     },
+    boldSmallHeading2: {
+        fontFamily: "Manrope",
+        fontSize: 16,
+        fontWeight: "bold"
+    },
     mediumHeading: {
         fontFamily: "Manrope",
         fontSize: 18,
@@ -26,6 +31,10 @@ export default {
     smallHeading: {
         fontFamily: "Manrope",
         fontSize: 14,
+    },
+    smallHeading2: {
+        fontFamily: "Manrope",
+        fontSize: 16,
     },
     extraSmallHeading: {
         fontFamily: "Manrope",

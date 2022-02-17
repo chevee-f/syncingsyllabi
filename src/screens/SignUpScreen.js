@@ -4,30 +4,30 @@ import {
     Text, 
     TouchableOpacity, 
     Image,
-    Platform,
+    Dimensions,
     StyleSheet,
     ScrollView,
-    StatusBar 
+    StatusBar,
+    Platform 
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import LinearGradient from 'react-native-linear-gradient';
 import { TextInput } from 'react-native-paper';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Feather from 'react-native-vector-icons/Feather';
 import color from '../styles/colors'; 
 import label from '../styles/label';
 import DefaultInput from '../components/DefaultInput';
 import DefaultButton from '../components/DefaultButton';
+import CarouselCards from '../components/Carousel/CarouselCards';
+
+var {height, width} = Dimensions.get('window');
 
 const SignUpScreen = ({navigation}) => {
-
+    const [isFocused, setIsFocused] = React.useState(false);
     const [data, setData] = React.useState({
         username: '',
         password: '',
         confirm_password: '',
         hasValue: false,
         secureTextEntry: true,
-        confirm_secureTextEntry: true,
     });
 
     const textInputChange = (val) => {
@@ -53,13 +53,6 @@ const SignUpScreen = ({navigation}) => {
         });
     }
 
-    const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirm_password: val
-        });
-    }
-
     const updateSecureTextEntry = () => {
         setData({
             ...data,
@@ -67,25 +60,29 @@ const SignUpScreen = ({navigation}) => {
         });
     }
 
-    const updateConfirmSecureTextEntry = () => {
-        setData({
-            ...data,
-            confirm_secureTextEntry: !data.confirm_secureTextEntry
-        });
-    }
-
     return (
       <View style={styles.container}>
-          <StatusBar backgroundColor={color.primary} barStyle="light-content"/>
-        <View style={styles.header}>
-            <Text style={styles.text_header}></Text>
+        <StatusBar backgroundColor={color.primary} barStyle="light-content"/>
+        <View style={styles.topLineContainer}>
+            <Image 
+                source={require('../assets/carousel/TopLines.png')}
+                resizeMode='contain'
+                style={styles.topLineImage}
+            />
         </View>
-        <Animatable.View 
-            animation="fadeInUpBig"
-            style={styles.footer}
-        >
+        <View style={styles.bottomLineContainer}>
+            <Image 
+                source={require('../assets/carousel/BottomLines.png')}
+                resizeMode='contain'
+                style={styles.bottomLineImage}
+            />
+        </View>
+        <View style={styles.carouselContainer}>
+            <CarouselCards />
+        </View>
+        <Animatable.View animation="fadeInUpBig" style={styles.mainContainer}>
             <ScrollView>
-                <Text style={[label.boldMediumHeading, {color:color.primary,marginBottom:10}]}>Sign Up</Text>  
+                <Text style={[label.boldSmallHeading2, {color:color.primary,marginBottom:height * 0.01}]}>Sign Up</Text>  
                 <DefaultInput 
                     label="Email Address"
                     onChangeText={(val) => textInputChange(val)}
@@ -95,10 +92,12 @@ const SignUpScreen = ({navigation}) => {
                     <View style={{flexDirection:'row'}}>
                         <TextInput 
                             label="Password"
+                            onFocus={() => { setIsFocused(true)}}
+                            onBlur={() => { setIsFocused(false)}}
                             onChangeText={(val) => handlePasswordChange(val)}
                             secureTextEntry={data.secureTextEntry ? true : false}
                             autoCapitalize="none"
-                            style={styles.input}
+                            style={[styles.input,{marginTop: isFocused || data.password.length ? -5 : 0}]}
                             selectionColor={color.primary}
                             activeUnderlineColor={color.primary}
                             theme={{ colors: { text: color.primary, placeholder: data.password.length ? color.primary : color.default } }}
@@ -122,37 +121,31 @@ const SignUpScreen = ({navigation}) => {
                         title="Sign Up"
                     />
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center',marginTop:40}}>
-                    <View style={{flex: 1, height: 0.5, backgroundColor: color.default}} />
+                <View style={styles.otherOptionContainer}>
+                    <View style={styles.horizontalLine} />
                     <View>
                         <Text style={[styles.textOtherOption, label.smallHeading]}>
                             Or sign up using
                         </Text>
                     </View>
-                    <View style={{flex: 1, height: 0.5, backgroundColor: color.default}} />
+                    <View style={styles.horizontalLine} />
                 </View>
                 <View style={{flexDirection:'row',justifyContent:'center'}}>
                     <Image 
                         source={require('./../assets/icons/google.png')}
                         resizeMode='contain'
-                        style={{
-                        width:25,
-                        height:25,
-                        marginVertical:20,
-                        marginHorizontal:10 
-                        }}
+                        style={styles.icon}
                     />
                     <Image 
                         source={require('./../assets/icons/facebook.png')}
                         resizeMode='contain'
-                        style={{
-                        width:25,
-                        height:25,
-                        marginVertical:20,
-                        marginHorizontal:15  
-                        }}
+                        style={styles.icon}
                     />
                 </View> 
+                <View style={styles.signInContainer}>
+                    <Text style={[label.smallHeading2,{color:color.default}]}>Already have an account? </Text>
+                    <Text style={[label.boldSmallHeading2,{color:color.primary}]}>Sign in</Text>
+                </View>
             </ScrollView>
         </Animatable.View>
       </View>
@@ -166,95 +159,88 @@ const styles = StyleSheet.create({
         borderRadius: 0,
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
-        height: 55,
+        height: height * 0.063,
         overflow: 'hidden',
         backgroundColor: '#fff',
         paddingLeft:5,
         fontFamily: "Manrope",
-        fontSize: 16,
-        width:'85%'
+        fontSize: height * 0.016,
+        width:'85%',
+        justifyContent:'center'
     },
     inputContainer: {
         borderRadius: 4,
-        height: 53 ,
+        height: height * 0.055,
         overflow: 'hidden',
         borderWidth:1,
         borderRadius:16,
-        marginVertical:10
+        marginVertical:8
     },
     textOtherOption: {
         textAlign: 'center',
         flexDirection:'row',
         color:color.default
     },
-
-
-
-
-
     container: {
-      flex: 1, 
-      backgroundColor: color.primary
+        flex: 1, 
+        backgroundColor: color.primary
     },
-    header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
-    },
-    footer: {
-        flex: 1.4,
+    mainContainer: {
+        flex: 1.27,
         backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
+        borderTopLeftRadius: 23,
+        borderTopRightRadius: 23,
         paddingHorizontal: 20,
-        paddingVertical: 30
+        paddingVertical: height * 0.04
     },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 30
+    otherOptionContainer:{
+        flexDirection: 'row', 
+        alignItems: 'center',
+        marginTop: height * 0.048
     },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 18
+    horizontalLine:{
+        flex: 1, 
+        height: 0.5, 
+        backgroundColor: color.default
     },
-    action: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderWidth:5,
-        borderColor:'#000',
-        //borderBottomWidth: 1,
-        //borderBottomColor: '#f2f2f2',
-        paddingBottom: 5
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#05375a',
+    icon:{
+        width:25,
+        height:25,
+        marginVertical:height * 0.016,
+        marginHorizontal:10 
     },
     button: {
         alignItems: 'center',
         marginTop: 10
     },
-    signIn: {
-        width: '100%',
-        height: 50,
+    signInContainer:{
+        flexDirection:'row',
+        justifyContent:'center',
+        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.02
+    },
+    topLineContainer:{
+        position:'absolute',
+        alignSelf:'flex-end',
+        marginTop:Platform.OS === 'ios' ? height * -0.27 : height * -0.32,
+        width:'60%'
+    },
+    topLineImage:{
+        height:height * 0.6,
+        width:width * 0.92
+    },
+    bottomLineContainer:{
+        position:'absolute',
+        alignSelf:'flex-start',
+        marginTop:height * 0.25,
+        marginLeft:width * -0.32
+    },
+    bottomLineImage:{
+        height:height * 0.35,
+        width:width * 0.75
+    },
+    carouselContainer: {
+        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
+        paddingBottom: height * 0.05
     },
-    textSign: {
-        fontSize: 18,
-        fontWeight: 'bold'
-    },
-    textPrivate: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        marginTop: 20
-    },
-    color_textPrivate: {
-        color: 'grey'
-    }
   });
