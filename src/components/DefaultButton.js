@@ -4,11 +4,14 @@ import color from '../styles/colors';
 
 var {height, width} = Dimensions.get('window');
 
-const Button = props => {
+const DefaultButton = ({
+  onPress,
+  ...props
+}) => {
   return (
     <TouchableOpacity 
       style={{...styles.btnContainer, ...props.containerStyle}}
-      onPress={() => props.pressHandler}
+      onPress={onPress}
     >
      <Text 
        style={{...styles.text, ...props.textStyle}}
@@ -36,4 +39,4 @@ const styles = StyleSheet.create({
     }, 
 });
 
-export default Button;
+export default DefaultButton;

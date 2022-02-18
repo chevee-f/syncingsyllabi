@@ -22,7 +22,7 @@ var {height, width} = Dimensions.get('window');
 
 const SignUpScreen = ({navigation}) => {
     const [isFocused, setIsFocused] = React.useState(false);
-    const [isSignUp, setIsSignUp] = React.useState(false);
+    const [isSignUp, setIsSignUp] = React.useState(true);
     const [data, setData] = React.useState({
         username: '',
         password: '',
@@ -122,6 +122,7 @@ const SignUpScreen = ({navigation}) => {
                 <View style={styles.button}>
                     <DefaultButton 
                         title={isSignUp ? 'Sign Up' : 'Sign In'}
+                        onPress={() => {isSignUp ? navigation.navigate("SignUpConfirmationScreen") : navigation.navigate("MainTabScreen")}}
                     />
                 </View>
                 {!isSignUp &&
