@@ -5,6 +5,7 @@ import SplashScreen from './../../screens/SplashScreen';
 import SignInSignUpScreen from '../../screens/SignInSignUpScreen';
 import MainTabScreen from '../Navigation/MainTabScreen';
 import SignUpConfirmationScreen from '../../screens/SignUpConfirmationScreen';
+import SetUpScreen from '../../screens/SetUpScreen';
 
 const RootStack = createStackNavigator();
 console.disableYellowBox = true;
@@ -16,6 +17,8 @@ const RootStackScreen = ({navigation}) => (
 
         <RootStack.Screen name="MainTabScreen" component={MainTabScreen}/>
         <RootStack.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen}/>
+
+        <RootStack.Screen name="SetUpScreen" component={SetUpScreen}/>
     </RootStack.Navigator>
 );
 

@@ -19,8 +19,8 @@ const SignUpConfirmationScreen = ({ navigation }) => {
     const startLoading = () => {
         setTimeout(() => {
             setIsLoading(false);
-            navigation.navigate("MainTabScreen")
-        }, 5000);
+            navigation.navigate("SetUpScreen")
+        }, 3000);
     };
 
     useEffect(() => {
