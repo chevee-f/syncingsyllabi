@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { StyleSheet, View, Dimensions, Text, Image } from 'react-native';
+import { StyleSheet, View, Dimensions, Text, Image, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-paper';
 import color from '../styles/colors'
@@ -26,46 +26,30 @@ const MainHeader = props => {
                 />
             </View>
 
-            <View style={{flexDirection:'row',marginHorizontal:20}}>
-            <View style={{flexDirection:'row',marginTop:25}}>
-                <View style={{ justifyContent:'center' }}>
-                    <View style={{height:68,
-                            alignItems:'center',
-                            width: 68,
-                            overflow: 'hidden', 
-                            borderColor: color.textDefault,
-                            borderWidth: 4,
-                            borderRadius: 50}}>
-                        <Avatar.Image 
-                        source={{
-                            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'
-                        }}
-                        size={68}
-                    />
+            <View style={styles.container}>
+                <View style={styles.profileContainer}>
+                    <View style={{ justifyContent:'center' }}>
+                        <View style={styles.avatarContainer}>
+                            <Avatar.Image 
+                                source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'}}
+                                size={68}
+                            />
+                        </View>
+                        
                     </View>
-                    
+                    <View style={styles.nameContainer}>
+                        <Text style={[label.mediumHeading,{color:color.textDefault}]}>Hello</Text>
+                        <Text style={[label.boldLargeHeading,{color:color.textDefault}]}>John Doe 👋</Text>
+                    </View>
                 </View>
-                <View style={{
-                            justifyContent:'center',
-                            marginLeft:10,
-                            width: 135 }}>
-                <Text style={[label.mediumHeading,{color:color.textDefault}]}>Hello</Text>
-                <Text style={[label.boldLargeHeading,{color:color.textDefault}]}>John Doe 👋</Text>
+                <View style={styles.rightContainer}>
+                    <View style={styles.notificationContainer}>
+                        <Icon name="notifications-outline" color={color.textDefault} size={26} />
+                    </View>
+                    <View style={styles.menuContainer}>
+                        <Icon.Button name="ios-menu" size={35} backgroundColor='transparent' onPress={() => {navigation.openDrawer()}} />
+                    </View>
                 </View>
-            </View>
-            <View style={{flexDirection:'row',marginTop:15,width: width * 0.5}}>
-                <View style={{
-                            justifyContent:'center',
-                            alignItems:'flex-end', 
-                            width: width * 0.3 }}>
-                <Icon name="notifications-outline" color={color.textDefault} size={26} />
-                </View>
-                <View style={{height:200,
-                            justifyContent:'center',
-                            }}>
-                <Icon.Button name="ios-menu" size={35} backgroundColor='transparent' onPress={() => {navigation.openDrawer()}} />
-                </View>
-            </View>
             </View>
         </View>
     );
@@ -74,7 +58,7 @@ const MainHeader = props => {
 const styles = StyleSheet.create({
     headerContainer:{
         backgroundColor: color.primary,
-        height: Platform.OS === 'ios' ? height * 0.22 : height * 0.3,
+        height: Platform.OS === 'ios' ? height * 0.21 : height * 0.28,
         borderBottomRightRadius: 25,
         borderBottomLeftRadius: 25
       },
@@ -91,13 +75,50 @@ const styles = StyleSheet.create({
       bottomLineContainer:{
           position:'absolute',
           alignSelf:'flex-start',
-          marginTop:height * 0.005,
+          marginTop: Platform.OS === 'ios' ? height * -0.002 : height * 0.07,
           marginLeft:width * -0.32
       },
       bottomLineImage:{
           height:height * 0.25,
           width:width * 0.75,
       },
+      container:{
+        flexDirection:'row',
+        marginHorizontal:20
+      },
+      profileContainer:{
+        flexDirection:'row',
+        marginTop:25
+      },
+      avatarContainer:{
+        height:68,
+        alignItems:'center',
+        width: 68,
+        overflow: 'hidden', 
+        borderColor: color.textDefault,
+        borderWidth: 4,
+        borderRadius: 50
+      },
+      nameContainer:{
+        justifyContent:'center',
+        marginLeft:10,
+        width: 135
+      },
+      notificationContainer:{
+        justifyContent:'center',
+        alignItems:'flex-end', 
+        width: width * 0.32
+      },
+      menuContainer:{
+        height:200,
+        justifyContent:'center',
+        marginLeft:-5
+      },
+      rightContainer:{
+        flexDirection:'row',
+        marginTop:15,
+        width: width * 0.5
+      }
 });
 
 export default MainHeader;
