@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Text, View } from 'react-native';
 
-const DetailScreen = () => {
+const CalendarScreen = ({ navigation }) => {
     return (
       <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
-        <Text>Detail Screen</Text>
+        <Text>Calendar Screen</Text>
       </View>
     )
 }
 
-export default DetailScreen;
+export default CalendarScreen;

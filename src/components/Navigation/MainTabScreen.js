@@ -1,93 +1,79 @@
 import React from 'react';
-import { StyleSheet,Text,View,Image,TouchableOpacity } from 'react-native';
+import { StyleSheet,Text,View,Image,TouchableOpacity,Dimensions, Platform } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Dot from 'react-native-vector-icons/Entypo';
+import color from './../../styles/colors'
+import label from './../../styles/label'
 
 import AddSyllabus from '../../screens/AddSyllabus';
 import HomeScreen from '../../screens/HomeScreen';
+import CalendarScreen from '../../screens/CalendarScreen';
 import AssignmentScreen from '../../screens/AssignmentScreen';
 import GoalScreen from '../../screens/GoalScreen';
-import ProfileScreen from '../../screens/ProfileScreen';
+import MainHeader from '../../components/MainHeader'
 
 const HomeStack = createStackNavigator();
 const DetailStack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
-
-const CustomTabBarButton = ({children, onPress}) => {
-  <TouchableOpacity
-    style={{
-      top: -30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      ... styles.shadow
-    }}
-    onPress={onPress}>
-    <View style={{
-      width: 70,
-      height: 70,
-      borderRadius: 35,
-      backgroundColor: "#fff"
-    }}>
-      {children}
-    </View>
-  </TouchableOpacity>
-}
+var {height, width} = Dimensions.get('window');
 
 const MainTabScreen = () => {
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            activeColor="#fff"
+            activeColor={color.textDefault}
             labeled={false}
             barStyle={{
-                position:'absolute',
-                bottom: 25,
-                left: 20,
-                right: 20,
-                elevation: 0,
-                backgroundColor: '#fff',
-                borderRadius: 30,
-                height: 90,
-                overflow:'hidden',
-                ... styles.shadow
+                ...styles.barStyle,
             }}
         >
             <Tab.Screen
                 name="Home"
                 component={HomeStackScreen}
                 options={{
-                  //tabBarLabel: 'Home',
-                  tabBarColor:'blue',
                   tabBarIcon: ({ focused }) => (
-                    <View style={{alignItems:'center',justifyContent:'center',top:10,width:40}}>
+                    <View style={styles.iconContainer}>
                       <Image 
                         source={require('./../../assets/icons/home.png')}
                         resizeMode='contain'
-                        style={{
-                          width:25,
-                          height:25,
-                          tintColor: focused ? "#fff" : "#000"
-                        }}
+                        style={{ width: focused ? 25 : 30,
+                                 height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
+                                 marginTop: focused ? -5 : 0,
+                                 tintColor: color.textDefault}}
                       />
-                      <Text 
-                       style={{ color: focused ? "#fff" : "#000", fontSize:12  }}>
-                          HOME
-                      </Text>
+                      {focused ?
+                         <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
+                          :
+                        <Text style={[label.extraSmallHeading2, styles.iconLabel]}>Home</Text>
+                      }
                     </View>
                   ) 
                 }}
             />
             <Tab.Screen
-                name="Assignment"
-                component={AssignmentStackScreen}
+                name="Calendar"
+                component={CalendarScreen}
                 options={{
-                tabBarLabel: 'Updates',
-                tabBarColor:'blue',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="ios-notifications" color={color} size={26} />
-                ),
+                tabBarIcon: ({ focused }) => (
+                    <View style={styles.iconContainer}>
+                      <Image 
+                        source={require('./../../assets/icons/calendar.png')}
+                        resizeMode='contain'
+                        style={{ width: focused ? 25 : 30,
+                                 height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
+                                 marginTop: focused ? -5 : 0,
+                                 tintColor: color.textDefault}}
+                      />
+                      {focused ?
+                        <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
+                          :
+                        <Text style={[label.extraSmallHeading2, styles.iconLabel]}>Calendar</Text>
+                      }
+                    </View>
+                  ),
                 }}
             />
              <Tab.Screen
@@ -99,95 +85,115 @@ const MainTabScreen = () => {
                       source={require('./../../assets/icons/add.png')}
                       resizeMode="contain"
                       style={{
-                        width:30,
-                        height:30,
-                        tintColor:'#fff',
-
+                        width:42,
+                        height:39,
+                        tintColor:color.textDefault,
                       }}
                     />
-                ),
-                tabBarButton: (props) => (
-                  <CustomTabBarButton {... props} />
                 )
                 }}
             />
             <Tab.Screen
                 name="Profile"
-                component={ProfileScreen}
+                component={GoalScreen}
                 options={{
-                tabBarLabel: 'Profile',
-                tabBarColor:'blue',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="ios-person" color={color} size={26} />
-                ),
+                tabBarIcon: ({ focused }) => (
+                    <View style={styles.iconContainer}>
+                      <Image 
+                        source={require('./../../assets/icons/goals.png')}
+                        resizeMode='contain'
+                        style={{ width: focused ? 25 : 30,
+                                 height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
+                                 marginTop: focused ? -5 : 0,
+                                 tintColor: color.textDefault}}
+                      />
+                      {focused ?
+                        <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
+                          :
+                        <Text 
+                          style={[label.extraSmallHeading2, styles.iconLabel ]}>
+                            Goal
+                        </Text>
+                      }
+                    </View>
+                  ),
                 }}
             />
             <Tab.Screen
                 name="Goal"
-                component={GoalScreen}
+                component={AssignmentScreen}
                 options={{
-                tabBarLabel: 'Goal',
-                tabBarColor:'blue',
-                tabBarIcon: ({ color }) => (
-                    <Icon name="ios-aperture" color={color} size={26} />
-                ),
+                tabBarIcon: ({ focused }) => (
+                    <View style={styles.iconContainer}>
+                      <Image 
+                        source={require('./../../assets/icons/assignment.png')}
+                        resizeMode='contain'
+                        style={{ width: focused ? 25 : 30,
+                                 height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
+                                 marginTop: focused ? -5 : 0,
+                                 tintColor: color.textDefault}}
+                      />
+                      {focused ?
+                        <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
+                          :
+                        <Text 
+                          style={[label.extraSmallHeading2, styles.iconLabel]}>
+                            Assignment
+                        </Text>
+                      }
+                    </View>
+                  ),
                 }}
             />
         </Tab.Navigator>
     )
 };
 
+const HomeStackScreen = ({navigation}) => {
+  return(
+    <HomeStack.Navigator screenOptions={{
+      headerStyle:{
+        backgroundColor: color.primary
+      },
+      title: '',
+      headerTintColor:'#fff',
+      header: () => <MainHeader />
+      
+    }}>
+        <HomeStack.Screen name="Home" component={HomeScreen} options={{
+          headerRight: () => (
+            <Icon.Button name="ios-menu" size={25} backgroundColor={color.primary} onPress={() => {navigation.openDrawer()}} />
+          ),
+          headerLeft: null
+        }} />
+    </HomeStack.Navigator>
+  )
+}
+
 const styles = StyleSheet.create({
-  shadow:{
-    shadowColor: '#7F5DF0',
-    shadowOffset:{
-      width: 0,
-      height: 10
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5
+  barStyle:{
+    position:'absolute',
+    bottom: 25,
+    left: 20,
+    right: 20,
+    elevation: 0,
+    backgroundColor: color.primary,
+    borderRadius: 22,
+    height: Platform.OS === 'ios' ? height * 0.08 : height * 0.1,
+    overflow:'hidden'
+  },
+  iconContainer:{
+    alignItems:'center',
+    width: 65
+  },
+  iconLabel:{
+    color: color.textDefault,
+    marginTop:3
+  },
+  dotStyle:{
+    top:-13,
+    left:1
   }
 })
 
 export default MainTabScreen;
-
-const HomeStackScreen = ({navigation}) => {
-    return(
-      <HomeStack.Navigator screenOptions={{
-        headerStyle:{
-          backgroundColor:'blue'
-        },
-        headerTintColor:'#fff',
-        headerTitleStyle:{
-          fontWeight:'bold'
-        }
-      }}>
-          <HomeStack.Screen name="Home" component={HomeScreen} options={{
-            headerRight: () => (
-              <Icon.Button name="ios-menu" size={25} backgroundColor="blue" onPress={() => {navigation.openDrawer()}} />
-            )
-          }} />
-      </HomeStack.Navigator>
-    )
-  }
-  
-  const AssignmentStackScreen = ({navigation}) => {
-    return(
-      <DetailStack.Navigator screenOptions={{
-        headerStyle:{
-          backgroundColor:'blue'
-        },
-        headerTintColor:'#fff',
-        headerTitleStyle:{
-          fontWeight:'bold'
-        }
-      }}>
-          <DetailStack.Screen name="Assignment" component={AssignmentScreen} options={{
-            headerRight: () => (
-              <Icon.Button name="ios-menu" size={25} backgroundColor="blue" onPress={() => {navigation.openDrawer()}} />
-            )
-          }} />
-      </DetailStack.Navigator>
-    )
-  }

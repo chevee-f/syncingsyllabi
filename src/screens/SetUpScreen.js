@@ -16,7 +16,7 @@ import DefaultButton from '../components/DefaultButton';
 
 var {height, width} = Dimensions.get('window');
 
-const SetUpScreen = () => {
+const SetUpScreen = ({navigation}) => {
 
     const [data, setData] = React.useState({
         name: '',
@@ -124,6 +124,7 @@ const SetUpScreen = () => {
                 <View style={{marginVertical: height * 0.05}}>
                     <DefaultButton 
                         title={`Let's get started!`}
+                        onPress={() => {navigation.navigate('MainTabScreen')}}
                     />
                 </View>
             </View>

@@ -7,7 +7,6 @@ import {
     Dimensions,
     StyleSheet,
     ScrollView,
-    StatusBar,
     Platform 
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
@@ -63,7 +62,6 @@ const SignUpScreen = ({navigation}) => {
 
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor={color.primary} barStyle="light-content"/>
         <View style={styles.topLineContainer}>
             <Image 
                 source={require('../assets/carousel/TopLines.png')}
