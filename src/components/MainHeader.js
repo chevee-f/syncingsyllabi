@@ -2,13 +2,16 @@ import React, {useEffect} from 'react';
 import { StyleSheet, View, Dimensions, Text, Image, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native' // <-- import useNavigation hook
 import color from '../styles/colors'
 import label from '../styles/label'
 
 var {height, width} = Dimensions.get('window');
 
 const MainHeader = props => {
- 
+
+    const navigation = useNavigation()
+
     return (
         <View style={styles.headerContainer}>
             <View style={styles.topLineContainer}>

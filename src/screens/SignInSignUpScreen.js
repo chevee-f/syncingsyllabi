@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { 
     View, 
     Text, 
@@ -16,14 +16,25 @@ import label from '../styles/label';
 import DefaultInput from '../components/DefaultInput';
 import DefaultButton from '../components/DefaultButton';
 import CarouselCards from '../components/Carousel/CarouselCards';
+import { useSelector, useDispatch } from 'react-redux';
+import { signIn } from '../actions/auth';
 
 var {height, width} = Dimensions.get('window');
 
-const SignUpScreen = ({navigation}) => {
+const SignUpScreen = ({ navigation }) => {
+
+    const {auth} = useSelector(state => state.authReducer);
+    const dispatch = useDispatch();
+
+    const signInUser = data => {
+        dispatch(signIn(data))
+        navigation.navigate('MainTabScreen')
+    }
+
     const [isFocused, setIsFocused] = React.useState(false);
     const [isSignUp, setIsSignUp] = React.useState(true);
     const [data, setData] = React.useState({
-        username: '',
+        email: '',
         password: '',
         confirm_password: '',
         hasValue: false,
@@ -34,13 +45,13 @@ const SignUpScreen = ({navigation}) => {
         if( val.length !== 0 ) {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 hasValue: true
             });
         } else {
             setData({
                 ...data,
-                username: val,
+                email: val,
                 hasValue: false
             });
         }
@@ -58,6 +69,10 @@ const SignUpScreen = ({navigation}) => {
             ...data,
             secureTextEntry: !data.secureTextEntry
         });
+    }
+
+    const loginHandle = (username, password) => {
+        //signIn(username, password);
     }
 
     return (
@@ -87,7 +102,7 @@ const SignUpScreen = ({navigation}) => {
                 <DefaultInput 
                     label="Email Address"
                     onChangeText={(val) => textInputChange(val)}
-                    hasValue={data.username.length}
+                    hasValue={data.email.length}
                 /> 
                 <View style={[styles.inputContainer, {borderColor: data.password.length ? color.primary : color.default}]}>
                     <View style={{flexDirection:'row'}}>
@@ -120,7 +135,9 @@ const SignUpScreen = ({navigation}) => {
                 <View style={styles.button}>
                     <DefaultButton 
                         title={isSignUp ? 'Sign Up' : 'Sign In'}
-                        onPress={() => {isSignUp ? navigation.navigate("SignUpConfirmationScreen") : navigation.navigate("MainTabScreen")}}
+                        //onPress={() => {isSignUp ? navigation.navigate("SignUpConfirmationScreen") : navigation.navigate("MainTabScreen")}}
+                        //onPress={() => loginHandle(data.username, data.password)}
+                        onPress={() => signInUser(data)}
                     />
                 </View>
                 {!isSignUp &&
@@ -151,7 +168,9 @@ const SignUpScreen = ({navigation}) => {
                 </View> 
                 <View style={styles.signInContainer}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
-                    <TouchableOpacity onPress={() => {setIsSignUp(!isSignUp)}}>
+                    <TouchableOpacity onPress={() => {
+                                setIsSignUp(!isSignUp)
+                                }}>
                         <Text style={[label.boldSmallHeading,{color:color.primary}]}>
                             {!isSignUp ? 'Sign Up' : 'Sign In'}
                         </Text>

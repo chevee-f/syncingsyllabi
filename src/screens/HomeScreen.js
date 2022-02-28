@@ -1,14 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, Dimensions, Platform, Text, View } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
 import label from './../styles/label'
 import color from './../styles/colors'
 import moment from 'moment';
+import { useSelector, useDispatch } from 'react-redux';
+import { getUser } from '../actions/user';
 
 var {height, width} = Dimensions.get('window');
 
 const HomeScreen = ({ navigation }) => {
+
+  const {user} = useSelector(state => state.userReducer);
+  const dispatch = useDispatch();
+  const fetchUser = () => dispatch(getUser());
+  useEffect(() => {
+    //fetchUser();
+  }, []);
 
   let startingDate = moment().subtract(2, 'days');
     return (
@@ -38,6 +47,9 @@ const HomeScreen = ({ navigation }) => {
             upperCaseDays={false}
             startingDate={startingDate}
           />
+        </View>
+        <View>
+            <Text>{user.email}</Text>
         </View>
       </View>
     )

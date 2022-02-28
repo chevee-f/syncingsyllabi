@@ -161,9 +161,6 @@ const HomeStackScreen = ({navigation}) => {
       
     }}>
         <HomeStack.Screen name="Home" component={HomeScreen} options={{
-          headerRight: () => (
-            <Icon.Button name="ios-menu" size={25} backgroundColor={color.primary} onPress={() => {navigation.openDrawer()}} />
-          ),
           headerLeft: null
         }} />
     </HomeStack.Navigator>

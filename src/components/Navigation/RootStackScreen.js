@@ -14,11 +14,15 @@ const RootStackScreen = ({navigation}) => (
     <RootStack.Navigator headerMode='none'>
         <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
         <RootStack.Screen name="SignInSignUpScreen" component={SignInSignUpScreen}/>
-
-        <RootStack.Screen name="MainTabScreen" component={MainTabScreen}/>
         <RootStack.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen}/>
-
         <RootStack.Screen name="SetUpScreen" component={SetUpScreen}/>
+
+
+{
+  <RootStack.Screen name="MainTabScreen" component={MainTabScreen}/>
+
+}
+      
     </RootStack.Navigator>
 );
 
