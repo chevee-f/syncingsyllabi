@@ -8,10 +8,10 @@ import color from './../../styles/colors'
 import label from './../../styles/label'
 
 import AddSyllabus from '../../screens/AddSyllabus';
-import HomeScreen from '../../screens/HomeScreen';
-import CalendarScreen from '../../screens/CalendarScreen';
-import AssignmentScreen from '../../screens/AssignmentScreen';
-import GoalScreen from '../../screens/GoalScreen';
+import HomeScreen from '../../screens/Home';
+import CalendarScreen from '../../screens/Calendar';
+import AssignmentScreen from '../../screens/Assignment';
+import GoalScreen from '../../screens/Goal';
 import MainHeader from '../../components/MainHeader'
 
 const HomeStack = createStackNavigator();

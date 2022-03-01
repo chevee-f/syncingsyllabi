@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Dimensions, Platform, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
-import label from './../styles/label'
-import color from './../styles/colors'
+import label from '../../styles/label'
+import color from '../../styles/colors'
 import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUser } from '../actions/user';
-
-var {height, width} = Dimensions.get('window');
+import { getUser } from '../../actions/user';
+import styles from './styles'
 
 const HomeScreen = ({ navigation }) => {
 
@@ -16,7 +15,7 @@ const HomeScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const fetchUser = () => dispatch(getUser());
   useEffect(() => {
-    //fetchUser();
+    fetchUser();
   }, []);
 
   let startingDate = moment().subtract(2, 'days');
@@ -48,61 +47,9 @@ const HomeScreen = ({ navigation }) => {
             startingDate={startingDate}
           />
         </View>
-        <View>
-            <Text>{user.email}</Text>
-        </View>
+        
       </View>
     )
 }
-
-const styles = StyleSheet.create({
-  progressContainer:{
-    flexDirection:'row',
-    justifyContent:'space-between',
-    marginBottom:5
-  },
-  textPercentage:{
-    color:color.primary,
-    alignSelf:'flex-end',
-    marginTop:5
-  },
-  calendarStyle:{
-    height: Platform.OS === 'ios' ? height * 0.15 : height * 0.2,
-    marginHorizontal:15
-  },
-  calendarHeaderStyle:{
-    color: color.primary,
-    fontFamily:'Manrope',
-    fontSize:23,
-    marginLeft:5,
-    marginBottom:15,
-    alignSelf:'flex-start'
-  },
-  dateNumberStyle:{
-    color: color.primary,
-    fontFamily:'Manrope',
-    fontSize:24
-  },
-  dayContainerStyle:{
-    backgroundColor:color.primaryLight,
-    borderRadius:15,
-    paddingTop:15
-  },
-  highlightDateNameStyle:{
-    color:color.textDefault,
-    marginBottom:-50
-  },
-  highlightDateNumberStyle:{
-    color:color.textDefault,
-    fontFamily:'Manrope',
-    fontSize:24
-  },
-  highlightDateContainerStyle:{
-    backgroundColor:color.primary,
-    borderRadius:15,
-    width:65,
-    paddingTop:15
-  }
-});
 
 export default HomeScreen;

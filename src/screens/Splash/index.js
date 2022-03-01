@@ -9,7 +9,7 @@ const SplashScreen = ({navigation}) => {
       <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
         {
           <Video
-            source={require('./../assets/SplashScreen.mp4')}
+            source={require('../../assets/SplashScreen.mp4')}
             style={{ width: width, height: height }}
             resizeMode="cover"
             onEnd={() => navigation.navigate('SignInSignUpScreen')}

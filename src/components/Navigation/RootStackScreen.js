@@ -1,11 +1,11 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SplashScreen from './../../screens/SplashScreen';
-import SignInSignUpScreen from '../../screens/SignInSignUpScreen';
+import SplashScreen from '../../screens/Splash';
+import SignInSignUpScreen from '../../screens/SignInSignUp';
 import MainTabScreen from '../Navigation/MainTabScreen';
-import SignUpConfirmationScreen from '../../screens/SignUpConfirmationScreen';
-import SetUpScreen from '../../screens/SetUpScreen';
+import SignUpConfirmationScreen from '../../screens/SignUpConfirmation';
+import SetUpScreen from '../../screens/SetUp';
 
 const RootStack = createStackNavigator();
 console.disableYellowBox = true;
@@ -15,14 +15,7 @@ const RootStackScreen = ({navigation}) => (
         <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
         <RootStack.Screen name="SignInSignUpScreen" component={SignInSignUpScreen}/>
         <RootStack.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen}/>
-        <RootStack.Screen name="SetUpScreen" component={SetUpScreen}/>
-
-
-{
-  <RootStack.Screen name="MainTabScreen" component={MainTabScreen}/>
-
-}
-      
+        <RootStack.Screen name="SetUpScreen" component={SetUpScreen}/>  
     </RootStack.Navigator>
 );
 

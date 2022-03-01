@@ -1,9 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Dimensions } from 'react-native';
+import { View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import color from '../styles/colors'
-
-var {height, width} = Dimensions.get('window');
+import color from '../../styles/colors'
+import styles from './styles'
 
 const PrimaryTextInput = props => {
   const [isFocused, setIsFocused] = React.useState(false);
@@ -25,28 +24,5 @@ const PrimaryTextInput = props => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-    inputContainer: {
-        borderRadius: 4,
-        height: height * 0.055,
-        overflow: 'hidden',
-        borderWidth:1,
-        borderRadius:16,
-        marginVertical:8
-    },
-    input: {
-        borderRadius: 0,
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        height: height * 0.063,
-        overflow: 'hidden',
-        backgroundColor: '#fff',
-        paddingLeft:5,
-        fontFamily: "Manrope",
-        fontSize: height * 0.016,
-        justifyContent:'center',
-    },
-});
 
 export default PrimaryTextInput;

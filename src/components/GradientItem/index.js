@@ -2,10 +2,8 @@ import React, {useEffect} from 'react';
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient'
-import color from '../styles/colors'
-import label from '../styles/label'
-
-var {height, width} = Dimensions.get('window');
+import label from '../../styles/label'
+import styles from './styles'
 
 const GradientItem = props => {
   
@@ -51,21 +49,5 @@ const GradientItem = props => {
       </TouchableOpacity>
     );
 };
-
-const styles = StyleSheet.create({
-    itemContainer:{
-        width: width * 0.21,
-        marginTop: height * 0.012,
-        marginHorizontal:6
-    },
-    linearGradient:{
-        alignItems:'center',
-        paddingVertical:22,
-        borderRadius:16
-    },
-    text:{
-      color:color.textDefault
-    }
-});
 
 export default GradientItem;

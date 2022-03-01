@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
     Avatar,
@@ -16,16 +16,12 @@ import {
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
-import { signOut } from '../../actions/auth';
+import {Context as AuthContext} from '../Context/AuthContext';
 
 export function DrawerContent (props) {
+    const {state, signOut} = useContext(AuthContext);
 
     const dispatch = useDispatch();
-
-    const signOutUser = () => {
-        dispatch(signOut())
-        props.navigation.navigate('SignInSignUp')
-    }
 
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
     const toggleTheme = () => {
@@ -119,7 +115,7 @@ export function DrawerContent (props) {
                         />
                     )}
                     label="Sign Out"
-                    onPress={() => {signOutUser()}}
+                    onPress={signOut} 
                 />
            </Drawer.Section>
         </View>

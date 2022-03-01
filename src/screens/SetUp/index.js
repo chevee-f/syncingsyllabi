@@ -1,18 +1,18 @@
 import React from 'react';
-import { StyleSheet,
-         Text, 
+import { Text, 
          View, 
          Image,
          ScrollView,
          Dimensions, 
          Platform } from 'react-native';
-import DefaultInput from './../components/DefaultInput';
-import GradientItem from '../components/GradientItem'
-import Item from '../components/Item'
-import AddItem from '../components/AddItem'
-import color from './../styles/colors'
-import label from './../styles/label'
-import DefaultButton from '../components/DefaultButton';
+import DefaultInput from '../../components/DefaultInput';
+import GradientItem from '../../components/GradientItem'
+import Item from '../../components/Item'
+import AddItem from '../../components/AddItem'
+import color from '../../styles/colors'
+import label from '../../styles/label'
+import DefaultButton from '../../components/DefaultButton';
+import styles from './styles'
 
 var {height, width} = Dimensions.get('window');
 
@@ -67,7 +67,7 @@ const SetUpScreen = ({navigation}) => {
                 </View>
                 <View style={styles.imageContainer}>
                     <Image 
-                        source={require('../assets/Saly1.png')}
+                        source={require('../../assets/Saly1.png')}
                         style={styles.image}
                     />
                 </View>
@@ -133,29 +133,4 @@ const SetUpScreen = ({navigation}) => {
     )
 }
 
-const styles = StyleSheet.create({
-    headerContainer:{
-        backgroundColor: color.primary,
-        height: Platform.OS === 'ios' ? height * 0.25 : height * 0.3,
-        width:'100%',
-        borderRadius:16,
-        alignItems:'center',
-        flexDirection:'row',
-        paddingHorizontal:20
-    },
-    image: {
-        width: width * 0.48,
-        height: height * 0.3,
-        position:'absolute'
-    },
-    imageContainer:{
-        marginTop: Platform.OS === 'ios' ? height * -0.14 : height * -0.09,
-        marginLeft: Platform.OS === 'ios' ? width * -0.12 : width * -0.05
-    },
-    headerActionText:{
-        color:color.textDefault,
-        lineHeight:24,
-        width:'70%'
-    }
-})
 export default SetUpScreen;
