@@ -1,7 +1,7 @@
 export default {
     primary: '#0036A1',
     primaryLight: '#E6EAF2',
-    primaryDark: '#E54C29',
+    error: '#E54C29',
     default: '#A6BEED',
     warning: '#FDC830',
     light: '#CED1D4',

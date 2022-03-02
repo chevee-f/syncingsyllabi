@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState } from 'react';
 import { 
     View, 
     Text, 
@@ -15,28 +15,36 @@ import label from '../../styles/label';
 import DefaultInput from '../../components/DefaultInput';
 import DefaultButton from '../../components/DefaultButton';
 import CarouselCards from '../../components/Carousel/CarouselCards';
-import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
+import Loader from '../../components/Loader';
+import method from './method';
 
 var {height, width} = Dimensions.get('window');
 
 const SignUpScreen = ({ navigation }) => {
 
-    const {state, signIn} = useContext(AuthContext);
-
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [secureTextEntry, setSecureTextEntry] = React.useState(true);
-
-    const [isFocused, setIsFocused] = React.useState(false);
-    const [isSignUp, setIsSignUp] = React.useState(true);
-   
-    const updateSecureTextEntry = () => {
-        setSecureTextEntry(!secureTextEntry)
-    }
+    const {
+        email,
+        password,
+        secureTextEntry,
+        isLoading,
+        isFocused,
+        isSignUp,
+        inputValidation,
+        updateSecureTextEntry,
+        handleSignIn,
+        handleValidEmail,
+        handleValidPassword,
+        setIsSignUp,
+        setIsFocused,
+        setPassword,
+        setEmail
+    } = method(navigation);
 
     return (
       <View style={styles.container}>
+        <Loader loading={isLoading} />
         <View style={styles.topLineContainer}>
             <Image 
                 source={require('../../assets/carousel/TopLines.png')}
@@ -63,40 +71,50 @@ const SignUpScreen = ({ navigation }) => {
                     label="Email Address"
                     onChangeText={(email) => setEmail(email)}
                     hasValue={email.length}
+                    hasError={!inputValidation.isValidEmail}
+                    errorMsg={inputValidation.emailErrMsg}
+                    onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
                 /> 
-                <View style={[styles.inputContainer, {borderColor: password.length ? color.primary : color.default}]}>
-                    <View style={{flexDirection:'row'}}>
-                        <TextInput 
-                            label="Password"
-                            onFocus={() => { setIsFocused(true)}}
-                            onBlur={() => { setIsFocused(false)}}
-                            onChangeText={(password) => setPassword(password)}
-                            secureTextEntry={secureTextEntry ? true : false}
-                            autoCapitalize="none"
-                            style={[styles.input,{marginTop: isFocused || password.length ? -5 : -2}]}
-                            selectionColor={color.primary}
-                            activeUnderlineColor={color.primary}
-                            theme={{ colors: { text: color.primary, placeholder: password.length ? color.primary : color.default } }}
-                        /> 
-                        <TouchableOpacity
-                            onPress={updateSecureTextEntry}
-                            style={{justifyContent:'center'}}
-                        >
-                            {secureTextEntry ? 
-                            <Text style={[label.extraSmallHeading, {color: password.length ? color.primary : color.default}]}>SHOW</Text>
-                            :
-                            <Text style={[label.extraSmallHeading, {color: password.length ? color.primary : color.default}]}>HIDE</Text>
-                            }
-                        </TouchableOpacity>
-                    </View>
-                    
-                </View>         
+                <View>
+                    <View style={[styles.inputContainer, {borderColor: !inputValidation.isValidPassword ? color.error : password.length ? color.primary : color.default}]}>
+                        <View style={{flexDirection:'row'}}>
+                            <TextInput 
+                                label="Password"
+                                onFocus={() => { setIsFocused(true)}}
+                                onBlur={() => { setIsFocused(false)}}
+                                onChangeText={(password) => setPassword(password)}
+                                secureTextEntry={secureTextEntry ? true : false}
+                                autoCapitalize="none"
+                                style={[styles.input,{marginTop: isFocused || password.length ? -5 : -2}]}
+                                selectionColor={color.primary}
+                                activeUnderlineColor={!inputValidation.isValidPassword ? color.error : color.primary}
+                                theme={{ colors: { text: !inputValidation.isValidPassword ? color.error : color.primary, placeholder: !inputValidation.isValidPassword ? color.error : password.length ? color.primary : color.default } }}
+                                onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text)}
+                            /> 
+                            <TouchableOpacity
+                                onPress={updateSecureTextEntry}
+                                style={{justifyContent:'center'}}
+                            >
+                                {secureTextEntry ? 
+                                <Text style={[label.extraSmallHeading, {color: password.length ? color.primary : color.default}]}>SHOW</Text>
+                                :
+                                <Text style={[label.extraSmallHeading, {color: password.length ? color.primary : color.default}]}>HIDE</Text>
+                                }
+                            </TouchableOpacity>
+                        </View>
+                    </View> 
+                    {!inputValidation.isValidPassword &&
+                        <Animatable.View animation="fadeInLeft" duration={500} style={{paddingLeft:15,marginBottom:12}}>
+                            <Text style={styles.errorMsg}>{inputValidation.passErrMsg}</Text>
+                        </Animatable.View>
+                    }
+                </View>
             
                 <View style={styles.button}>
                     <DefaultButton 
                         title={isSignUp ? 'Sign Up' : 'Sign In'}
                         onPress={() => {
-                            !isSignUp ? signIn({email, password}) : navigation.navigate('SignUpConfirmationScreen') ;
+                            !isSignUp ? handleSignIn() : navigation.navigate('SignUpConfirmationScreen') ;
                         }}
                     />
                 </View>
@@ -126,7 +144,7 @@ const SignUpScreen = ({ navigation }) => {
                         style={styles.icon}
                     />
                 </View> 
-                <View style={styles.signInContainer}>
+                <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.04 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
                     <TouchableOpacity onPress={() => {
                                 setIsSignUp(!isSignUp)

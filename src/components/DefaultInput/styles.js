@@ -24,4 +24,8 @@ export default StyleSheet.create({
         fontSize: height * 0.016,
         justifyContent:'center',
     },
+    errorMsg: {
+        color: '#E54C29',
+        fontSize: height * 0.0135,
+    },
 })

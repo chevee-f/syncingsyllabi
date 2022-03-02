@@ -2,6 +2,7 @@ import createDataContext from './CreateDataContext';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getAPIBaseUrl } from "../../config/env";
+import { Alert } from 'react-native';
 
 const authReducer = (state, action) => {
   switch (action.type) {
@@ -28,11 +29,15 @@ const generateAuth = (email,password) => {
             "password": password
         })
         .then((res) => {
+          if(res.data.data.success){
             AsyncStorage.setItem('userToken', res.data.data.item.authToken)
             return res.data.data.item.authToken;
+          }else{
+            return null
+          }
         })
       } catch (error) {
-        Alert.alert('Invalid Email or Password.')
+       Alert.alert(error.message)
       }
 };
 
@@ -40,9 +45,7 @@ const retrieveToken = dispatch => {
   return async() => {
     let userToken = await AsyncStorage.getItem('userToken')
     dispatch({type: 'retrieveToken',
-              payload: {
-                token: userToken
-                },
+              payload: { token: userToken }
             });
   };
 };
@@ -57,16 +60,13 @@ const signup = dispatch => {
 const signIn = dispatch => {
   return async({email, password}) => {
       try {
-            const userToken = await generateAuth(email,password);
+          const userToken = await generateAuth(email,password);
+          if(userToken !== null){
             axios.post(`${getAPIBaseUrl()}User/LoginUser`,
-                {
-                    "email": email,
-                    "password": password
-                },
-                { 
-                    headers: {"Authorization" : `Bearer ${userToken}`} 
-                }
-            )
+            {
+                "email": email,
+                "password": password
+            },{ headers: {"Authorization" : `Bearer ${userToken}`} })
             .then((res) => {
                 dispatch({type: 'signIn',
                           payload: {
@@ -75,6 +75,9 @@ const signIn = dispatch => {
                             },
                         });
             })
+          }else{
+            Alert.alert('Invalid username and password')
+          }
       } catch (error) {
         
       }

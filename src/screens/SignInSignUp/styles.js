@@ -65,7 +65,6 @@ export default StyleSheet.create({
     signInContainer:{
         flexDirection:'row',
         justifyContent:'center',
-        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.018
     },
     topLineContainer:{
         position:'absolute',
@@ -91,5 +90,9 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         paddingBottom: height * 0.05
+    },
+    errorMsg: {
+        color: '#E54C29',
+        fontSize: height * 0.0135,
     },
 })
