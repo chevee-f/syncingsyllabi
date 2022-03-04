@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { getAPIBaseUrl } from "../config/env";
 
 export const GET_USER = 'GET_USER';
+export const GET_USER_BY_EMAIL = 'GET_USER_BY_EMAIL';
 
 export const getUser = () => {
     try {
@@ -20,6 +21,22 @@ export const getUser = () => {
         }
       };
     } catch (error) {
-      // Add custom logic to handle errors 
+
     }
   };
+
+export const getUserByEmail = email => {
+  try {
+    return async dispatch => {
+      let userToken = await AsyncStorage.getItem('userToken')
+      const res = await axios.get(`${getAPIBaseUrl()}User/GetUserByEmail/${email}`,
+      { headers: {"Authorization" : `Bearer ${userToken}`} })
+        dispatch({
+          type: GET_USER_BY_EMAIL,
+          payload: res.data.data.item,
+        });
+    };
+  } catch (error) {
+
+  }
+};

@@ -5,20 +5,40 @@ import { getAPIBaseUrl } from "../../config/env";
 import { Alert } from 'react-native';
 
 const authReducer = (state, action) => {
+
   switch (action.type) {
     case 'retrieveToken':
-      return {token: action.payload.token};
-    case 'signOut':
-      return {token: null, email: ''};
-    case 'signIn':
-    case 'signup':
       return {
-        token: action.payload.token,
-        email: action.payload.email,
-      };
+                token: action.payload.token,
+                isForCodeVerification: false
+             };
+    case 'signOut':
+      return {
+                token: null, 
+                isSignOut: true
+             };
+    case 'signIn':
+      return {
+                token: action.payload.token,
+                userId: action.payload.userId,
+                isForCodeVerification: action.payload.isForCodeVerification
+             };
+    case 'signUp':
+      return {
+                token: null,
+                userId: action.payload.userId,
+                isForCodeVerification: true
+     };
+     case 'verifyUserCode':
+      return {
+                userId: action.payload.userId,
+                isEmailVerified: action.payload.isEmailVerified,
+                isForCodeVerification: action.payload.isForCodeVerification
+     };
     default:
       return state;
   }
+  
 };
 
 const generateAuth = (email,password) => {
@@ -29,6 +49,7 @@ const generateAuth = (email,password) => {
             "password": password
         })
         .then((res) => {
+
           if(res.data.data.success){
             AsyncStorage.setItem('userToken', res.data.data.item.authToken)
             return res.data.data.item.authToken;
@@ -50,9 +71,33 @@ const retrieveToken = dispatch => {
   };
 };
 
-const signup = dispatch => {
-  return ({email, password}) => {
-    console.log('Signup');
+const signUp = dispatch => {
+  return async({email, password}) => {
+    try{
+
+      const formData = new FormData();
+      formData.append('Email', email); 
+      formData.append('Password', password); 
+    
+      let res = await fetch(
+        `${getAPIBaseUrl()}User/CreateUser`,
+        {
+          method: 'post',
+          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data; ',
+          },
+        }
+      );
+      let responseJson = await res.json();     
+          dispatch({type: 'signUp',
+                   payload: { userId: responseJson.data.item.id }
+                  });
+      
+    }catch (error) {
+      Alert.alert(error.message)
+    }
+
   };
 };
 
@@ -60,31 +105,60 @@ const signup = dispatch => {
 const signIn = dispatch => {
   return async({email, password}) => {
       try {
-          const userToken = await generateAuth(email,password);
-          if(userToken !== null){
             axios.post(`${getAPIBaseUrl()}User/LoginUser`,
             {
                 "email": email,
                 "password": password
-            },{ headers: {"Authorization" : `Bearer ${userToken}`} })
-            .then((res) => {
-                dispatch({type: 'signIn',
-                          payload: {
-                            token: userToken,
-                            email,
-                            },
-                        });
             })
-          }else{
-            Alert.alert('Invalid username and password')
-          }
+            .then((res) => {
+              if(res.data.data.item == null){
+                Alert.alert('Incorrect Password','The password you entered is incorrect. Please try again.')
+              }
+              else if(res.data.data.item.isActive){
+                const userToken = generateAuth(email,password);
+                dispatch({type: 'signIn',
+                          payload: { token: userToken, 
+                                     userId: res.data.data.item.id,
+                                     isForCodeVerification: false
+                                   }
+                        });
+              }else{
+
+                dispatch({type: 'signIn',
+                          payload: { token: null, 
+                                     userId: res.data.data.item.id,
+                                     isForCodeVerification: true
+                                   }
+                        });
+              }
+            })
       } catch (error) {
-        
+        dispatch({ type: 'HAS_ERROR', payload: { hasError:true, errMsg: error.message } });  
       }
   };
 };
 
+const verifyUserCode = dispatch => {
+  return async({userId, verificationCode}) => {
+      try {      
+            axios.post(`${getAPIBaseUrl()}User/VerifyUserCode`,
+            {
+                "UserId": userId,
+                "CodeType": 1,
+                "VerificationCode": verificationCode
+            })
+            .then((res) => {
+                dispatch({type: 'verifyUserCode',
+                          payload: { userId: userId,
+                                     isEmailVerified: res.data.data.success,
+                                     isForCodeVerification: false }
+                        });
+            })
+      } catch (error) {
 
+      }
+  };
+};
 
 const signOut = dispatch => {
   return async() => {
@@ -95,6 +169,6 @@ const signOut = dispatch => {
 
 export const {Provider, Context} = createDataContext(
   authReducer,
-  {signIn, signOut, signup, retrieveToken},
+  {signIn, signOut, signUp, retrieveToken, verifyUserCode},
   {token: null, email: ''},
 );

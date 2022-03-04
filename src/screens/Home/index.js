@@ -8,9 +8,11 @@ import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../actions/user';
 import styles from './styles'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
 
+  const { state } = React.useContext(AuthContext);
   const {user} = useSelector(state => state.userReducer);
   const dispatch = useDispatch();
   const fetchUser = () => dispatch(getUser());
@@ -47,7 +49,10 @@ const HomeScreen = ({ navigation }) => {
             startingDate={startingDate}
           />
         </View>
-        
+        <View>
+            <Text>{user.email}</Text>
+            <Text>{JSON.stringify(state.token)}</Text>
+        </View>
       </View>
     )
 }

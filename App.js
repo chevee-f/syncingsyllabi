@@ -5,8 +5,11 @@ import { DrawerContent } from './src/components/Navigation/DrawerContent';
 
 import RootStackScreen from './src/components/Navigation/RootStackScreen';
 import MainTabScreen from './src/components/Navigation/MainTabScreen';
-import SignInSignUpScreen from './src/screens/SignInSignUp';
 import SettingScreen from './src/screens/Setting';
+import SetUpScreen from './src/screens/SetUp';
+
+import CodeVerificationScreen from './src/screens/CodeVerification';
+import SignUpConfirmationScreen from './src/screens/SignUpConfirmation';
 
 import {Provider} from 'react-redux';
 import {store} from './src/reducers/index';
@@ -27,14 +30,18 @@ function App() {
   return (
     <Provider store={store}>
           <NavigationContainer>
-            {state.token !== null ? (
+            {state.token !== null || state.isForCodeVerification ? (
                 <Drawer.Navigator 
-                  //initialRouteName="Home" 
+                  initialRouteName={state.isForCodeVerification ? "CodeVerificationScreen" : "MainTabScreen" }
                   drawerContent={props => <DrawerContent {... props} />}
                 >
-                  <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
-                  <Drawer.Screen name="Setting" component={SettingScreen} />
-                  <Drawer.Screen name="SignInSignUp" component={SignInSignUpScreen} />
+                    <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
+                    <Drawer.Screen name="Setting" component={SettingScreen} />
+                    <Drawer.Screen name="SetUpScreen" component={SetUpScreen} />
+
+                    <Drawer.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen} />
+                    <Drawer.Screen name="CodeVerificationScreen" component={CodeVerificationScreen} />
+
                 </Drawer.Navigator>
               ) :
               <RootStackScreen />

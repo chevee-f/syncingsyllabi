@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
     View, 
     Text, 
@@ -6,7 +6,8 @@ import {
     Image,
     Dimensions,
     ScrollView,
-    Platform 
+    Platform ,
+    Alert
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
@@ -17,7 +18,6 @@ import DefaultButton from '../../components/DefaultButton';
 import CarouselCards from '../../components/Carousel/CarouselCards';
 import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
-import Loader from '../../components/Loader';
 import method from './method';
 
 var {height, width} = Dimensions.get('window');
@@ -33,7 +33,7 @@ const SignUpScreen = ({ navigation }) => {
         isSignUp,
         inputValidation,
         updateSecureTextEntry,
-        handleSignIn,
+        handleSignInSignUp,
         handleValidEmail,
         handleValidPassword,
         setIsSignUp,
@@ -44,7 +44,6 @@ const SignUpScreen = ({ navigation }) => {
 
     return (
       <View style={styles.container}>
-        <Loader loading={isLoading} />
         <View style={styles.topLineContainer}>
             <Image 
                 source={require('../../assets/carousel/TopLines.png')}
@@ -112,10 +111,9 @@ const SignUpScreen = ({ navigation }) => {
             
                 <View style={styles.button}>
                     <DefaultButton 
-                        title={isSignUp ? 'Sign Up' : 'Sign In'}
-                        onPress={() => {
-                            !isSignUp ? handleSignIn() : navigation.navigate('SignUpConfirmationScreen') ;
-                        }}
+                        title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> :
+                               isSignUp ? 'Sign Up' : 'Sign In'}
+                        onPress={() => {handleSignInSignUp()}}
                     />
                 </View>
                 {!isSignUp &&
@@ -123,7 +121,7 @@ const SignUpScreen = ({ navigation }) => {
                         <Text style={[label.boldExtraSmallHeading,{color:color.default}]}>Forgot Password</Text>
                     </TouchableOpacity>   
                 }
-                <View style={styles.otherOptionContainer}>
+                <View style={[styles.otherOptionContainer,{marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.04 : Platform.OS === 'ios' ? height * 0.055 : height * 0.05}]}>
                     <View style={styles.horizontalLine} />
                     <View>
                         <Text style={[styles.textOtherOption, label.smallHeading]}>
@@ -144,7 +142,7 @@ const SignUpScreen = ({ navigation }) => {
                         style={styles.icon}
                     />
                 </View> 
-                <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.04 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
+                <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.01 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
                     <TouchableOpacity onPress={() => {
                                 setIsSignUp(!isSignUp)

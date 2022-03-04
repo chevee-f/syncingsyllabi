@@ -1,9 +1,16 @@
-import React, { useState,useContext } from 'react';
+import React, { useState,useContext,useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { getUserByEmail } from '../../actions/user';
+import { Alert } from 'react-native';
 
 const method = (navigation) => {
 
-    const {state, signIn} = useContext(AuthContext);
+    const errors = useSelector((state) => state.errors);
+    const {user} = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
+
+    const {state, signIn, signUp} = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -11,7 +18,7 @@ const method = (navigation) => {
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [isFocused, setIsFocused] = React.useState(false);
-    const [isSignUp, setIsSignUp] = React.useState(true);
+    const [isSignUp, setIsSignUp] = React.useState(false);
 
     const [inputValidation, setInputValidation] = React.useState({
         isValidEmail: true,
@@ -20,15 +27,34 @@ const method = (navigation) => {
         passErrMsg: ''
     });
    
+    useEffect(() => {
+    }, [errors]); 
+
     const updateSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry)
     }
+    const fetchUserByEmail = (email) => dispatch(getUserByEmail(email));
 
-    const handleSignIn = async() => {
+    const handleSignInSignUp = async() => {
         if(inputValidation.isValidEmail && inputValidation.isValidPassword){
             setIsLoading(true)
-            await signIn({email, password})
-            setIsLoading(false)
+            if(isSignUp){
+                await signUp({email, password}) 
+                setIsLoading(false)
+                Alert.alert("2-Step Verification","We have sent you the code for verification. Please check your email.",
+                        [{ text: "OK",  onPress: () => {
+                            navigation.navigate('CodeVerificationScreen')
+                        } }],
+                        { cancelable: false });
+            }else{
+                await fetchUserByEmail(email)
+                if(user == null){
+                    setIsLoading(false)
+                    Alert.alert('Account',"Account doesn't exist. Enter a different account or get a new one.");
+                }
+                await signIn({email, password})
+                setIsLoading(false)
+            }
         } 
     }
 
@@ -56,12 +82,22 @@ const method = (navigation) => {
             });
             return false
         }else {
-            setInputValidation({
-                ...inputValidation,
-                isValidEmail: true,
-                emailErrMsg: ''
-            });
-            return true
+            fetchUserByEmail(email)
+            if(user !== null && isSignUp){
+                setInputValidation({
+                    ...inputValidation,
+                    isValidEmail: false,
+                    emailErrMsg: 'Email already exists. Please use other email.'
+                });
+                return false
+            }else{
+                setInputValidation({
+                    ...inputValidation,
+                    isValidEmail: true,
+                    emailErrMsg: ''
+                });
+                return true
+            }
         }
     }
 
@@ -99,7 +135,7 @@ const method = (navigation) => {
         isSignUp,
         inputValidation,
         updateSecureTextEntry,
-        handleSignIn,
+        handleSignInSignUp,
         handleValidEmail,
         handleValidPassword,
         setIsSignUp,

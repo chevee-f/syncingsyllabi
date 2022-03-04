@@ -44,8 +44,7 @@ export default StyleSheet.create({
     },
     otherOptionContainer:{
         flexDirection: 'row', 
-        alignItems: 'center',
-        marginTop: Platform.OS === 'ios' ? height * 0.055 : height * 0.05
+        alignItems: 'center'
     },
     horizontalLine:{
         flex: 1, 
