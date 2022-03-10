@@ -2,7 +2,14 @@ import React, { useState,useContext,useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { getUserByEmail } from '../../actions/user';
-import { Alert } from 'react-native';
+import { Alert,Platform } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import {
+    GoogleSignin,
+    GoogleSigninButton,
+    statusCodes,
+} from 'react-native-google-signin';  
+import { getWebClientId } from "../../config/env";
 
 const method = (navigation) => {
 
@@ -19,6 +26,8 @@ const method = (navigation) => {
 
     const [isFocused, setIsFocused] = React.useState(false);
     const [isSignUp, setIsSignUp] = React.useState(false);
+    const [isGoogleSignIn, isSetGoogleSignIn] = React.useState(false);
+    const [userInfo, setuserInfo] = React.useState([]);
 
     const [inputValidation, setInputValidation] = React.useState({
         isValidEmail: true,
@@ -26,9 +35,6 @@ const method = (navigation) => {
         emailErrMsg: '',
         passErrMsg: ''
     });
-   
-    useEffect(() => {
-    }, [errors]); 
 
     const updateSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry)
@@ -52,11 +58,55 @@ const method = (navigation) => {
                     setIsLoading(false)
                     Alert.alert('Account',"Account doesn't exist. Enter a different account or get a new one.");
                 }
-                await signIn({email, password})
+                await signIn({email, password, isGoogleSignIn})
                 setIsLoading(false)
             }
         } 
     }
+
+    const handleGoogleSignIn = async() => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const {accessToken, idToken} = await GoogleSignin.signIn();
+            const credential = auth.GoogleAuthProvider.credential(
+              idToken,
+              accessToken,
+            );
+            await auth().signInWithCredential(credential);
+            isSetGoogleSignIn(true)
+            await signIn({email, password, isGoogleSignIn})
+          } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+              // user cancelled the login flow
+            } else if (error.code === statusCodes.IN_PROGRESS) {
+              Alert.alert('Signin in progress');
+              // operation (f.e. sign in) is in progress already
+            } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+              Alert.alert('Play services not available or outdated');
+              // play services not available or outdated
+            } else {
+              Alert.alert(error.message)
+              // some other error happened
+            }
+          }
+    }
+    
+    function onAuthStateChanged(user) {
+        setuserInfo(user);
+        //if (user){
+            Alert.alert(JSON.stringify(userInfo))
+        //}
+    }
+    
+    useEffect(() => {
+        GoogleSignin.configure({
+            scopes: ['email'], 
+            webClientId: getWebClientId(Platform.OS),
+            offlineAccess: true
+        });
+        const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+        return subscriber; 
+    }, []);
 
     const validateEmail = (email) => {
         return String(email)
@@ -138,6 +188,7 @@ const method = (navigation) => {
         handleSignInSignUp,
         handleValidEmail,
         handleValidPassword,
+        handleGoogleSignIn,
         setIsSignUp,
         setIsFocused,
         setPassword,

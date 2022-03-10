@@ -26,5 +26,5 @@ export default StyleSheet.create({
         color:color.textDefault,
         lineHeight:24,
         width:'70%'
-    }
+    },
 })
