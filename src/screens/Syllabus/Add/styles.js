@@ -1,9 +1,25 @@
 import { StyleSheet, Dimensions, Platform } from "react-native"
-import color from './../../styles/colors'
+import color from '../../../styles/colors'
 
 var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
+    modal:{
+        justifyContent: 'flex-end', 
+        margin: 0,
+        alignItems:'center'
+    },
+    modalContainer:{
+        backgroundColor: '#fff', 
+        //alignItems: 'center',
+        borderRadius: 16,
+        width: width * 1,
+        height: height * 0.66,
+        padding:20
+    },
+    close:{
+        alignSelf:'flex-end'
+    },
     inputContainer: {
         borderRadius: 4,
         height: height * 0.055,
@@ -24,12 +40,7 @@ export default StyleSheet.create({
         fontSize: height * 0.016,
         justifyContent:'center',
     },
-    errorMsg: {
-        color: '#E54C29',
-        fontSize: height * 0.0135,
-    },
-    errorContainer:{
-        paddingLeft:15,
-        marginBottom:12
+    fieldContainer:{
+        marginVertical:10
     }
 })

@@ -3,6 +3,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import { getAPIBaseUrl } from "../../config/env";
 import { Alert } from 'react-native';
+import { GoogleSignin } from 'react-native-google-signin';  
 
 const authReducer = (state, action) => {
 
@@ -52,7 +53,7 @@ const generateAuth = (email,password) => {
 
           if(res.data.data.success){
             AsyncStorage.setItem('userToken', res.data.data.item.authToken)
-            return res.data.data.item.authToken;
+            return res.data.data.item;
           }else{
             return null
           }
@@ -103,35 +104,46 @@ const signUp = dispatch => {
 
 
 const signIn = dispatch => {
-  return async({email, password}) => {
+  return async({email, password, isGoogleSignIn}) => {
       try {
-            axios.post(`${getAPIBaseUrl()}User/LoginUser`,
-            {
-                "email": email,
-                "password": password
-            })
-            .then((res) => {
-              if(res.data.data.item == null){
-                Alert.alert('Incorrect Password','The password you entered is incorrect. Please try again.')
-              }
-              else if(res.data.data.item.isActive){
-                const userToken = generateAuth(email,password);
-                dispatch({type: 'signIn',
-                          payload: { token: userToken, 
-                                     userId: res.data.data.item.id,
-                                     isForCodeVerification: false
-                                   }
+            if(isGoogleSignIn){
+              AsyncStorage.setItem('isGoogleSignIn', true)
+              const user = generateAuth(email,password);
+              dispatch({type: 'signIn',
+                        payload: { token: user.authToken, 
+                                   userId: user.id,
+                                   isForCodeVerification: false
+                                  }
                         });
-              }else{
+            }else{
+                axios.post(`${getAPIBaseUrl()}User/LoginUser`,
+                {
+                    "email": email,
+                    "password": password
+                })
+                .then((res) => {
+                  if(res.data.data.item == null){
+                    Alert.alert('Incorrect Password','The password you entered is incorrect. Please try again.')
+                  }
+                  else if(res.data.data.item.isActive){
+                    const userToken = generateAuth(email,password);
+                    dispatch({type: 'signIn',
+                              payload: { token: userToken, 
+                                         userId: res.data.data.item.id,
+                                         isForCodeVerification: false
+                                        }
+                            });
+                  }else{
 
-                dispatch({type: 'signIn',
-                          payload: { token: null, 
-                                     userId: res.data.data.item.id,
-                                     isForCodeVerification: true
-                                   }
-                        });
-              }
-            })
+                    dispatch({type: 'signIn',
+                              payload: { token: null, 
+                                         userId: res.data.data.item.id,
+                                         isForCodeVerification: true
+                                       }
+                            });
+                  }
+                })
+            }
       } catch (error) {
         dispatch({ type: 'HAS_ERROR', payload: { hasError:true, errMsg: error.message } });  
       }
@@ -162,7 +174,16 @@ const verifyUserCode = dispatch => {
 
 const signOut = dispatch => {
   return async() => {
-    await AsyncStorage.removeItem('userToken');
+    let isGoogleSignIn = await AsyncStorage.getItem('isGoogleSignIn')
+    if(isGoogleSignIn){
+      await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
+      auth().signOut()
+    }
+
+    //await AsyncStorage.removeItem('userToken');
+    const keys = await AsyncStorage.getAllKeys();
+    await AsyncStorage.multiRemove(keys);
     dispatch({type: 'signOut'});
   };
 };

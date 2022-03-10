@@ -16,7 +16,7 @@ export default StyleSheet.create({
       },
       calendarStyle:{
         height: Platform.OS === 'ios' ? height * 0.15 : height * 0.2,
-        marginHorizontal:15
+        marginHorizontal:16
       },
       calendarHeaderStyle:{
         color: color.primary,
@@ -50,5 +50,5 @@ export default StyleSheet.create({
         borderRadius:15,
         width:65,
         paddingTop:15
-      }
+      },
 })

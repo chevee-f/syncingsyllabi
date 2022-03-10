@@ -11,7 +11,7 @@ const DefaultButton = ({
       style={{...styles.btnContainer, ...props.containerStyle}}
       onPress={onPress}>
         <Text style={{...styles.text, ...props.textStyle}}>
-          {props.title}
+            {props.title}
         </Text>
     </TouchableOpacity>
   );

@@ -36,6 +36,7 @@ const SignUpScreen = ({ navigation }) => {
         handleSignInSignUp,
         handleValidEmail,
         handleValidPassword,
+        handleGoogleSignIn,
         setIsSignUp,
         setIsFocused,
         setPassword,
@@ -131,11 +132,14 @@ const SignUpScreen = ({ navigation }) => {
                     <View style={styles.horizontalLine} />
                 </View>
                 <View style={{flexDirection:'row',justifyContent:'center'}}>
-                    <Image 
-                        source={require('../../assets/icons/google.png')}
-                        resizeMode='contain'
-                        style={styles.icon}
-                    />
+                    <TouchableOpacity onPress={handleGoogleSignIn}>
+                        <Image 
+                            source={require('../../assets/icons/google.png')}
+                            resizeMode='contain'
+                            style={styles.icon}
+                        />
+                    </TouchableOpacity>
+                   
                     <Image 
                         source={require('../../assets/icons/facebook.png')}
                         resizeMode='contain'

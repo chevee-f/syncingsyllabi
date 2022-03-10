@@ -53,6 +53,6 @@ export default {
     extraSmallHeading2: {
         fontFamily: "Manrope",
         fontSize: 11,
-    },
+    }
   };
   

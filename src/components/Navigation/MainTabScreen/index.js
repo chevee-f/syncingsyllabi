@@ -1,27 +1,30 @@
-import React from 'react';
-import { StyleSheet,Text,View,Image,TouchableOpacity,Dimensions, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Text,View,Image,Platform } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Dot from 'react-native-vector-icons/Entypo';
-import color from './../../styles/colors'
-import label from './../../styles/label'
+import color from '../../../styles/colors'
+import label from '../../../styles/label'
 
-import AddSyllabus from '../../screens/AddSyllabus';
-import HomeScreen from '../../screens/Home';
-import CalendarScreen from '../../screens/Calendar';
-import AssignmentScreen from '../../screens/Assignment';
-import GoalScreen from '../../screens/Goal';
-import MainHeader from '../../components/MainHeader'
+import HomeScreen from '../../../screens/Home';
+import CalendarScreen from '../../../screens/Calendar';
+import AssignmentScreen from '../../../screens/Assignment';
+import GoalScreen from '../../../screens/Goal';
+import MainHeader from '../../MainHeader'
+import styles from './styles'
+import SelectSyllabus from '../../../screens/Syllabus/Select'
 
 const HomeStack = createStackNavigator();
 const DetailStack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
-var {height, width} = Dimensions.get('window');
 
 const MainTabScreen = () => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedComponent, setSelectedComponent] = useState('Home');
+
     return (
+      <>
         <Tab.Navigator
             initialRouteName="Home"
             activeColor={color.textDefault}
@@ -37,7 +40,7 @@ const MainTabScreen = () => {
                   tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
                       <Image 
-                        source={require('./../../assets/icons/home.png')}
+                        source={require('../../../assets/icons/home.png')}
                         resizeMode='contain'
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
@@ -52,6 +55,11 @@ const MainTabScreen = () => {
                     </View>
                   ) 
                 }}
+                listeners={() => ({
+                  tabPress: e => {
+                    setSelectedComponent('Home')
+                  },
+                })}
             />
             <Tab.Screen
                 name="Calendar"
@@ -60,7 +68,7 @@ const MainTabScreen = () => {
                 tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
                       <Image 
-                        source={require('./../../assets/icons/calendar.png')}
+                        source={require('../../../assets/icons/calendar.png')}
                         resizeMode='contain'
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
@@ -75,24 +83,40 @@ const MainTabScreen = () => {
                     </View>
                   ),
                 }}
+                listeners={() => ({
+                  tabPress: e => {
+                    setSelectedComponent('Calendar')
+                  },
+                })}
             />
-             <Tab.Screen
-                name="AddSyllabus"
-                component={AddSyllabus}
+
+            <Tab.Screen 
+                name="SelectSyllabus" 
+                component={selectedComponent == 'Home' ? HomeStackScreen : 
+                           selectedComponent == 'Calendar' ? CalendarScreen :
+                           selectedComponent == 'Goal' ? GoalScreen : AssignmentScreen
+                          }
                 options={{
-                tabBarIcon: ({ focused }) => (
-                    <Image 
-                      source={require('./../../assets/icons/add.png')}
-                      resizeMode="contain"
-                      style={{
-                        width:42,
-                        height:39,
-                        tintColor:color.textDefault,
-                      }}
-                    />
-                )
-                }}
+                  tabBarIcon: ({ focused }) => (
+                      <Image 
+                        source={require('../../../assets/icons/add.png')}
+                        resizeMode="contain"
+                        style={{
+                          width:42,
+                          height:39,
+                          tintColor:color.textDefault,
+                        }}
+                      />
+                  )
+                  }}
+                listeners={() => ({
+                  tabPress: e => {
+                    e.preventDefault();
+                    setModalVisible(true)
+                  },
+                })}
             />
+             
             <Tab.Screen
                 name="Profile"
                 component={GoalScreen}
@@ -100,7 +124,7 @@ const MainTabScreen = () => {
                 tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
                       <Image 
-                        source={require('./../../assets/icons/goals.png')}
+                        source={require('../../../assets/icons/goals.png')}
                         resizeMode='contain'
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
@@ -118,6 +142,11 @@ const MainTabScreen = () => {
                     </View>
                   ),
                 }}
+                listeners={() => ({
+                  tabPress: e => {
+                    setSelectedComponent('Goal')
+                  },
+                })}
             />
             <Tab.Screen
                 name="Goal"
@@ -126,7 +155,7 @@ const MainTabScreen = () => {
                 tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
                       <Image 
-                        source={require('./../../assets/icons/assignment.png')}
+                        source={require('../../../assets/icons/assignment.png')}
                         resizeMode='contain'
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
@@ -144,8 +173,20 @@ const MainTabScreen = () => {
                     </View>
                   ),
                 }}
+                listeners={({ navigation, route }) => ({
+                  tabPress: e => {
+                    setSelectedComponent('Assignment')
+                  },
+                })}
             />
         </Tab.Navigator>
+        
+        <SelectSyllabus 
+            onClose={() => { setModalVisible(!modalVisible); }}
+            modalVisible={modalVisible} 
+        />
+        
+      </>
     )
 };
 
@@ -166,31 +207,5 @@ const HomeStackScreen = ({navigation}) => {
     </HomeStack.Navigator>
   )
 }
-
-const styles = StyleSheet.create({
-  barStyle:{
-    position:'absolute',
-    bottom: 25,
-    left: 20,
-    right: 20,
-    elevation: 0,
-    backgroundColor: color.primary,
-    borderRadius: 22,
-    height: Platform.OS === 'ios' ? height * 0.08 : height * 0.1,
-    overflow:'hidden'
-  },
-  iconContainer:{
-    alignItems:'center',
-    width: 65
-  },
-  iconLabel:{
-    color: color.textDefault,
-    marginTop:3
-  },
-  dotStyle:{
-    top:-13,
-    left:1
-  }
-})
 
 export default MainTabScreen;
