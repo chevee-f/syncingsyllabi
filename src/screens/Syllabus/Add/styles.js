@@ -6,12 +6,11 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
     modal:{
         justifyContent: 'flex-end', 
-        margin: 0,
+        margin: -35,
         alignItems:'center'
     },
     modalContainer:{
         backgroundColor: '#fff', 
-        //alignItems: 'center',
         borderRadius: 16,
         width: width * 1,
         height: height * 0.66,

@@ -94,7 +94,7 @@ const method = (navigation) => {
     function onAuthStateChanged(user) {
         setuserInfo(user);
         //if (user){
-            Alert.alert(JSON.stringify(userInfo))
+        //    Alert.alert(JSON.stringify(userInfo))
         //}
     }
     
