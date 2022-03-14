@@ -1,11 +1,9 @@
 import React, {useEffect} from 'react';
-import { Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient'
-import label from '../../styles/label'
 import styles from './styles'
 
-const GradientItem = props => {
+const GradientColor = props => {
   
   const [bgColor, setBgColor] = React.useState(
       [
@@ -42,12 +40,9 @@ const GradientItem = props => {
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 0.5 }}
         >
-          <Text style={{...styles.text, ...label.boldExtraSmallHeading, ...props.textStyle}}>{props.code}</Text>
-          <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
-          <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
         </LinearGradient>
       </TouchableOpacity>
     );
 };
 
-export default GradientItem;
+export default GradientColor;

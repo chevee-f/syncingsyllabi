@@ -30,7 +30,10 @@ function App() {
   return (
     <Provider store={store}>
           <NavigationContainer>
-            {state.token !== null || state.isForCodeVerification ? (
+            {
+             
+              
+            state.token !== null || state.isForCodeVerification ? (
                 <Drawer.Navigator 
                   initialRouteName={state.isForCodeVerification ? "CodeVerificationScreen" : "MainTabScreen" }
                   drawerContent={props => <DrawerContent {... props} />}
@@ -45,6 +48,7 @@ function App() {
                 </Drawer.Navigator>
               ) :
               <RootStackScreen />
+              
             }
           </NavigationContainer>
     </Provider>

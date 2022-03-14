@@ -1,8 +1,8 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import SplashScreen from '../../screens/Splash';
-import SignInSignUpScreen from '../../screens/SignInSignUp';
+import SplashScreen from '../../../screens/Splash';
+import SignInSignUpScreen from '../../../screens/SignInSignUp';
 
 const RootStack = createStackNavigator();
 console.disableYellowBox = true;

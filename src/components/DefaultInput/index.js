@@ -26,7 +26,7 @@ const PrimaryTextInput = props => {
           />
       </View>
       {props.hasError &&
-        <Animatable.View animation="fadeInLeft" duration={500} style={{paddingLeft:15,marginBottom:12}}>
+        <Animatable.View animation="fadeInLeft" duration={500} style={styles.errorContainer}>
             <Text style={styles.errorMsg}>{props.errorMsg}</Text>
         </Animatable.View>
       }

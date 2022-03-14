@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>SyncingSyllabi</string>
+	<string>Syncing Syllabi</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -23,9 +23,11 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.creativeinterlace.SyncingSyllabi</string>
+				<string>com.googleusercontent.apps.974860535646-b0a3m3q99jks7vnkooljnir4mqcs9aam</string>
 			</array>
 		</dict>
 	</array>
@@ -46,6 +48,16 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>manrope-bold.otf</string>
+		<string>manrope-extrabold.otf</string>
+		<string>manrope-light.otf</string>
+		<string>manrope-medium.otf</string>
+		<string>manrope-regular.otf</string>
+		<string>manrope-semibold.otf</string>
+		<string>manrope-thin.otf</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -62,16 +74,6 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>manrope-bold.otf</string>
-		<string>manrope-extrabold.otf</string>
-		<string>manrope-light.otf</string>
-		<string>manrope-medium.otf</string>
-		<string>manrope-regular.otf</string>
-		<string>manrope-semibold.otf</string>
-		<string>manrope-thin.otf</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
