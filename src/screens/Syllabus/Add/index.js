@@ -9,7 +9,6 @@ import styles from './styles'
 import Modal from "react-native-modal";
 import AddItem from '../../../components/AddItem'
 import Label from '../../../components/Label'
-import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import DefaultInput from '../../../components/DefaultInput';
 import DateTimePicker from '../../../components/DateTimePicker'
@@ -72,18 +71,18 @@ const AddSyllabus = ({
                     </View>
                     <View style={{marginVertical:10}}>
                         <Label text="What's your Schedule?" />
-                            <View style={[styles.inputContainer, {borderColor: color.default}]}>
-                                <TextInput
-                                    mode="flat"
-                                    style={[styles.input]}
-                                    onPressIn={() => { setCalendarVisible(true)}}
-                                    label="Schedule"
-                                    editable={false}
-                                    selectionColor={color.primary}
-                                    activeUnderlineColor={color.primary}
-                                    theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                                />
-                            </View> 
+                        <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                            <TextInput
+                                mode="flat"
+                                style={[styles.input]}
+                                onPressIn={() => { setCalendarVisible(true)}}
+                                label="Schedule"
+                                editable={false}
+                                selectionColor={color.primary}
+                                activeUnderlineColor={color.primary}
+                                theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                            />
+                        </View> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="Pick a color" />
@@ -111,6 +110,7 @@ const AddSyllabus = ({
             <DateTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
+                showTimePicker={true}
             />
           </Modal>
 

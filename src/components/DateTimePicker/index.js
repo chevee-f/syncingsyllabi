@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Text, View, Dimensions, TouchableOpacity,SafeAreaView } from 'react-native';
+import {View, Dimensions, SafeAreaView } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
-import label from '../../styles/label'
 import color from '../../styles/colors'
 import CalendarPicker from 'react-native-calendar-picker';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -23,7 +22,7 @@ const SelectSyllabus = ({
             <Modal
                 useNativeDriver={true}
                 animationIn='slideInUp'
-                animationOut='fadeOut'
+                animationOut='slideOutDown'
                 backdropColor='rgba(0, 0, 0, 0.7)'
                 backdropOpacity={0.5}
                 isVisible={props.modalVisible}
@@ -32,7 +31,7 @@ const SelectSyllabus = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={styles.modalContainer}>
+                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.7 : height * 0.43}]}>
                     <CalendarPicker
                         previousComponent={<Icon 
                                             name="chevron-thin-left"
@@ -54,17 +53,22 @@ const SelectSyllabus = ({
                         monthTitleStyle={styles.titleStyle}
                         yearTitleStyle={styles.titleStyle}
                     />
-                    <View style={styles.horizontalLine} />
 
-                    <DatePicker 
-                        mode="time"
-                        textColor={color.primary}
-                        date={date} 
-                        onDateChange={setDate} />
+                    {props.showTimePicker &&
+                        <View style={{alignItems:'center'}}>
+                             <View style={styles.horizontalLine} />
 
-                    <View style={{flexDirection:'row',width:width * 0.84,justifyContent:'space-between'}}>
-                        <CancelButton title="Cancel" containerStyle={{width: width * 0.4}} />
-                        <DefaultButton title="Done" containerStyle={{width: width * 0.4}} />
+                            <DatePicker 
+                                mode="time"
+                                textColor={color.primary}
+                                date={date} 
+                                onDateChange={setDate} />
+                        </View>
+                    }
+
+                    <View style={styles.buttonContainer}>
+                        <CancelButton title="Cancel" containerStyle={styles.button} />
+                        <DefaultButton title="Done" containerStyle={styles.button} />
                     </View>
                 </View>
             </Modal>
