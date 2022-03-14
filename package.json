@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "postinstall": "npx jetify",
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -25,6 +26,7 @@
     "react-native-animatable": "^1.3.3",
     "react-native-calendar-picker": "^7.1.2",
     "react-native-calendar-strip": "^2.2.5",
+    "react-native-calendars": "^1.1278.0",
     "react-native-date-picker": "^4.2.0",
     "react-native-document-picker": "^8.0.0",
     "react-native-elements": "^3.4.2",
@@ -40,11 +42,13 @@
     "react-native-vector-icons": "^9.0.0",
     "react-native-video": "^5.2.0",
     "react-native-web": "0.17.1",
+    "styled-components": "^5.3.3",
     "react-redux": "^7.2.6",
     "redux-thunk": "^2.4.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.9"
+    "@babel/core": "^7.12.9",
+    "jetifier": "^2.0.0"
   },
   "private": true,
   "name": "SyncingSyllabi",
