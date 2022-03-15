@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import TabButton from './../../components/TabButton'
 import DropDownPicker from 'react-native-dropdown-picker';
-import Card from '../../components/Card/Item'
+import CardItem from '../../components/CardItem'
 import styles from './styles'
 import label from '../../styles/label'
 import color from '../../styles/colors'
@@ -14,21 +14,21 @@ var terms = [{ name: "Short-Term", isActive: true },
 
 const GoalScreen = ({ navigation }) => {
 
-  const data = [
-      {
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },{
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },{
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },
-  ];
+const data = [
+    {
+      class: 'Get 4.0 GPA for the semester',
+      term: 'Short-Term',
+      due: "Due Tomorrow at 10:00am"
+    },{
+      class: 'Get 4.0 GPA for the semester',
+      term: 'Short-Term',
+      due: "Due Tomorrow at 10:00am"
+    },{
+      class: 'Get 4.0 GPA for the semester',
+      term: 'Short-Term',
+      due: "Due Tomorrow at 10:00am"
+    },
+];
 
     return (
       <View style={{ flex:1 }}>

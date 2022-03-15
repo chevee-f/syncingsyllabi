@@ -40,6 +40,7 @@
     "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "^3.11.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-swipe-action-list": "0.0.6",
     "react-native-vector-icons": "^9.0.0",
     "react-native-video": "^5.2.0",
     "react-native-web": "0.17.1",

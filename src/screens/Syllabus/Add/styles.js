@@ -11,7 +11,6 @@ export default StyleSheet.create({
     },
     modalContainer:{
         backgroundColor: '#fff', 
-        //alignItems: 'center',
         borderRadius: 16,
         width: width * 1,
         height: height * 0.66,
