@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import TabButton from './../../components/TabButton'
 import DropDownPicker from 'react-native-dropdown-picker';
-import CardItem from '../../components/CardItem'
+import Card from '../../components/Card/Item'
 import styles from './styles'
 import label from '../../styles/label'
 import color from '../../styles/colors'
