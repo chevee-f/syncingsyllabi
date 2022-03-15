@@ -16,7 +16,6 @@ export default StyleSheet.create({
         alignItems: 'center',
         borderRadius: 16,
         width: width * 0.93,
-        height: height * 0.7,
         padding:30
     },
     textStyle:{
@@ -35,5 +34,13 @@ export default StyleSheet.create({
         borderBottomWidth: 0.3,
         width: width * 0.85,
         marginTop:15
+    },
+    buttonContainer:{
+        flexDirection:'row',
+        width:width * 0.84,
+        justifyContent:'space-between'
+    },
+    button:{
+        width: width * 0.4
     }
 })

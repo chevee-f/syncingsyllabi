@@ -37,7 +37,7 @@ const AddSyllabus = ({
           backdropColor='rgba(0, 0, 0, 0.7)'
           backdropOpacity={0.5}
           animationIn='slideInUp'
-          animationOut='fadeOut'
+          animationOut='slideOutDown'
           //isVisible={props.modalVisible}
           isVisible={modalVisible}
           hideModalContentWhileAnimating
@@ -111,6 +111,7 @@ const AddSyllabus = ({
             <DateTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
+                showTimePicker={true}
             />
           </Modal>
 

@@ -14,8 +14,7 @@ import MainHeader from '../../MainHeader'
 import styles from './styles'
 import SelectSyllabus from '../../../screens/Syllabus/Select'
 
-const HomeStack = createStackNavigator();
-const DetailStack = createStackNavigator();
+const Stack = createStackNavigator();
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -29,9 +28,7 @@ const MainTabScreen = () => {
             initialRouteName="Home"
             activeColor={color.textDefault}
             labeled={false}
-            barStyle={{
-                ...styles.barStyle,
-            }}
+            barStyle={{ ...styles.barStyle }}
         >
             <Tab.Screen
                 name="Home"
@@ -45,7 +42,7 @@ const MainTabScreen = () => {
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
                                  marginTop: focused ? -5 : 0,
-                                 tintColor: color.textDefault}}
+                                 tintColor: color.textDefault }}
                       />
                       {focused ?
                          <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
@@ -94,7 +91,7 @@ const MainTabScreen = () => {
                 name="SelectSyllabus" 
                 component={selectedComponent == 'Home' ? HomeStackScreen : 
                            selectedComponent == 'Calendar' ? CalendarScreen :
-                           selectedComponent == 'Goal' ? GoalScreen : AssignmentScreen
+                           selectedComponent == 'Goal' ? GoalStackScreen : AssignmentScreen
                           }
                 options={{
                   tabBarIcon: ({ focused }) => (
@@ -118,8 +115,8 @@ const MainTabScreen = () => {
             />
              
             <Tab.Screen
-                name="Profile"
-                component={GoalScreen}
+                name="Goal"
+                component={GoalStackScreen}
                 options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
@@ -129,13 +126,12 @@ const MainTabScreen = () => {
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
                                  marginTop: focused ? -5 : 0,
-                                 tintColor: color.textDefault}}
+                                 tintColor: color.textDefault }}
                       />
                       {focused ?
                         <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
                           :
-                        <Text 
-                          style={[label.extraSmallHeading2, styles.iconLabel ]}>
+                        <Text style={[label.extraSmallHeading2, styles.iconLabel ]}>
                             Goal
                         </Text>
                       }
@@ -149,7 +145,7 @@ const MainTabScreen = () => {
                 })}
             />
             <Tab.Screen
-                name="Goal"
+                name="Assignment"
                 component={AssignmentScreen}
                 options={{
                 tabBarIcon: ({ focused }) => (
@@ -160,13 +156,12 @@ const MainTabScreen = () => {
                         style={{ width: focused ? 25 : 30,
                                  height: focused ? 25 : Platform.OS === 'ios' ? 28 : 24,
                                  marginTop: focused ? -5 : 0,
-                                 tintColor: color.textDefault}}
+                                 tintColor: color.textDefault }}
                       />
                       {focused ?
                         <Dot name="dot-single" color={color.textDefault} size={50} style={styles.dotStyle} />
                           :
-                        <Text 
-                          style={[label.extraSmallHeading2, styles.iconLabel]}>
+                        <Text style={[label.extraSmallHeading2, styles.iconLabel]}>
                             Assignment
                         </Text>
                       }
@@ -192,19 +187,39 @@ const MainTabScreen = () => {
 
 const HomeStackScreen = ({navigation}) => {
   return(
-    <HomeStack.Navigator screenOptions={{
+    <Stack.Navigator screenOptions={{
       headerStyle:{
         backgroundColor: color.primary
       },
       title: '',
       headerTintColor:'#fff',
-      header: () => <MainHeader />
+      header: () => <MainHeader screen='Home' />
       
     }}>
-        <HomeStack.Screen name="Home" component={HomeScreen} options={{
-          headerLeft: null
-        }} />
-    </HomeStack.Navigator>
+        <Stack.Screen 
+          name="Home" 
+          component={HomeScreen} 
+          options={{ headerLeft: null }} />
+    </Stack.Navigator>
+  )
+}
+
+const GoalStackScreen = ({navigation}) => {
+  return(
+    <Stack.Navigator screenOptions={{
+      headerStyle:{
+        backgroundColor: color.primary
+      },
+      title: '',
+      headerTintColor:'#fff',
+      header: () => <MainHeader screen='Goal' />
+      
+    }}>
+        <Stack.Screen 
+          name="Goal" 
+          component={GoalScreen} 
+          options={{ headerLeft: null }} />
+    </Stack.Navigator>
   )
 }
 

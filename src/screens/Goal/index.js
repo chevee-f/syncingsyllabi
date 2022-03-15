@@ -1,10 +1,63 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Text, View } from 'react-native';
+import TabButton from './../../components/TabButton'
+import DropDownPicker from 'react-native-dropdown-picker';
+import Card from '../../components/Card/Item'
+import styles from './styles'
+import label from '../../styles/label'
+import color from '../../styles/colors'
+
+var terms = [{ name: "Short-Term", isActive: true },
+             { name: "Medium-Term", isActive: false },
+             { name: "Long-Term", isActive: false },
+             { name: "Archived", isActive: false }];
 
 const GoalScreen = ({ navigation }) => {
+
+  const data = [
+      {
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },{
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },{
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },
+  ];
+
     return (
-      <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
-        <Text>Goal Screen</Text>
+      <View style={{ flex:1 }}>
+        <View style={styles.header}>
+          {
+            terms.map((item) => {
+                return (
+                    <TabButton title={item.name} isActive={item.isActive} />
+                );
+            })                
+          }     
+        </View>
+        <View style={styles.sortContainer}>
+            <Text style={[label.boldExtraSmallHeading, {color: color.default, marginLeft:10}]}>Sort by</Text>
+            <DropDownPicker
+                open={false}
+                //setOpen={setOpen}
+                items={[
+                    {label: 'Item 1', value: 'item1'},
+                    {label: 'Item 2', value: 'item2', selected: true},
+                ]}
+
+                containerStyle={styles.containerStyle}
+                style={styles.dropDown}
+                placeholderStyle={styles.placeHolder}
+                placeholder="Due Date"
+            />
+        </View>
+        <Card data={data} />
       </View>
     )
 }
