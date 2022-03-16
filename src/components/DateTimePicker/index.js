@@ -67,8 +67,8 @@ const SelectSyllabus = ({
                     }
 
                     <View style={styles.buttonContainer}>
-                        <CancelButton title="Cancel" containerStyle={styles.button} />
-                        <DefaultButton title="Done" containerStyle={styles.button} />
+                        <CancelButton title="Cancel" containerStyle={styles.button} onPress={props.onClose} />
+                        <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onClose} />
                     </View>
                 </View>
             </Modal>

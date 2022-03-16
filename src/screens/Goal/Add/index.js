@@ -103,7 +103,7 @@ const AddGoal = ({
                             </View>
                         </View>
                         <View style={styles.fieldContainer}>
-                            <DefaultButton title="Save" />       
+                            <DefaultButton title="Save" onPress={() => { setGoalVisible(!goalVisible); }} />       
                         </View>
                     </ScrollView>
                 </View>

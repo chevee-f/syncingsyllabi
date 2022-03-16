@@ -13,22 +13,21 @@ var terms = [{ name: "Short-Term", isActive: true },
              { name: "Archived", isActive: false }];
 
 const GoalScreen = ({ navigation }) => {
-
-const data = [
-    {
-      class: 'Get 4.0 GPA for the semester',
-      term: 'Short-Term',
-      due: "Due Tomorrow at 10:00am"
-    },{
-      class: 'Get 4.0 GPA for the semester',
-      term: 'Short-Term',
-      due: "Due Tomorrow at 10:00am"
-    },{
-      class: 'Get 4.0 GPA for the semester',
-      term: 'Short-Term',
-      due: "Due Tomorrow at 10:00am"
-    },
-];
+  const data = [
+      {
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },{
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },{
+        class: 'Get 4.0 GPA for the semester',
+        term: 'Short-Term',
+        due: "Due Tomorrow at 10:00am"
+      },
+  ];
 
     return (
       <View style={{ flex:1 }}>

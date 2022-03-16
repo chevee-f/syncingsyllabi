@@ -1,47 +1,58 @@
-import { StyleSheet } from "react-native"
+import { StyleSheet, Dimensions } from "react-native"
+import color from '../../../styles/colors'
+
+var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
+    drawer:{
+      flex:1,
+      backgroundColor: color.primary
+    },
     drawerContent: {
-        flex: 1,
+        flex: 1
       },
       userInfoSection: {
-        paddingLeft: 20,
-      },
-      title: {
-        fontSize: 16,
-        marginTop: 3,
-        fontWeight: 'bold',
-      },
-      caption: {
-        fontSize: 14,
-        lineHeight: 14,
+        paddingLeft: 25,
+        marginTop: height * 0.05
       },
       row: {
         marginTop: 20,
         flexDirection: 'row',
-        alignItems: 'center',
+        alignItems: 'center'
       },
       section: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginRight: 15,
+        alignItems: 'flex-end',
+        marginRight: 15
+      },
+      text:{
+        color: color.textDefault, 
+        fontSize: 12,
+        marginLeft: 3
       },
       paragraph: {
         fontWeight: 'bold',
-        marginRight: 3,
+        marginRight: 3
       },
       drawerSection: {
-        marginTop: 15,
+       // marginTop: 15,
       },
       bottomDrawerSection: {
           marginBottom: 15,
-          borderTopColor: '#f4f4f4',
-          borderTopWidth: 1
+          //borderTopColor: '#f4f4f4',
+          //borderTopWidth: 1,
+          alignItems: 'center'
       },
       preference: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingVertical: 12,
-        paddingHorizontal: 16,
+        paddingHorizontal: 16
       },
+      horizontalLine:{
+        borderBottomColor: '#E6EAF2',
+        borderBottomWidth: 1,
+        width: '90%',
+        marginTop: 18
+      }
 })

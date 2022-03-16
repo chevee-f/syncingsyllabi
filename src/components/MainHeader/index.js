@@ -1,8 +1,9 @@
-import React, {useEffect} from 'react';
-import { View, Text, Image, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native' // <-- import useNavigation hook
+import { useNavigation } from '@react-navigation/native'
+import AddGoal from '../../screens/Goal/Add'
 import color from '../../styles/colors'
 import label from '../../styles/label'
 import styles from './styles'
@@ -12,6 +13,7 @@ var {height, width} = Dimensions.get('window');
 const MainHeader = props => {
 
     const navigation = useNavigation()
+    const [goalVisible, setGoalVisible] = useState(false);
 
     return (
         <View style={[styles.headerContainer,{height: props.screen === 'Home' ? 
@@ -37,7 +39,9 @@ const MainHeader = props => {
             {props.screen === 'Goal' &&
                     <View style={styles.titleContainer}>
                         <Text style={[label.boldMediumHeading, {color: color.textDefault,textAlign:'right', width:'57%'}]}>Goals</Text>
-                        <Icon name="add-outline" color={color.textDefault} size={40} />
+                        <TouchableOpacity onPress={() => setGoalVisible(true)}>
+                            <Icon name="add-outline" color={color.textDefault} size={40} />
+                        </TouchableOpacity>
                     </View>
             }
 
@@ -45,12 +49,14 @@ const MainHeader = props => {
                 <View style={styles.container}>
                     <View style={styles.profileContainer}>
                         <View style={{ justifyContent:'center' }}>
-                            <View style={styles.avatarContainer}>
-                                <Avatar.Image 
-                                    source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'}}
-                                    size={68}
-                                />
-                            </View>
+                            <TouchableOpacity 
+                                style={styles.avatarContainer}
+                                onPress={() => navigation.navigate('ProfileScreen')}>
+                                    <Avatar.Image 
+                                        source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'}}
+                                        size={68}
+                                    />
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.nameContainer}>
                             <Text style={[label.mediumHeading,{color:color.textDefault}]}>Hello</Text>
@@ -67,6 +73,13 @@ const MainHeader = props => {
                     </View>
                 </View>
             }
+
+        <AddGoal 
+            onClose={() => { setGoalVisible(!goalVisible); }}
+            goalVisible={goalVisible} 
+            setGoalVisible={setGoalVisible}
+        />
+
         </View>
     );
 };

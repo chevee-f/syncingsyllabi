@@ -6,7 +6,7 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
     barStyle:{
     position:'absolute',
-    bottom: 25,
+    bottom: 10,
     left: 20,
     right: 20,
     elevation: 0,
