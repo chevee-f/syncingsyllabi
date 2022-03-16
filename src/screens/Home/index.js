@@ -71,8 +71,8 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <Goals goals={goals} />
               <View>
-                  <Text>{user.email}</Text>
-                  <Text>{JSON.stringify(state.token)}</Text>
+                  <Text>{//user.email
+                  }</Text>
               </View>
         </ScrollView>
       </View>

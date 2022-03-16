@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
 import { View, 
-         Dimensions, 
+         Text, 
          SafeAreaView,
          Image ,
          ScrollView
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
-import AddItem from '../../../components/AddItem'
-import Label from '../../../components/Label'
+import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import DefaultInput from '../../../components/DefaultInput';
 import DateTimePicker from '../../../components/DateTimePicker'
-import { TextInput } from 'react-native-paper';
 import Colors from '../../../components/GradientColor'
 import DefaultButton from '../../../components/DefaultButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-var {height, width} = Dimensions.get('window');
 
-const AddSyllabus = ({
+const EditProfile = ({
     onPress,
     setModalVisible,
     modalVisible,
@@ -27,7 +24,6 @@ const AddSyllabus = ({
   }) => {
 
     const [calendarVisible, setCalendarVisible] = useState(false);
-    var colors = [ 1,2,3,4,5,6,7,8,9,10,11,12 ];
 
     return (
         <SafeAreaView>
@@ -53,57 +49,41 @@ const AddSyllabus = ({
                             style={styles.close}
                         />
                     </TouchableOpacity>
-                    <View style={styles.fieldContainer}>
-                        <Label text="Add your Syllabus" />
-                        <AddItem />
+                    <View style={{marginVertical: 10}}>
+                        <Text style={[label.boldMediumHeading, { color: color.primary }]}>Edit Information</Text>
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Input the Class Name or Class Code" />
                         <DefaultInput 
-                            label="Class Name"
+                            label="First Name"
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="What's the name of your teacher?" />
                         <DefaultInput 
-                            label="Name of Teacher"
+                            label="Last Name"
                         /> 
                     </View>
-                    <View style={{marginVertical:10}}>
-                        <Label text="What's your Schedule?" />
-                        <View style={[styles.inputContainer, {borderColor: color.default}]}>
-                            <TextInput
-                                mode="flat"
-                                style={[styles.input]}
-                                onPressIn={() => { setCalendarVisible(true)}}
-                                label="Schedule"
-                                editable={false}
-                                selectionColor={color.primary}
-                                activeUnderlineColor={color.primary}
-                                theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                            />
-                        </View> 
+                    <View style={styles.fieldContainer}>
+                        <DefaultInput 
+                            label="Email"
+                        /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Pick a color" />
-                        <View style={{flexDirection:'row'}}>
-                            <ScrollView horizontal>
-                                {
-                                    colors.map((item) => {
-                                        return (
-                                            <Colors />
-                                        );
-                                    })                
-                                }              
-                            </ScrollView>
-                        </View>
+                        <DefaultInput 
+                            label="School"
+                        /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Preview" />
-                        <Colors containerStyle={{alignSelf:'center'}} />
+                        <DefaultInput 
+                            label="Date of Birth"
+                        /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <DefaultButton title="Save" onPress={() => { setModalVisible(!modalVisible); }} />       
+                        <DefaultInput 
+                            label="Major"
+                        /> 
+                    </View>
+                    <View style={styles.fieldContainer}>
+                        <DefaultButton title="Update" onPress={() => { setModalVisible(!modalVisible); }} />       
                     </View>
                 </ScrollView>
             </View>
@@ -114,11 +94,9 @@ const AddSyllabus = ({
             />
           </Modal>
 
-          
       </SafeAreaView>
-            
         
     )
 }
 
-export default AddSyllabus;
+export default EditProfile;

@@ -5,7 +5,7 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
       container:{
-        height: height * 0.64
+        //height: height * 0.64
       },
       progressContainer:{
         flexDirection:'row',

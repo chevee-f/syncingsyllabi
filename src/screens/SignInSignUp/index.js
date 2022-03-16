@@ -71,7 +71,7 @@ const SignUpScreen = ({ navigation }) => {
                     label="Email Address"
                     onChangeText={(email) => setEmail(email)}
                     hasValue={email.length}
-                    hasError={!inputValidation.isValidEmail}
+                    //hasError={!inputValidation.isValidEmail}
                     errorMsg={inputValidation.emailErrMsg}
                     onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
                 /> 
@@ -114,7 +114,9 @@ const SignUpScreen = ({ navigation }) => {
                     <DefaultButton 
                         title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> :
                                isSignUp ? 'Sign Up' : 'Sign In'}
-                        onPress={() => {handleSignInSignUp()}}
+                        //onPress={() => {handleSignInSignUp()}
+                        onPress={() => {navigation.navigate('CodeVerificationScreen')}
+                    }
                     />
                 </View>
                 {!isSignUp &&

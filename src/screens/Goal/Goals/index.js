@@ -21,7 +21,7 @@ const Goals = props => {
             {props.goals.map((item) => {
                     return (
                         <View style={styles.container}>
-                            <ImageBackground source={require('../../../assets/fetti.png')} resizeMode="cover" style={styles.backgroundImage} >
+                            <ImageBackground source={require('../../../assets/backgrounds/fetti.png')} resizeMode="cover" style={styles.backgroundImage}>
                             <View>
                                 <Text style={[label.boldSmallHeading2,{color:'#fbe206',marginBottom:5}]}>{item.goal}</Text>
                                 <View style={{flexDirection:'row'}}>
