@@ -36,23 +36,27 @@ export default {
     },
     mediumHeading: {
         fontFamily: "Manrope",
-        fontSize: 18,
+        fontSize: 18
     },
     smallHeading: {
         fontFamily: "Manrope",
-        fontSize: 14,
+        fontSize: 14
     },
     smallHeading2: {
         fontFamily: "Manrope",
-        fontSize: 16,
+        fontSize: 16
     },
     extraSmallHeading: {
         fontFamily: "Manrope",
-        fontSize: 10,
+        fontSize: 10
     },
     extraSmallHeading2: {
         fontFamily: "Manrope",
-        fontSize: 11,
+        fontSize: 11
+    },
+    extraSmallHeading3: {
+        fontFamily: "Manrope",
+        fontSize: 12
     }
   };
   

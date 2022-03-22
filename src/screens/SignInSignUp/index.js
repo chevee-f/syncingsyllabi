@@ -6,8 +6,7 @@ import {
     Image,
     Dimensions,
     ScrollView,
-    Platform ,
-    Alert
+    Platform 
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
@@ -114,7 +113,8 @@ const SignUpScreen = ({ navigation }) => {
                     <DefaultButton 
                         title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> :
                                isSignUp ? 'Sign Up' : 'Sign In'}
-                        onPress={() => {handleSignInSignUp()}}
+                        onPress={() => {handleSignInSignUp()}
+                    }
                     />
                 </View>
                 {!isSignUp &&

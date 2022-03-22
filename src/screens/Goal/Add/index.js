@@ -7,16 +7,13 @@ import { View,
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
-import AddItem from '../../../components/AddItem'
 import Label from '../../../components/Label'
-import label from '../../../styles/label'
 import color from '../../../styles/colors'
-import DefaultInput from '../../../components/DefaultInput';
 import DateTimePicker from '../../../components/DateTimePicker'
 import { TextInput } from 'react-native-paper';
-import Colors from '../../../components/GradientColor'
 import DefaultButton from '../../../components/DefaultButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import Dropdown from '../../../components/Dropdown'
 
 var {height, width} = Dimensions.get('window');
 
@@ -28,7 +25,7 @@ const AddGoal = ({
   }) => {
 
     const [calendarVisible, setCalendarVisible] = useState(false);
-    var colors = [ 1,2,3,4,5,6,7,8,9,10,11,12 ];
+    const [openMenu, setOpenMenu] = useState(false);
 
     return (
         <SafeAreaView>
@@ -37,7 +34,7 @@ const AddGoal = ({
                 backdropColor='rgba(0, 0, 0, 0.7)'
                 backdropOpacity={0.5}
                 animationIn='slideInUp'
-                animationOut='fadeOut'
+                animationOut='slideOutDown'
                 //isVisible={props.modalVisible}
                 isVisible={goalVisible}
                 hideModalContentWhileAnimating
@@ -56,61 +53,64 @@ const AddGoal = ({
                         </TouchableOpacity>
                         <View style={styles.fieldContainer}>
                             <Label text="Type of Goal" />
-                            <AddItem />
+                            <Dropdown visible={openMenu} onDismiss={() => setOpenMenu(false)} />
                         </View>
-                        <View style={styles.fieldContainer}>
-                            <Label text="Input the Class Name or Class Code" />
-                            <DefaultInput 
-                                label="Class Name"
-                            /> 
+                        <View style={[styles.fieldContainer,{zIndex:-5}]}>
+                            <Label text="Description of the Goal" />
+                            <View style={[styles.inputContainer, {borderColor: color.default,height: height * 0.15}]}>
+                                <TextInput
+                                    mode="flat"
+                                    style={[styles.input,{height: height * 0.16}]}
+                                    label="Description of Goal"
+                                    selectionColor={color.primary}
+                                    activeUnderlineColor={color.primary}
+                                    multiline={true}
+                                    numberOfLines={5}
+                                    theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                                />
+                            </View> 
                         </View>
-                        <View style={styles.fieldContainer}>
-                            <Label text="What's the name of your teacher?" />
-                            <DefaultInput 
-                                label="Name of Teacher"
-                            /> 
-                        </View>
-                        <View style={{marginVertical:10}}>
-                            <Label text="What's your Schedule?" />
+                        <View style={[styles.fieldContainer,{zIndex:-5,flexDirection:'row',justifyContent:'space-between'}]}>
+                            <View style={{width: '49%'}}>
+                                <Label text="Start Date" />
                                 <View style={[styles.inputContainer, {borderColor: color.default}]}>
                                     <TextInput
                                         mode="flat"
                                         style={[styles.input]}
                                         onPressIn={() => { setCalendarVisible(true)}}
-                                        label="Schedule"
+                                        label="DD/MM/YYYY"
                                         editable={false}
                                         selectionColor={color.primary}
                                         activeUnderlineColor={color.primary}
                                         theme={{ colors: { text: color.primary, placeholder: color.default } }}
                                     />
                                 </View> 
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <Label text="Pick a color" />
-                            <View style={{flexDirection:'row'}}>
-                                <ScrollView horizontal>
-                                    {
-                                        colors.map((item) => {
-                                            return (
-                                                <Colors />
-                                            );
-                                        })                
-                                    }              
-                                </ScrollView>
+                            </View>
+                            <View style={{width: '49%'}}>
+                                <Label text="End Date" />
+                                <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                                    <TextInput
+                                        mode="flat"
+                                        style={[styles.input]}
+                                        onPressIn={() => { setCalendarVisible(true)}}
+                                        label="DD/MM/YYYY"
+                                        editable={false}
+                                        selectionColor={color.primary}
+                                        activeUnderlineColor={color.primary}
+                                        theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                                    />
+                                </View> 
                             </View>
                         </View>
                         <View style={styles.fieldContainer}>
-                            <Label text="Preview" />
-                            <Colors containerStyle={{alignSelf:'center'}} />
-                        </View>
-                        <View style={styles.fieldContainer}>
-                            <DefaultButton title="Save" />       
+                            <DefaultButton title="Save" onPress={() => { setGoalVisible(!goalVisible); }} />       
                         </View>
                     </ScrollView>
                 </View>
                 <DateTimePicker 
                     onClose={() => { setCalendarVisible(!calendarVisible); }}
                     modalVisible={calendarVisible} 
+                    showTimePicker={false}
                 />
           </Modal>
         </SafeAreaView>

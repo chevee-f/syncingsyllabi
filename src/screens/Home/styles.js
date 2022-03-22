@@ -4,13 +4,16 @@ import color from './../../styles/colors'
 var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
-    progressContainer:{
+      container:{
+        //height: height * 0.64
+      },
+      progressContainer:{
         flexDirection:'row',
         justifyContent:'space-between',
         marginBottom:5
       },
       textPercentage:{
-        color:color.primary,
+        color: color.primary,
         alignSelf:'flex-end',
         marginTop:5
       },
@@ -37,16 +40,16 @@ export default StyleSheet.create({
         paddingTop:15
       },
       highlightDateNameStyle:{
-        color:color.textDefault,
+        color: color.textDefault,
         marginBottom:-50
       },
       highlightDateNumberStyle:{
-        color:color.textDefault,
+        color: color.textDefault,
         fontFamily:'Manrope',
         fontSize:24
       },
       highlightDateContainerStyle:{
-        backgroundColor:color.primary,
+        backgroundColor: color.primary,
         borderRadius:15,
         width:65,
         paddingTop:15

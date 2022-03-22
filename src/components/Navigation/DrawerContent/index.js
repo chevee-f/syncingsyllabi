@@ -1,10 +1,9 @@
 import React, { useContext } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import {
     Avatar,
     Title,
     Caption,
-    Paragraph,
     Drawer,
     Text,
     TouchableRipple,
@@ -17,7 +16,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../Context/AuthContext';
+import Icons from 'react-native-vector-icons/Entypo';
 import styles from './styles'
+import label from '../../../styles/label'
+import color from '../../../styles/colors'
 
 export function DrawerContent (props) {
     const {state, signOut} = useContext(AuthContext);
@@ -30,71 +32,83 @@ export function DrawerContent (props) {
     }
 
     return(
-        <View style={{flex:1}}>
+        <View style={styles.drawer}>
            <DrawerContentScrollView {... props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View style={{flexDirection:'row',marginTop:15}}>
-                            <Avatar.Image 
-                                source={{
-                                    uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'
-                                }}
-                                size={50}
-                            />
-                            <View style={{marginLeft:15,flexDirection:'column'}}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>California State University, Fresno</Caption>
+                        <Avatar.Image 
+                            source={{
+                                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'
+                            }}
+                            size={70}
+                        />
+                        <View style={styles.row}>
+                            <View style={{flexDirection:'column'}}>
+                                <Title style={[label.boldExtraLargeHeading, { color: color.textDefault }]}>John Doe</Title>
+                                <View style={{flexDirection:'row', alignItems:'center'}}>
+                                    <Icons name="location-pin" color={color.default} size={18} />
+                                    <Caption style={[label.extraSmallHeading2, { color: color.textDefault, fontSize:12 }]}>California State University, Fresno</Caption>
+                                </View>
                             </View>
                         </View>
 
                         <View style={styles.row}>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Following</Caption>
+                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>3</Text>
+                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Classes</Caption>
                             </View>
                             <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
-                                <Caption style={styles.caption}>Followers</Caption>
+                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>3</Text>
+                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Goals</Caption>
+                            </View>
+                            <View style={styles.section}>
+                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>7</Text>
+                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Friends</Caption>
                             </View>
                         </View>
+                        <View style={styles.horizontalLine} />
                     </View>
 
                    <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem 
-                            icon={({color,size}) => (
-                                <Icon 
-                                    name="home-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Home"
+                            icon={() => (<Image source={require('../../../assets/icons/CalendarWhite.png')}/>)}
+                            label="Calendar"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
                             onPress={() => {props.navigation.navigate('Home')}}
                         />
                         <DrawerItem 
-                            icon={({color,size}) => (
-                                <Icon 
-                                    name="account-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Profile"
-                            onPress={() => {props.navigation.navigate('Profile')}}
+                            icon={() => (<Image source={require('../../../assets/icons/GraduationCap.png')}/>)}
+                            label="Goals"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => {props.navigation.navigate('Home')}}
                         />
                         <DrawerItem 
-                            icon={({color,size}) => (
-                                <Icon 
-                                    name="setting-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
+                            icon={() => (<Image source={require('../../../assets/icons/Note.png')}/>)}
+                            label="Assignments"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => {props.navigation.navigate('Home')}}
+                        />
+                        <DrawerItem 
+                            icon={() => (<Image source={require('../../../assets/icons/FilePlus.png')}/>)}
+                            label="Add a Class"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => {props.navigation.navigate('Home')}}
+                        />
+                        <DrawerItem 
+                            icon={() => (<Image source={require('../../../assets/icons/Gear.png')}/>)}
                             label="Settings"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
                             onPress={() => {props.navigation.navigate('Setting')}}
                         />
-                   </Drawer.Section>                 
-                   <Drawer.Section title="Preferences">
+                        <DrawerItem 
+                            icon={() => (<Image source={require('../../../assets/icons/UserCircle.png')}/>)}
+                            label="User Profile"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => {props.navigation.navigate('Home')}}
+                        />
+                   </Drawer.Section>    
+                   {/*
+                    <Drawer.Section title="Preferences">
                         <TouchableRipple onPress={() => {toggleTheme()}}>
                             <View style={styles.preference}>
                                 <Text>Dark Theme</Text>
@@ -104,21 +118,25 @@ export function DrawerContent (props) {
                             </View>
                         </TouchableRipple>        
                    </Drawer.Section>
+                   */}             
                 </View>
            </DrawerContentScrollView>
            <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem 
-                    icon={({color,size}) => (
-                        <Icon 
-                            name="exit-to-app"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Sign Out"
-                    onPress={signOut} 
-                />
-           </Drawer.Section>
+              {/** <Text style={[label.extraSmallHeading3, {color: color.textDefault}]}>v0.1</Text> 
+              **/}
+                    <DrawerItem 
+                        icon={({color,size}) => (
+                            <Icon 
+                                name="exit-to-app"
+                                color='#fff'
+                                size={size}
+                            />
+                        )}
+                        label="Sign Out"
+                        labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                        onPress={signOut} 
+                    />           
+            </Drawer.Section>
         </View>
     )
 }

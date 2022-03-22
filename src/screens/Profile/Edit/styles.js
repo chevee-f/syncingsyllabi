@@ -40,6 +40,6 @@ export default StyleSheet.create({
         justifyContent:'center',
     },
     fieldContainer:{
-        marginVertical:10
+        marginVertical: 2
     }
 })
