@@ -25,13 +25,16 @@ const AssignmentScreen = () => {
   const data = [
     {
       class: 'MKTG 10',
-      due: "Due Tomorrow at 09:00am"
+      due: "09:00am",
+      isDue: false
     },{
       class: 'CS 111',
-      due: "Due Tomorrow at 10:00am"
+      due: "10:00am",
+      isDue: false
     },{
       class: 'MKTG',
-      due: "Due Tomorrow at 11:00am"
+      due: "Due Tomorrow at 11:00am",
+      isDue: true
     },
   ];
 
@@ -91,14 +94,35 @@ const AssignmentScreen = () => {
           selectedDate={'2022-02-25'}
           style={{height: 80, marginTop: 110, paddingBottom: 10, overflow: 'visible'}}
           calendarHeaderStyle={{color: 'white', marginBottom: 30, position: 'absolute', left: 15, top: -45, fontSize: 16, fontWeight: '100'}}
-          dateNumberStyle={{color: 'black'}}
           iconContainer={{flex: 0.1}}
           calendarAnimation={{type: 'sequence', duration: 30}}
           daySelectionAnimation={{type: 'background', duration: 200, highlightColor: 'black'}}
           markedDates={markedDatesArray}
           markedDatesStyle={{ top: 10, bottom: 0}}
+          weekendDateNameStyle={{
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: '#0036A1'
+          }}
+          weekendDateNumberStyle={{
+            color: 'black',
+            top: 14
+          }}
+          dateNumberStyle={{ // day number
+            color: 'black',
+            top: 14
+          }}
+          dateNameStyle={{ // day name
+            fontSize: 12,
+            fontWeight: 'bold',
+            color: '#0036A1'
+          }}
+          dayContainerStyle={{
+            backgroundColor: 'white'
+          }}
           highlightDateNumberStyle={{  // selected day
-            top: 19
+            top: 19,
+            color: 'white'
           }}
           highlightDateNameStyle={{ // day name
             fontSize: 12,

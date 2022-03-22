@@ -4,6 +4,7 @@ import {Context as AuthContext} from '../../Context/AuthContext';
 
 import SplashScreen from '../../../screens/Splash';
 import SignInSignUpScreen from '../../../screens/SignInSignUp';
+import MainTabScreen from '../MainTabScreen';
 
 const RootStack = createStackNavigator();
 console.disableYellowBox = true;
@@ -15,11 +16,10 @@ function RootStackScreen() {
         <RootStack.Navigator 
             headerMode='none' 
             //initialRouteName="SplashScreen" 
-            initialRouteName={state.isSignOut ? "SignInSignUpScreen" : "SplashScreen" }
+            initialRouteName={state.isSignOut ? "MainTabScreen" : "MainTabScreen" }
         >
 
-                <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
-                <RootStack.Screen name="SignInSignUpScreen" component={SignInSignUpScreen}/>
+                <RootStack.Screen name="MainTabScreen" component={MainTabScreen}/>
                 
         </RootStack.Navigator>
     )
