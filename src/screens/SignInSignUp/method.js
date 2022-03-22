@@ -1,12 +1,10 @@
 import React, { useState,useContext,useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
-import { getUserByEmail } from '../../actions/user';
 import { Alert,Platform } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import {
     GoogleSignin,
-    GoogleSigninButton,
     statusCodes,
 } from 'react-native-google-signin';  
 import { getWebClientId } from "../../config/env";
@@ -39,32 +37,26 @@ const method = (navigation) => {
     const updateSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry)
     }
-    const fetchUserByEmail = (email) => dispatch(getUserByEmail(email));
 
     const handleSignInSignUp = async() => {
         if(inputValidation.isValidEmail && inputValidation.isValidPassword){
             setIsLoading(true)
             if(isSignUp){
-                await signUp({email, password}) 
-                setIsLoading(false)
-                Alert.alert("2-Step Verification","We have sent you the code for verification. Please check your email.",
-                        [{ text: "OK",  onPress: () => {
-                            navigation.navigate('CodeVerificationScreen')
-                        } }],
-                        { cancelable: false });
+                await signUp({email, password, isGoogleSignIn, navigation}) 
             }else{
-                await fetchUserByEmail(email)
-                if(user == null){
-                    setIsLoading(false)
-                    Alert.alert('Account',"Account doesn't exist. Enter a different account or get a new one.");
-                }
                 await signIn({email, password, isGoogleSignIn})
-                setIsLoading(false)
             }
+            setIsLoading(false)
         } 
     }
 
     const handleGoogleSignIn = async() => {
+        
+        //await GoogleSignin.revokeAccess();
+        //await GoogleSignin.signOut();
+        //auth().signOut()
+        //return 
+
         try {
             await GoogleSignin.hasPlayServices();
             const {accessToken, idToken} = await GoogleSignin.signIn();
@@ -73,13 +65,14 @@ const method = (navigation) => {
               accessToken,
             );
             await auth().signInWithCredential(credential);
-            isSetGoogleSignIn(true)
-            await signIn({email, password, isGoogleSignIn})
+            if(userInfo.email){
+                isSetGoogleSignIn(true)
+            }
           } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
               // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
-              Alert.alert('Signin in progress');
+              Alert.alert('Sign In in progress');
               // operation (f.e. sign in) is in progress already
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
               Alert.alert('Play services not available or outdated');
@@ -92,13 +85,24 @@ const method = (navigation) => {
     }
     
     function onAuthStateChanged(user) {
-        setuserInfo(user);
-        //if (user){
-        //    Alert.alert(JSON.stringify(userInfo))
-        //}
+        if (user){
+            setuserInfo(user);
+        }
     }
     
     useEffect(() => {
+        if(isGoogleSignIn){
+            var email = userInfo.email
+            var password = null
+
+            if(isSignUp){
+                signUp({email, password, isGoogleSignIn, navigation}) 
+            }else{
+                signIn({email, password, isGoogleSignIn})
+            }
+            isSetGoogleSignIn(false)
+        }
+ 
         GoogleSignin.configure({
             scopes: ['email'], 
             webClientId: getWebClientId(Platform.OS),
@@ -106,7 +110,7 @@ const method = (navigation) => {
         });
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; 
-    }, []);
+    }, [isGoogleSignIn]);
 
     const validateEmail = (email) => {
         return String(email)
@@ -132,22 +136,12 @@ const method = (navigation) => {
             });
             return false
         }else {
-            fetchUserByEmail(email)
-            if(user !== null && isSignUp){
-                setInputValidation({
-                    ...inputValidation,
-                    isValidEmail: false,
-                    emailErrMsg: 'Email already exists. Please use other email.'
-                });
-                return false
-            }else{
-                setInputValidation({
-                    ...inputValidation,
-                    isValidEmail: true,
-                    emailErrMsg: ''
-                });
-                return true
-            }
+            setInputValidation({
+                ...inputValidation,
+                isValidEmail: true,
+                emailErrMsg: ''
+            });
+            return true
         }
     }
 

@@ -6,8 +6,7 @@ import {
     Image,
     Dimensions,
     ScrollView,
-    Platform ,
-    Alert
+    Platform 
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
@@ -71,7 +70,7 @@ const SignUpScreen = ({ navigation }) => {
                     label="Email Address"
                     onChangeText={(email) => setEmail(email)}
                     hasValue={email.length}
-                    //hasError={!inputValidation.isValidEmail}
+                    hasError={!inputValidation.isValidEmail}
                     errorMsg={inputValidation.emailErrMsg}
                     onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
                 /> 
@@ -114,8 +113,7 @@ const SignUpScreen = ({ navigation }) => {
                     <DefaultButton 
                         title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> :
                                isSignUp ? 'Sign Up' : 'Sign In'}
-                        //onPress={() => {handleSignInSignUp()}
-                        onPress={() => {navigation.navigate('CodeVerificationScreen')}
+                        onPress={() => {handleSignInSignUp()}
                     }
                     />
                 </View>

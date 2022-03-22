@@ -122,21 +122,20 @@ export function DrawerContent (props) {
                 </View>
            </DrawerContentScrollView>
            <Drawer.Section style={styles.bottomDrawerSection}>
-               <Text style={[label.extraSmallHeading3, {color: color.textDefault}]}>v0.1</Text>
-           {/*
+              {/** <Text style={[label.extraSmallHeading3, {color: color.textDefault}]}>v0.1</Text> 
+              **/}
                     <DrawerItem 
                         icon={({color,size}) => (
                             <Icon 
                                 name="exit-to-app"
-                                color={color}
+                                color='#fff'
                                 size={size}
                             />
                         )}
                         label="Sign Out"
+                        labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
                         onPress={signOut} 
-                    />
-                </Drawer.Section>
-           */}
+                    />           
             </Drawer.Section>
         </View>
     )

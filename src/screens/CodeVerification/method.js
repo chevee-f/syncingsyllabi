@@ -2,6 +2,7 @@ import React, { useState,useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { Alert } from 'react-native';
+
 const method = (navigation) => {
 
     const errors = useSelector((state) => state.errors);
@@ -15,7 +16,8 @@ const method = (navigation) => {
 
     const handleCodeVerification = () => {
         let userId = state.userId
-        verifyUserCode({userId, verificationCode}) 
+        let email = state.email
+        verifyUserCode({userId, verificationCode, email}) 
     }
 
     return {

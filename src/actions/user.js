@@ -28,9 +28,7 @@ export const getUser = () => {
 export const getUserByEmail = email => {
   try {
     return async dispatch => {
-      let userToken = await AsyncStorage.getItem('userToken')
-      const res = await axios.get(`${getAPIBaseUrl()}User/GetUserByEmail/${email}`,
-      { headers: {"Authorization" : `Bearer ${userToken}`} })
+      const res = await axios.get(`${getAPIBaseUrl()}User/GetUserByEmail/${email}`)
         dispatch({
           type: GET_USER_BY_EMAIL,
           payload: res.data.data.item,
