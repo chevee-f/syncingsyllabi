@@ -50,8 +50,7 @@ const CodeVerificationScreen = ({ navigation }) => {
                 <View style={styles.button}>
                     <DefaultButton 
                         title='Verify'
-                        //onPress={() => {handleCodeVerification()}}
-                        onPress={() => {navigation.navigate('SignUpConfirmationScreen')}}
+                        onPress={() => {handleCodeVerification()}}
                     />
                 </View>
                 

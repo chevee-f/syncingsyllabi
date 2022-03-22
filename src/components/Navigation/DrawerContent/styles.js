@@ -39,9 +39,8 @@ export default StyleSheet.create({
       },
       bottomDrawerSection: {
           marginBottom: 15,
-          //borderTopColor: '#f4f4f4',
-          //borderTopWidth: 1,
-          alignItems: 'center'
+          borderTopColor: '#f4f4f4',
+          borderTopWidth: 1
       },
       preference: {
         flexDirection: 'row',
