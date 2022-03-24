@@ -94,4 +94,8 @@ export default StyleSheet.create({
         color: '#E54C29',
         fontSize: height * 0.0135,
     },
+    forgotPassword:{
+        padding:10,
+        marginBottom:Platform.OS === 'ios' ? height * -0.02 : height * -0.06
+    }
 })
