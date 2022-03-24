@@ -2,20 +2,19 @@ import React from 'react';
 import { View, Image, Text, TouchableOpacity } from 'react-native';
 import DefaultInput from '../../components/DefaultInput';
 import DefaultButton from '../../components/DefaultButton';
+import { ActivityIndicator } from 'react-native-paper';
 import method from './method';
 import styles from './styles';
 import color from './../../styles/colors'
 import label from './../../styles/label'
-import { ActivityIndicator } from 'react-native-paper';
 
 const CodeVerificationScreen = ({ navigation }) => {
 
     const {
+        emailAddress,
         isLoading,
-        verificationCode,
-        setVerificationCode,
-        handleCodeVerification,
-        handleResendCode
+        setEmailAddress,
+        handleSearchAccount
     } = method(navigation);
 
 
@@ -36,34 +35,25 @@ const CodeVerificationScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.headerContainer}>
-                <Text style={[label.boldExtraLargeHeading, {color:color.textDefault}]}>Verify Account</Text>
+                <Text style={[label.boldExtraLargeHeading, {color:color.textDefault}]}>Find your Account</Text>
                 <Text style={[label.smallHeading, styles.text]}>
-                    Please enter the verification code we sent to your email address
+                    Please enter your email address to search for your account
                 </Text>
             </View>
 
             <View style={styles.mainContainer}>
                 <View style={styles.button}>
                     <DefaultInput 
-                        label="Verification Code"
-                        onChangeText={(verificationCode) => setVerificationCode(verificationCode)}
-                        hasValue={verificationCode.length}
+                        label="Email Address"
+                        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+                        hasValue={emailAddress.length}
                     /> 
                 </View>
                 <View style={styles.button}>
                     <DefaultButton 
-                        title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Verify'}
-                        onPress={() => {handleCodeVerification()}}
+                        title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Search'}
+                        onPress={() => {handleSearchAccount()}}
                     />
-                </View>
-                
-                <View style={styles.bottomContainer}>
-                    <Text style={[label.smallHeading2,{color:color.default}]}>Didn't get the code? </Text>
-                    <TouchableOpacity onPress={() => {handleResendCode()}}>
-                        <Text style={[label.boldSmallHeading,{color:color.primary}]}>
-                            Resend Code
-                        </Text>
-                    </TouchableOpacity>
                 </View>
             </View>
             

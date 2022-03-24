@@ -3,10 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { Alert,Platform } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {
-    GoogleSignin,
-    statusCodes,
-} from 'react-native-google-signin';  
+import { GoogleSignin, statusCodes } from 'react-native-google-signin';  
 import { getWebClientId } from "../../config/env";
 
 const method = (navigation) => {
@@ -39,10 +36,12 @@ const method = (navigation) => {
     }
 
     const handleSignInSignUp = async() => {
-        if(inputValidation.isValidEmail && inputValidation.isValidPassword){
+        let isValidEmail = await handleValidEmail()
+        let isValidPassword = await handleValidPassword()
+        if(isValidEmail && isValidPassword){
             setIsLoading(true)
             if(isSignUp){
-                await signUp({email, password, isGoogleSignIn, navigation}) 
+                await signUp({email, password, isGoogleSignIn}) 
             }else{
                 await signIn({email, password, isGoogleSignIn})
             }
@@ -51,12 +50,6 @@ const method = (navigation) => {
     }
 
     const handleGoogleSignIn = async() => {
-        
-        //await GoogleSignin.revokeAccess();
-        //await GoogleSignin.signOut();
-        //auth().signOut()
-        //return 
-
         try {
             await GoogleSignin.hasPlayServices();
             const {accessToken, idToken} = await GoogleSignin.signIn();
@@ -96,7 +89,7 @@ const method = (navigation) => {
             var password = null
 
             if(isSignUp){
-                signUp({email, password, isGoogleSignIn, navigation}) 
+                signUp({email, password, isGoogleSignIn}) 
             }else{
                 signIn({email, password, isGoogleSignIn})
             }
@@ -110,7 +103,7 @@ const method = (navigation) => {
         });
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; 
-    }, [isGoogleSignIn]);
+    }, [inputValidation,isGoogleSignIn]);
 
     const validateEmail = (email) => {
         return String(email)
@@ -121,7 +114,7 @@ const method = (navigation) => {
     };
 
     const handleValidEmail = () => {
-        if( email.trim().length === 0 ) {
+        if(email.trim().length === 0) {
             setInputValidation({
                 ...inputValidation,
                 isValidEmail: false,

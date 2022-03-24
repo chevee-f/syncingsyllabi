@@ -30,14 +30,32 @@ const authReducer = (state, action) => {
                 token: null,
                 userId: action.payload.userId,
                 email: action.payload.email,
-                isForCodeVerification: action.payload.isForCodeVerification
+                isForCodeVerification: action.payload.isForCodeVerification,
+                codeType: 1,
+                isGoogle: action.payload.isGoogle
      };
      case 'verifyUserCode':
       return {
                 userId: action.payload.userId,
+                email: action.payload.email,
                 isEmailVerified: action.payload.isEmailVerified,
-                isForCodeVerification: action.payload.isForCodeVerification
+                codeType: action.payload.codeType,
+                isForCodeVerification: action.payload.isForCodeVerification,
+                currentPassword: action.payload.currentPassword
      };
+     case 'recoverAccount':
+      return {
+                token: action.payload.token,
+                userId: action.payload.userId,
+                email: action.payload.email,
+                isForCodeVerification: action.payload.isForCodeVerification,
+                codeType: 2
+             };
+     case 'resetPassword':
+      return {
+                userId: action.payload.userId,
+                isSuccessChangePassword: action.payload.isSuccessChangePassword
+             };
     default:
       return state;
   }
@@ -46,8 +64,6 @@ const authReducer = (state, action) => {
 
 const generateAuth = (email,password,isGoogleSignIn) => {
     try {
-      alert(JSON.stringify(isGoogleSignIn))
-
         return axios.post(`${getAPIBaseUrl()}Auth/GenerateAuth`,
         {
             "email": email,
@@ -56,6 +72,7 @@ const generateAuth = (email,password,isGoogleSignIn) => {
         })
         .then((res) => {
           if(res.data.data.success){
+            if(isGoogleSignIn) AsyncStorage.setItem('isGoogleSignIn', 'true')
             AsyncStorage.setItem('userToken', res.data.data.item.authToken)
             return res.data.data.item;
           }else{
@@ -76,10 +93,13 @@ const retrieveToken = dispatch => {
   };
 };
 
+
 const signUp = dispatch => {
-  return async({email, password, isGoogleSignIn, navigation}) => {
+  return async({email, password, isGoogleSignIn}) => {
     try{
-      if(await getUserInfo(email) != null){
+      let userInfo = await getUserInfo(email)
+      
+      if(userInfo != null){
         Alert.alert('Account','Email already exists. Please use other email.')
         return
       }
@@ -101,17 +121,16 @@ const signUp = dispatch => {
 
       let responseJson = await res.json();   
       if(!isGoogleSignIn){
-        Alert.alert("2-Step Verification","We have sent you the code for verification. Please check your email.",
-        [{ text: "OK",  onPress: () => { navigation.navigate('CodeVerificationScreen')}}],
-        { cancelable: false }); 
+          Alert.alert("2-Step Verification","We have sent you the code for verification. Please check your email."); 
       }else{
-        navigation.navigate('SignUpConfirmationScreen')
+          const userToken = await generateAuth(email, null, isGoogleSignIn);
       }
       
       dispatch({type: 'signUp',
                 payload: { userId: responseJson.data.item.id, 
                            email: email,
-                           isForCodeVerification: !isGoogleSignIn
+                           isForCodeVerification: !isGoogleSignIn,
+                           isGoogle: isGoogleSignIn
                 }});
       
     }catch (error) {
@@ -128,6 +147,41 @@ const getUserInfo = async(email) => {
   } catch (error) {
 
   }
+};
+
+const sendVerificationCode = dispatch => {
+  return async({ emailAddress, codeType }) => {
+      try {
+            let userInfo = await getUserInfo(emailAddress)
+            if(userInfo == null){
+              Alert.alert('Account','Account does not exist. Enter a different account or get a new one.')
+              return
+            }
+            axios.post(`${getAPIBaseUrl()}Email/SendEmailVerificationCode`,
+            {
+                "userId": userInfo.id,
+                "codeType": codeType,
+                "isResend": userInfo.isResetPassword
+            })
+            .then((res) => {
+              if(codeType === 2){
+                Alert.alert("Reset Password","We have sent you the code to reset your password. Please check your email."); 
+              }else{
+                Alert.alert("We have sent you the code for verification. Please check your email.")
+              }
+              dispatch({type: 'recoverAccount',
+                        payload: { token: null, 
+                                   userId: userInfo.id,
+                                   email: emailAddress,
+                                   isForCodeVerification: true
+                                 }
+                      });
+            })
+            
+      } catch (error) {
+        dispatch({ type: 'HAS_ERROR', payload: { hasError:true, errMsg: error.message } });  
+      }
+  };
 };
 
 const signIn = dispatch => {
@@ -149,7 +203,6 @@ const signIn = dispatch => {
                 Alert.alert('Incorrect Password','The password you entered is incorrect. Please try again.')
               }
               else if(res.data.data.item.isActive){
-                if(isGoogleSignIn) await AsyncStorage.setItem('isGoogleSignIn', true)
                 const userToken = await generateAuth(email, password, isGoogleSignIn);
                 dispatch({type: 'signIn',
                           payload: { token: userToken, 
@@ -158,7 +211,6 @@ const signIn = dispatch => {
                                       isForCodeVerification: false
                           }});
               }else{
-
                 dispatch({type: 'signIn',
                           payload: { token: null, 
                                       userId: res.data.data.item.id,
@@ -175,27 +227,32 @@ const signIn = dispatch => {
 };
 
 const verifyUserCode = dispatch => {
-  return async({userId, verificationCode, email}) => {
-      try {    
+  return async({userId, verificationCode, codeType, email}) => {
+      try {
+            let userInfo = await getUserInfo(email)    
             axios.post(`${getAPIBaseUrl()}User/VerifyUserCode`,
             {
                 "UserId": userId,
-                "CodeType": 1,
+                "CodeType": codeType,
                 "VerificationCode": verificationCode
             })
             .then(async(res) => {
-                let userInfo = getUserInfo(email)
-                let isGoogleSignIn = false
-                if(userInfo.isGoogle !== null && userInfo.isGoogle){
-                  isGoogleSignIn = true
-                  AsyncStorage.setItem('isGoogleSignIn', true)
+                if(res.data.data.success){
+                  let currentPassword = ''
+                  if(codeType === 2){
+                    currentPassword = await decryptPassword(userInfo.password)
+                    Alert.alert("Email Verification","Success! You may now reset your password")
+                  } 
+                  dispatch({type: 'verifyUserCode',
+                            payload: { userId: userId,
+                                       email: email,
+                                       isEmailVerified: res.data.data.success,
+                                       codeType: codeType,
+                                       isForCodeVerification: false,
+                                       currentPassword: currentPassword
+                                    }
+                          });
                 }
-                //await generateAuth(email, password, isGoogleSignIn);
-                dispatch({type: 'verifyUserCode',
-                          payload: { userId: userId,
-                                     isEmailVerified: res.data.data.success,
-                                     isForCodeVerification: false }
-                        });
             })
       } catch (error) {
 
@@ -203,10 +260,47 @@ const verifyUserCode = dispatch => {
   };
 };
 
+const changePassword = dispatch => {
+  return async({userId, currentPassword, updatedPassword}) => {
+      try {    
+            axios.post(`${getAPIBaseUrl()}User/ResetPassword`,
+            {
+                "userId": userId,
+                "currentPassword": currentPassword,
+                "updatedPassword": updatedPassword
+            })
+            .then(async(res) => {
+                if(res.data.data.success){
+                  dispatch({type: 'resetPassword',
+                            payload: { userId: userId,
+                                       isSuccessChangePassword: true
+                                     }
+                          });
+                }
+            })
+      } catch (error) {
+
+      }
+  };
+};
+
+const decryptPassword = (password) => {
+  try {
+      return axios.post(`${getAPIBaseUrl()}User/DecryptPassword`,
+      {
+          "decryptPassword": password
+      })
+      .then((res) => {
+        return res.data.data.decryptedPassword
+      })
+  } catch (error) {
+  }
+};
+
 const signOut = dispatch => {
   return async() => {
     let isGoogleSignIn = await AsyncStorage.getItem('isGoogleSignIn')
-    if(isGoogleSignIn){
+    if(JSON.stringify(isGoogleSignIn) === "true"){
       await GoogleSignin.revokeAccess();
       await GoogleSignin.signOut();
       auth().signOut()
@@ -221,6 +315,12 @@ const signOut = dispatch => {
 
 export const {Provider, Context} = createDataContext(
   authReducer,
-  {signIn, signOut, signUp, retrieveToken, verifyUserCode},
+  { signIn, 
+    signOut, 
+    signUp, 
+    retrieveToken, 
+    verifyUserCode,
+    changePassword,
+    sendVerificationCode },
   {token: null, email: ''},
 );

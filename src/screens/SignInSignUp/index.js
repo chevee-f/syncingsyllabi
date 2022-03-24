@@ -118,7 +118,7 @@ const SignUpScreen = ({ navigation }) => {
                     />
                 </View>
                 {!isSignUp &&
-                    <TouchableOpacity style={{padding:10,marginBottom:Platform.OS === 'ios' ? height * -0.02 : height * -0.06}}>
+                    <TouchableOpacity style={styles.forgotPassword} onPress={() => {navigation.navigate('RecoverAccountScreen')}}>
                         <Text style={[label.boldExtraSmallHeading,{color:color.default}]}>Forgot Password</Text>
                     </TouchableOpacity>   
                 }
@@ -148,9 +148,7 @@ const SignUpScreen = ({ navigation }) => {
                 </View> 
                 <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.01 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
-                    <TouchableOpacity onPress={() => {
-                                setIsSignUp(!isSignUp)
-                                }}>
+                    <TouchableOpacity onPress={() => {setIsSignUp(!isSignUp)}}>
                         <Text style={[label.boldSmallHeading,{color:color.primary}]}>
                             {!isSignUp ? 'Sign Up' : 'Sign In'}
                         </Text>
