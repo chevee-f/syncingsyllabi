@@ -33,7 +33,8 @@ const renderRightAction = (text, color, x, progress) => {
   });
   const pressHandler = () => {
   //   this.close();
-    alert(text);
+    // alert(text);
+    ModalPopup()
   };
   return (
     <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>

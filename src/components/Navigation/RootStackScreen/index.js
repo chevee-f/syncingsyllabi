@@ -21,8 +21,7 @@ function RootStackScreen() {
 
                 <RootStack.Screen name="SplashScreen" component={SplashScreen}/>
                 <RootStack.Screen name="SignInSignUpScreen" component={SignInSignUpScreen}/>
-                <RootStack.Screen name="RecoverAccountScreen" component={RecoverAccountScreen}/>
-                
+                <RootStack.Screen name="RecoverAccountScreen" component={RecoverAccountScreen}/>                
         </RootStack.Navigator>
     )
 }

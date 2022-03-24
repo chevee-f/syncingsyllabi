@@ -1,17 +1,62 @@
-import React from 'react';
-import { Button, Text, View, StyleSheet, Image, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { Button, Text, View, StyleSheet, Image, Dimensions, Modal, Pressable } from 'react-native';
 import Card from '../../components/Card';
+import { ActivityIndicator } from 'react-native-paper';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
 const CalendarScreen = ({ navigation }) => {
   const vacation = {key: 'vacation', color: '#70C862'};
   const massage = {key: 'massage', color: '#70C862'};
   const workout = {key: 'workout', color: '#70C862'};
+  const [setModalVisible, modalVisible] = useState(true);
     return (
       <View style={{ flex:1, alignItems:'center',justifyContent:'center', top: 24 }}>
+        <View style={{
+          backgroundColor: 'white',
+          height: 150,
+          width: Dimensions.get("window").width,
+          position: 'absolute',
+          top: 0,
+        }}></View>
+        <View style={{
+          backgroundColor: '#0036A1',
+          height: 60,
+          width: Dimensions.get("window").width,
+          position: 'absolute',
+          top: 0,
+          borderBottomLeftRadius: 13,
+          borderBottomRightRadius: 13
+        }}>
+          <Text style={{ textAlign: 'center', color: 'white', marginTop: 18, fontSize: 18, fontWeight: 'bold'}}>Calendar</Text>
+        </View>
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={false}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Hello World!</Text>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      <View style={{ marginTop: 60}}>
         <Agenda
   items={{
-    '2012-05-22': [{name: 'MKTG 100S1', due: 'Due Tomorrow at 10:00am'}, {name: 'CS111', due: 'Due Tomorrow at 10:00am'}]
+    '2012-05-22': [
+      {name: 'MKTG 100S1', due: 'Due Tomorrow at 10:00am'}, 
+      {name: 'CS111', due: 'Due Tomorrow at 10:00am'}
+    ]
   }}
   // Callback that gets called when items for a certain month should be loaded (month became visible)
   loadItemsForMonth={month => {
@@ -85,7 +130,7 @@ const CalendarScreen = ({ navigation }) => {
   }}
   // Specify what should be rendered instead of ActivityIndicator
   renderEmptyData={() => {
-    return <View><Text>Empty Data</Text></View>;
+    return <View style={{flex: 1, width: Dimensions.get("window").width }}><Text>Empty Data</Text></View>;
   }}
   // Specify your item comparison function for increased performance
   rowHasChanged={(r1, r2) => {
@@ -107,7 +152,6 @@ const CalendarScreen = ({ navigation }) => {
           width: 30
         },
         text: {
-          color: 'white',
           fontSize: 15
         }
       }
@@ -129,9 +173,9 @@ const CalendarScreen = ({ navigation }) => {
     agendaKnobColor: 'red',
     textDayFontSize: 15,
     textDisabledColor: 'black',
+    selectedDayBackgroundColor: '#0036A1',
     dotStyle: {
-      marginTop: 10,
-      color: 'black'
+      marginTop: 10
     },
     'stylesheet.dot': {
       selectedDot: {
@@ -161,9 +205,52 @@ const CalendarScreen = ({ navigation }) => {
   }}
   // Agenda container style
   style={{ }}
-/>
+/></View>
       </View>
     )
 }
 
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
+})
 export default CalendarScreen;
