@@ -17,41 +17,77 @@ export default StyleSheet.create({
         alignSelf:'flex-end',
         marginTop:5
       },
-      calendarStyle:{
-        height: Platform.OS === 'ios' ? height * 0.15 : height * 0.2,
-        marginHorizontal:16
+      calendar:{
+        height: 80, 
+        marginTop: 30,
+        overflow: 'visible'
       },
-      calendarHeaderStyle:{
+      calendarHeader:{
+        color: '#0036A1', // dark blue
+        position: 'absolute', 
+        left: 20, 
+        top: -45, 
+        fontFamily:'Manrope',
+        fontSize:23
+      },
+      dateNumber:{
+        color: '#0036A1',
+        top: -16, 
+        fontFamily:'Manrope',
+        fontWeight: '600',
+        fontSize: 26,
+      },
+      dateName:{
         color: color.primary,
-        fontFamily:'Manrope',
-        fontSize:23,
-        marginLeft:5,
-        marginBottom:15,
-        alignSelf:'flex-start'
+        top: 35,
+        fontWeight: '600'
       },
-      dateNumberStyle:{
+      weekendDateNumber: {
+        color: '#0036A1',
+        top: -16, 
+        fontFamily:'Manrope',
+        fontWeight: '600',
+        fontSize: 26
+      },
+      weekendDateName: {
         color: color.primary,
-        fontFamily:'Manrope',
-        fontSize:24
+        top: 35,
+        fontWeight: '600'
       },
-      dayContainerStyle:{
-        backgroundColor:color.primaryLight,
-        borderRadius:15,
-        paddingTop:15
+      markedDate: {
+        top: 10, 
+        bottom: 0
       },
-      highlightDateNameStyle:{
-        color: color.textDefault,
-        marginBottom:-50
+      highlightDateNumber: {
+        top: -32,
+        fontSize: 26,
+        fontWeight: '600',
+        color: 'white'
       },
-      highlightDateNumberStyle:{
-        color: color.textDefault,
-        fontFamily:'Manrope',
-        fontSize:24
+      highlightDateName: {
+        fontSize: 12,
+        fontWeight: '600',
+        height: 20,
+        width: 100,
+        flex: 1,
+        position: 'absolute',
+        top: 50,
+        color: 'white'
       },
-      highlightDateContainerStyle:{
-        backgroundColor: color.primary,
-        borderRadius:15,
-        width:65,
-        paddingTop:15
+      highlightDateContainer:{
+        top: -10,
+        justifyContent: 'flex-end', 
+        height: 80,
+        width: 64,
+        borderRadius: 16,
+        backgroundColor: '#0036A1'
       },
+      dayContainer:{
+        top: -10,
+        justifyContent: 'center', 
+        height: 80,
+        width: 64,
+        borderRadius: 16,
+        backgroundColor: color.primaryLight //blue
+      }
 })

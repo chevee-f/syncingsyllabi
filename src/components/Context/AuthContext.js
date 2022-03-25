@@ -107,17 +107,14 @@ const signUp = dispatch => {
       formData.append('Email', email); 
       if(!isGoogleSignIn) formData.append('Password', password); 
       formData.append('IsGoogle', isGoogleSignIn); 
-    
-      let res = await fetch(
-        `${getAPIBaseUrl()}User/CreateUser`,
-        {
-          method: 'post',
-          body: formData,
-          headers: {
-            'Content-Type': 'multipart/form-data; ',
-          },
-        }
-      );
+
+      let res = await fetch(`${getAPIBaseUrl()}User/CreateUser`,{
+                method: 'post',
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+                body: formData
+             })
 
       let responseJson = await res.json();   
       if(!isGoogleSignIn){
@@ -131,7 +128,8 @@ const signUp = dispatch => {
                            email: email,
                            isForCodeVerification: !isGoogleSignIn,
                            isGoogle: isGoogleSignIn
-                }});
+                         }
+               });
       
     }catch (error) {
       Alert.alert(error.message)

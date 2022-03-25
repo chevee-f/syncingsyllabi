@@ -54,96 +54,29 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View>
               <CalendarStrip
-          currentScreen={"Home"}
-          scrollable
-          selectedDate={moment()}
-          numDaysInWeek={5}
-          style={{
-            height: 80, 
-            marginTop: 20,
-            overflow: 'visible'
-          }}
-          calendarHeaderFormat='MMMM'
-          calendarHeaderStyle={{
-            color: '#0036A1', // dark blue
-            position: 'absolute', 
-            left: 20, 
-            top: -35, 
-            fontFamily:'Manrope',
-            fontSize:23,
-          }}
-          iconContainer={{flex: 0.1}}
-          calendarAnimation={{type: 'sequence', duration: 30}}
-          dateNumberStyle={{ // day number
-            color: '#0036A1',
-            top: -16, 
-            fontFamily:'Manrope',
-            fontWeight: 'normal',
-            fontSize: 26,
-          }}
-          dateNameStyle={{ // day name
-            color: 'black',
-            top: 35,
-            fontWeight: 'bold',
-          }}
-          weekendDateNumberStyle={{ // weekend day number
-            color: '#0036A1',
-            top: -16, 
-            fontFamily:'Manrope',
-            fontWeight: 'normal',
-            fontSize: 26,
-          }}
-          weekendDateNameStyle={{ // weekend day name
-            color: 'black',
-            top: 35,
-            fontWeight: 'bold',
-          }}
-          daySelectionAnimation={{
-            type: 'background', 
-            duration: 200}}
-          // markedDates={markedDatesArray}
-          markedDatesStyle={{ top: 10, bottom: 0}}
-          highlightDateNumberStyle={{  // selected day number
-            top: -32,
-            fontSize: 26,
-            fontWeight: 'normal',
-            color: 'white'
-          }}
-          highlightDateNameStyle={{ // selected day name
-            fontSize: 12,
-            fontWeight: 'bold',
-            height: 20,
-            width: 100,
-            flex: 1,
-            position: 'absolute',
-            top: 50,
-            color: 'white'
-          }}
-          highlightDateContainerStyle={{ // selected circle
-            // position: 'absolute', 
-            top: -10,
-            justifyContent: 'flex-end', 
-            height: 80,
-            width: 64,
-            borderRadius: 16,
-            backgroundColor: '#0036A1' //blue
-          }}
-        />
-                  {/* <CalendarStrip
-                    scrollable
-                    style={styles.calendarStyle}
-                    calendarHeaderStyle={styles.calendarHeaderStyle}
-                    dateNumberStyle={styles.dateNumberStyle}
-                    dateNameStyle={{color: color.primary,marginBottom:-50}}
-                    selectedDate={moment()}
-                    calendarHeaderFormat='MMMM'
-                    dayContainerStyle	={styles.dayContainerStyle}
-                    highlightDateNameStyle={styles.highlightDateNameStyle}
-                    highlightDateNumberStyle={styles.highlightDateNumberStyle}
-                    highlightDateContainerStyle={styles.highlightDateContainerStyle} 
-                    upperCaseDays={false}
-                    startingDate={startingDate}
-                  /> */}
+                currentScreen={"Home"}
+                scrollable
+                selectedDate={moment()}
+                numDaysInWeek={5}
+                style={styles.calendar}
+                calendarHeaderFormat='MMMM'
+                calendarHeaderStyle={styles.calendarHeader}
+                iconContainer={{flex: 0.1}}
+                calendarAnimation={{type: 'sequence', duration: 30}}
+                dateNumberStyle={styles.dateNumber}
+                dateNameStyle={styles.dateName}
+                weekendDateNumberStyle={styles.weekendDateNumber}
+                weekendDateNameStyle={styles.weekendDateName}
+                daySelectionAnimation={{ type: 'background', duration: 200}}
+                // markedDates={markedDatesArray}
+                markedDatesStyle={styles.markedDate}
+                highlightDateNumberStyle={styles.highlightDateNumber}
+                highlightDateNameStyle={styles.highlightDateName}
+                highlightDateContainerStyle={styles.highlightDateContainer}
+                upperCaseDays={false}
+                dayContainerStyle={styles.dayContainer}
+                startingDate={startingDate}
+                />
               </View>
               <Goals goals={goals} />
               <View>
