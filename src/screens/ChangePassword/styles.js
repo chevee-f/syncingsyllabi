@@ -47,8 +47,8 @@ export default StyleSheet.create({
         marginTop: height * 0.02
     },
     headerImage:{
-        height:height * 0.7,
-        width:width * 0.8
+        height: Platform.OS === 'ios' ? height * 0.7 : height * 1,
+        width: Platform.OS === 'ios' ? width * 0.8 : width * 0.76
     },
     headerImageContainer:{
         position: 'absolute',

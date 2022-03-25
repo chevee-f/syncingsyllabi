@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Platform } from 'react-native';
 import Modal from "react-native-modal";
 import PasswordInput from '../../components/PasswordInput';
 import DefaultButton from '../../components/DefaultButton';
@@ -81,7 +81,7 @@ const CodeVerificationScreen = ({ navigation }) => {
                         </View>
                     </View>
                 </View>
-                <View style={{marginBottom: !inputValidation.isValidCurrentPassword ? 0 : 20}}>
+                <View style={{marginBottom: !inputValidation.isValidCurrentPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
                     <PasswordInput 
                         label="Current Password"
                         onChangeText={(currentPassword) => setCurrentPassword(currentPassword)}
@@ -93,7 +93,7 @@ const CodeVerificationScreen = ({ navigation }) => {
                         onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'currentPassword')}
                     /> 
                 </View>
-                <View style={{marginBottom: !inputValidation.isValidNewPassword ? 0 : 20}}>
+                <View style={{marginBottom: !inputValidation.isValidNewPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
                     <PasswordInput 
                         label="New Password"
                         onChangeText={(newPassword) => setNewPassword(newPassword)}
