@@ -1,12 +1,16 @@
 
-function errorReducer(errors = [], action) {
+const initialState = {
+    error: [],
+  };
+
+function errorReducer(state = initialState, action) {
     switch (action.type){
         case 'HAS_ERROR':
-            return action.payload;
+            return {...state, error: action.payload};
         case 'CLEAR_ERROR':
-            return action.payload;
+            return {...state, error: action.payload};
         default:
-            return errors;
+            return state;
     }
 }
 export default errorReducer;

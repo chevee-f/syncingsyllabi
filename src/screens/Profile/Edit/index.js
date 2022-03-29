@@ -11,10 +11,11 @@ import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import DefaultInput from '../../../components/DefaultInput';
 import DateTimePicker from '../../../components/DateTimePicker'
-import Colors from '../../../components/GradientColor'
 import DefaultButton from '../../../components/DefaultButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { ActivityIndicator } from 'react-native-paper';
+import method from './method'
+import Moment from 'moment';
 
 const EditProfile = ({
     onPress,
@@ -22,6 +23,17 @@ const EditProfile = ({
     modalVisible,
     ...props
   }) => {
+
+    const {
+        profile,
+        isLoading,
+        inputValidation,
+        selectedDate,
+        setSelectedDate,
+        setProfile,
+        handleUpdateProfile,
+        handleValidEmail
+    } = method(setModalVisible);
 
     const [calendarVisible, setCalendarVisible] = useState(false);
 
@@ -33,7 +45,6 @@ const EditProfile = ({
           backdropOpacity={0.5}
           animationIn='slideInUp'
           animationOut='slideOutDown'
-          //isVisible={props.modalVisible}
           isVisible={modalVisible}
           hideModalContentWhileAnimating
           style={styles.modal}
@@ -42,7 +53,7 @@ const EditProfile = ({
 
             <View style={styles.modalContainer}>
                 <ScrollView>
-                    <TouchableOpacity onPress={() => { setModalVisible(!modalVisible); }}>
+                    <TouchableOpacity onPress={props.onClose}>
                         <Image 
                             source={require('../../../assets/icons/closeButton.png')}
                             resizeMode='contain'
@@ -55,42 +66,69 @@ const EditProfile = ({
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="First Name"
+                            value={profile.firstName}
+                            onChangeText={(firstName) =>  setProfile({...profile, firstName: firstName})}
+                            hasValue={profile.firstName.length}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="Last Name"
+                            value={profile.lastName}
+                            onChangeText={(lastName) =>  setProfile({...profile, lastName: lastName})}
+                            hasValue={profile.lastName.length}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="Email"
+                            value={profile.email}
+                            onChangeText={(email) =>  setProfile({...profile, email: email})}
+                            hasValue={profile.email.length}
+                            hasError={!inputValidation.isValidEmail}
+                            errorMsg={inputValidation.emailErrMsg}
+                            onEndEditing={(e)=>handleValidEmail(e.nativeEvent.text)}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="School"
+                            value={profile.school}
+                            onChangeText={(school) =>  setProfile({...profile, school: school})}
+                            hasValue={profile.school.length}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="Date of Birth"
+                            onPressIn={() => { setCalendarVisible(true)}}
+                            editable={false}
+                            value={Moment(profile.dateOfBirth).format("MM/DD/YYYY")}
+                            hasValue={selectedDate !== '' || profile.dateOfBirth !== null}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <DefaultInput 
                             label="Major"
+                            value={profile.major}
+                            onChangeText={(major) =>  setProfile({...profile, major: major})}
+                            hasValue={profile.major.length}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <DefaultButton title="Update" onPress={() => { setModalVisible(!modalVisible); }} />       
+                        <DefaultButton 
+                            title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Update'}
+                            onPress={() => {handleUpdateProfile()}} />       
                     </View>
                 </ScrollView>
             </View>
             <DateTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
+                onSelectDate={() => {setProfile({...profile, dateOfBirth: Moment(selectedDate).format("MM/DD/YYYY")}) 
+                                     setCalendarVisible(!calendarVisible)}}
                 modalVisible={calendarVisible} 
-                showTimePicker={true}
+                showTimePicker={false}
+                onChangeDate={(dateOfBirth) => setSelectedDate(dateOfBirth)}
             />
           </Modal>
 

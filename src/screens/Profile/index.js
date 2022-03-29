@@ -1,20 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Email from 'react-native-vector-icons/EvilIcons';
 import { Avatar } from 'react-native-paper';
-import { ActivityIndicator } from 'react-native-paper';
+import { useSelector, useDispatch } from 'react-redux';
 import EditProfile from './Edit'
 import DefaultButton from '../../components/DefaultButton'
 import styles from './styles'
 import color from '../../styles/colors'
 import label from '../../styles/label'
+import Moment from 'moment';
 
 var {height, width} = Dimensions.get('window');
 
 const ProfileScreen = ({ navigation }) => {
 
-    const [isLoading, setIsLoading] = useState(false);
+    const {user} = useSelector(state => state.userReducer);
+    const dispatch = useDispatch();
     const [modalVisible, setModalVisible] = useState(false);
     const data = [
         {
@@ -28,6 +30,9 @@ const ProfileScreen = ({ navigation }) => {
             count: '7'
         },
     ];
+
+    useEffect(() => {
+    }, [user]);
 
     return (
       <View style={styles.mainContainer}>
@@ -53,17 +58,16 @@ const ProfileScreen = ({ navigation }) => {
               </ImageBackground>
           </View>
         <View style={{ marginTop: height * 0.38 }}>
-            <Text style={styles.name}>John Doe</Text>
+            <Text style={styles.name}>{user.firstName} {user.lastName}</Text>
             <View style={styles.row}>
                 <Icon name="location-pin" color={color.default} size={18} />
                 <Text style={[label.boldSmallHeading, { color: color.primary, marginLeft: 5 }]}>
-                    California State University, Fresno
+                    {user.school}
                 </Text>
             </View>
             <View style={styles.row}>
                 <View style={styles.countContainer}>
-                    {
-                      data.map((item) => {
+                    {data.map((item) => {
                           return (
                               <View>
                                 <Text style={[ label.smallHeading, styles.title ]}>
@@ -81,14 +85,14 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={[label.boldMediumHeading, { color: color.primary, marginBottom: 10 }]}>Basic Information</Text>
             <View style={styles.emailContainer}>
                 <Email name="envelope" color={color.default} size={30} />
-                <Text style={[label.smallHeading2, {color: color.primary}]}>email@csufresno.edu</Text>
+                <Text style={[label.smallHeading2, {color: color.primary}]}>{user.email}</Text>
             </View>
-            <Text style={[label.smallHeading2, styles.info ]}>Birthdate: 09/02/1998</Text>
-            <Text style={[label.smallHeading2, styles.info ]}>Major: Computer Science</Text>
+                <Text style={[label.smallHeading2, styles.info ]}>Birthdate: {Moment(user.dateOfBirth).format("MM/DD/YYYY")}</Text>
+                <Text style={[label.smallHeading2, styles.info ]}>Major: {user.major}</Text>
 
             <View style={{marginTop:height * 0.05}}>
                 <DefaultButton 
-                    title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Edit Profile'}
+                    title="Edit Profile" 
                     onPress={() => setModalVisible(true)}
                 />
             </View>         
