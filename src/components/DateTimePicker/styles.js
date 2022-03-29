@@ -36,9 +36,10 @@ export default StyleSheet.create({
         marginTop:15
     },
     buttonContainer:{
-        flexDirection:'row',
-        width:width * 0.84,
-        justifyContent:'space-between'
+        flexDirection: 'row',
+        width: width * 0.84,
+        justifyContent: 'space-between',
+        marginTop: 15
     },
     button:{
         width: width * 0.4

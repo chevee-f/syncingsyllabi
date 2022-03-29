@@ -15,7 +15,7 @@ const SelectSyllabus = ({
     onPress,
     ...props
   }) => {
-    const [date, setDate] = useState(new Date())
+    const [time, setTime] = useState(new Date())
 
     return (
         <SafeAreaView>
@@ -31,7 +31,7 @@ const SelectSyllabus = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.7 : height * 0.43}]}>
+                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.71 : height * 0.45}]}>
                     <CalendarPicker
                         previousComponent={<Icon 
                                             name="chevron-thin-left"
@@ -52,6 +52,7 @@ const SelectSyllabus = ({
                         width={width * 0.92}
                         monthTitleStyle={styles.titleStyle}
                         yearTitleStyle={styles.titleStyle}
+                        onDateChange={props.onChangeDate}
                     />
 
                     {props.showTimePicker &&
@@ -61,14 +62,14 @@ const SelectSyllabus = ({
                             <DatePicker 
                                 mode="time"
                                 textColor={color.primary}
-                                date={date} 
-                                onDateChange={setDate} />
+                                date={time} 
+                                onDateChange={setTime} />
                         </View>
                     }
 
                     <View style={styles.buttonContainer}>
                         <CancelButton title="Cancel" containerStyle={styles.button} onPress={props.onClose} />
-                        <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onClose} />
+                        <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onSelectDate} />
                     </View>
                 </View>
             </Modal>

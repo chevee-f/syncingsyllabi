@@ -11,6 +11,7 @@ const authReducer = (state, action) => {
     case 'retrieveToken':
       return {
                 token: action.payload.token,
+                userId: action.payload.userId,
                 isForCodeVerification: false
              };
     case 'signOut':
@@ -72,8 +73,13 @@ const generateAuth = (email,password,isGoogleSignIn) => {
         })
         .then((res) => {
           if(res.data.data.success){
+
             if(isGoogleSignIn) AsyncStorage.setItem('isGoogleSignIn', 'true')
-            AsyncStorage.setItem('userToken', res.data.data.item.authToken)
+
+            const userToken = ["userToken",res.data.data.item.authToken]
+            const userId = ["userId", JSON.stringify(res.data.data.item.userId)]
+            AsyncStorage.multiSet([userToken, userId])
+
             return res.data.data.item;
           }else{
             return null
@@ -86,9 +92,16 @@ const generateAuth = (email,password,isGoogleSignIn) => {
 
 const retrieveToken = dispatch => {
   return async() => {
-    let userToken = await AsyncStorage.getItem('userToken')
+    var obj;
+    await AsyncStorage.multiGet(["userToken","userId"]).then(response => {
+        obj = {
+          userToken: response[0][1],
+          userId:response[1][1]
+        }
+    })
+
     dispatch({type: 'retrieveToken',
-              payload: { token: userToken }
+              payload: { token: obj.userToken, userId: obj.userId }
             });
   };
 };

@@ -1,43 +1,19 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
 import label from '../../styles/label'
 import color from '../../styles/colors'
 import moment from 'moment';
-import { useSelector, useDispatch } from 'react-redux';
-import { getUser } from '../../actions/user';
 import styles from './styles'
-import {Context as AuthContext} from '../../components/Context/AuthContext';
 import Goals from '../Goal/Goals'
+import method from './method'
 
 const HomeScreen = ({ navigation }) => {
 
-  const { state } = React.useContext(AuthContext);
-  const {user} = useSelector(state => state.userReducer);
-  const dispatch = useDispatch();
-  const fetchUser = () => dispatch(getUser());
-  useEffect(() => {
-    fetchUser();
-  }, []);
-
-  const [goals, setGoals] = React.useState([
-      {
-          goal: "Get an A for IS Exam!",
-          dateTime: "Due Tomorrow at 10:00am",
-          isDue: true
-      },
-      {
-          goal: "Get an A for IS Exam!",
-          dateTime: "10-29-2021  |  1:00 PM",
-          isDue: false
-      },
-      {
-          goal: "Get an A for IS Exam!",
-          dateTime: "10-29-2021  |  1:00 PM",
-          isDue: false
-      }
-  ]);
+  const {
+    goals
+  } = method();
 
   let startingDate = moment().subtract(2, 'days');
     return (
