@@ -35,7 +35,7 @@ function App() {
             {
             state.token !== null || state.isForCodeVerification || state.isGoogle ? (
                 <Drawer.Navigator 
-                  //initialRouteName="ChangePasswordScreen"
+                  //initialRouteName="SetUpScreen"
                   initialRouteName={state.isForCodeVerification ? "CodeVerificationScreen" : state.isGoogle ? "SetUpScreen" : "MainTabScreen" }
                   drawerContent={props => <DrawerContent {... props} />}
                 >

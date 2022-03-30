@@ -25,27 +25,30 @@ const GradientItem = props => {
     );
     const [selectedBgColor, setSelectedBgColor] = React.useState(['transparent', 'transparent']); 
 
-    const getRandomColor = () => {
-      var item = bgColor[Math.floor(Math.random()*bgColor.length)];
+    const getRandomColor = (selectedColor) => {
+      //var item = bgColor[Math.floor(Math.random()*bgColor.length)];
+      var item = bgColor[selectedColor];
       setSelectedBgColor(item);
     }
    
     useEffect(() => {
-      getRandomColor()
+      //getRandomColor(props.selectedColor)
     });
  
     return (
       <TouchableOpacity style={{...styles.itemContainer, ...props.containerStyle}}>
-        <LinearGradient
-          colors={selectedBgColor}
-          style={styles.linearGradient}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-        >
-          <Text style={{...styles.text, ...label.boldExtraSmallHeading, ...props.textStyle}}>{props.code}</Text>
-          <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
-          <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
-        </LinearGradient>
+        {props.selectedBgColor !== undefined && props.selectedBgColor !== null &&
+            <LinearGradient
+              colors={props.selectedBgColor}
+              style={[styles.linearGradient, {paddingVertical: props.schedule ? 15 : 21}]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+            >
+              <Text style={{...styles.text, ...label.boldExtraSmallHeading, ...props.textStyle}}>{props.code}</Text>
+              <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
+              <Text style={{...styles.textSchedule, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
+            </LinearGradient>
+        }
       </TouchableOpacity>
     );
 };

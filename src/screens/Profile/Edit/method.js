@@ -47,8 +47,7 @@ const method = (setModalVisible) => {
     const handleUpdateProfile = async() => {
         setIsLoading(true)
         let userId = state.userId
-        let token = state.token
-        await dispatch(updateUser(profile, userId, token))
+        await dispatch(updateUser(profile, userId))
         if(hasError){
             Alert.alert("Error", error,
                 [{ text: "OK", onPress: () => setIsLoading(false)}],

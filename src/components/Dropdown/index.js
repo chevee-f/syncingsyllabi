@@ -6,12 +6,14 @@ import styles from './styles'
 const Dropdown = ({
     onDismiss,
     openMenu,
+    isOpen,
   ...props
 }) => {
   return (
             <DropDownPicker
-                open={false}
-                //setOpen={setOpen}
+                open={isOpen}
+                setOpen={openMenu}
+                onClose={onDismiss}
                 items={[
                     {label: 'Item 1', value: 'item1'},
                     {label: 'Item 2', value: 'item2', selected: true},

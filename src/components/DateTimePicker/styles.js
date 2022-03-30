@@ -9,7 +9,7 @@ export default StyleSheet.create({
     },
     modal:{
         justifyContent: 'center', 
-        alignItems:'center'
+        alignItems:'center',
     },
     modalContainer:{
         backgroundColor: '#fff', 

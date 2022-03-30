@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Text, 
          View, 
          Image,
          ScrollView,
-         Dimensions, 
+         Dimensions, Alert,
          Platform } from 'react-native';
 import DefaultInput from '../../components/DefaultInput';
 import GradientItem from '../../components/GradientItem'
@@ -16,16 +16,29 @@ import AddSyllabus from '../Syllabus/Add'
 import AddGoal from '../Goal/Add'
 import styles from './styles'
 import Label from '../../components/Label'
+import method from './method'
+import { useSelector, useDispatch } from 'react-redux';
+import Moment from 'moment';
+import { ActivityIndicator } from 'react-native-paper';
 
 var {height, width} = Dimensions.get('window');
 
 const SetUpScreen = ({navigation}) => {
 
-    const [data, setData] = React.useState({
-        name: '',
-        school: ''
-    });
+    const {
+        profile,
+        bgColor,
+        isLoading,
+        semesterGoals,
+        modalVisible,
+        goalVisible,
+        setProfile,
+        setGoalVisible,
+        setModalVisible,
+        handleLetsGetStarted
+    } = method({navigation});
 
+    const { syllabus } = useSelector(state => state.syllabusReducer);
     const [classSyllabi, setClassSyllabi] = React.useState([
         {
             code: "MKTG 100S",
@@ -44,24 +57,10 @@ const SetUpScreen = ({navigation}) => {
         }
     ]);
 
-    const [semesterGoals, setSemesterGoals] = React.useState([
-        {
-            code: "SHORT-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        },
-        {
-            code: "MED-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        },
-        {
-            code: "LONG-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        }
-    ]);
+    useEffect(() => {
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [goalVisible, setGoalVisible] = useState(false);
-    
+    }, [syllabus]);
+
     return (
       <View style={{ flex:1}}>
         <View style={styles.headerContainer}>
@@ -84,14 +83,18 @@ const SetUpScreen = ({navigation}) => {
                     <Label text="What's your name?" />
                     <DefaultInput 
                         label="Name"
-                        hasValue={data.name.length}
+                        value={profile.firstName}
+                        onChangeText={(name) =>  setProfile({...profile, firstName: name})}
+                        hasValue={profile.firstName.length}
                     /> 
                 </View>
                 <View style={{marginTop:height * 0.02}}>
                     <Label text="What school are you attending?" />
                     <DefaultInput 
                         label="School"
-                        hasValue={data.school.length}
+                        value={profile.school}
+                        onChangeText={(school) =>  setProfile({...profile, school: school})}
+                        hasValue={profile.school.length}
                     /> 
                 </View>
                 <View style={{marginTop:height * 0.02}}>
@@ -99,15 +102,19 @@ const SetUpScreen = ({navigation}) => {
                     <View style={{flexDirection:'row'}}>
                         <AddItem onPress={() => setModalVisible(true)} />
                         {
-                        classSyllabi.map((item) => {
-                                return (
+                        //classSyllabi.map((item) => {
+                              //  return (
                                     <GradientItem 
-                                        code={item.code}
-                                        name={item.name}
-                                        schedule={item.schedule}
-                                    />
-                                );
-                            })                
+                                        //code={item.code}
+                                        code={syllabus.className}
+                                        name={syllabus.teacherName}
+                                        schedule={Moment(syllabus.classSchedule).format("MM/DD/YYYY hh:mm A")}
+                                        selectedBgColor={bgColor[syllabus.colorInHex]}
+                                        />
+
+                                   
+                               // );
+                        //    })                
                         }
                     </View>
                 </View>
@@ -128,8 +135,8 @@ const SetUpScreen = ({navigation}) => {
                 </View>
                 <View style={{marginVertical: height * 0.05}}>
                     <DefaultButton 
-                        title={`Let's get started!`}
-                        onPress={() => {navigation.navigate('MainTabScreen')}}
+                        title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : `Let's get started!`}
+                        onPress={() => {handleLetsGetStarted()}}
                     />
                 </View>
             </View>

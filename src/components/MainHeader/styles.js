@@ -50,7 +50,7 @@ export default StyleSheet.create({
       nameContainer:{
         justifyContent:'center',
         marginLeft:10,
-        width: 135
+        width: width * 0.42
       },
       notificationContainer:{
         justifyContent:'center',
@@ -65,6 +65,7 @@ export default StyleSheet.create({
       rightContainer:{
         flexDirection:'row',
         marginTop:15,
-        width: width * 0.5
+        width: width * 0.3,
+        marginLeft: width * -0.09
       },
 })
