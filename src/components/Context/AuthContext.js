@@ -253,7 +253,9 @@ const verifyUserCode = dispatch => {
                   if(codeType === 2){
                     currentPassword = await decryptPassword(userInfo.password)
                     Alert.alert("Email Verification","Success! You may now reset your password")
-                  } 
+                  }else{
+                   const userToken = await generateAuth(email, null, true);
+                  }
                   dispatch({type: 'verifyUserCode',
                             payload: { userId: userId,
                                        email: email,

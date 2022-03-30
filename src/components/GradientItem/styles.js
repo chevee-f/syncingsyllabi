@@ -11,10 +11,14 @@ export default StyleSheet.create({
     },
     linearGradient:{
         alignItems:'center',
-        paddingVertical:22,
         borderRadius:16
     },
     text:{
       color:color.textDefault
+    },
+    textSchedule:{
+      color:color.textDefault,
+      marginHorizontal:10,
+      textAlign: 'center'
     }
 })

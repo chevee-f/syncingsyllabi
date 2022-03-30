@@ -15,7 +15,6 @@ const SelectSyllabus = ({
     onPress,
     ...props
   }) => {
-    const [time, setTime] = useState(new Date())
 
     return (
         <SafeAreaView>
@@ -31,7 +30,7 @@ const SelectSyllabus = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.71 : height * 0.45}]}>
+                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.71 : height * 0.5}]}>
                     <CalendarPicker
                         previousComponent={<Icon 
                                             name="chevron-thin-left"
@@ -62,8 +61,9 @@ const SelectSyllabus = ({
                             <DatePicker 
                                 mode="time"
                                 textColor={color.primary}
-                                date={time} 
-                                onDateChange={setTime} />
+                                date={props.time} 
+                                onDateChange={props.onChangeTime}
+                            />
                         </View>
                     }
 

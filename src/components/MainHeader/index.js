@@ -7,6 +7,7 @@ import AddGoal from '../../screens/Goal/Add'
 import color from '../../styles/colors'
 import label from '../../styles/label'
 import styles from './styles'
+import { useSelector } from 'react-redux';
 
 var {height, width} = Dimensions.get('window');
 
@@ -14,6 +15,7 @@ const MainHeader = props => {
 
     const navigation = useNavigation()
     const [goalVisible, setGoalVisible] = useState(false);
+    const { user } = useSelector(state => state.userReducer);
 
     return (
         <View style={[styles.headerContainer,{height: props.screen === 'Home' ? 
@@ -60,7 +62,7 @@ const MainHeader = props => {
                         </View>
                         <View style={styles.nameContainer}>
                             <Text style={[label.mediumHeading,{color:color.textDefault}]}>Hello</Text>
-                            <Text style={[label.boldLargeHeading,{color:color.textDefault}]}>John Doe 👋</Text>
+                            <Text style={[label.boldMediumHeading,{color:color.textDefault}]}>{user.firstName} {user.lastName} 👋</Text>
                         </View>
                     </View>
                     <View style={styles.rightContainer}>

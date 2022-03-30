@@ -37,18 +37,18 @@ export const getUserByEmail = email => {
   }
 };
 
-export const updateUser = (profile, userId, token) => {
+export const updateUser = (profile, userId) => {
     return async dispatch => {
       try{  
-        
+        let token = await AsyncStorage.getItem('userToken')
         const formData = new FormData();
         formData.append('UserId', userId)
         formData.append('FirstName', profile.firstName); 
-        formData.append('LastName', profile.lastName); 
-        formData.append('Email', profile.email); 
+        if(profile.lastName !== null) formData.append('LastName', profile.lastName); 
+        if(profile.email !== null) formData.append('Email', profile.email); 
         formData.append('School', profile.school); 
-        formData.append('DateOfBirth', profile.dateOfBirth); 
-        formData.append('Major', profile.major); 
+        if(profile.dateOfBirth !== null) formData.append('DateOfBirth', profile.dateOfBirth); 
+        if(profile.major !== null) formData.append('Major', profile.major); 
   
         let res = await fetch(`${getAPIBaseUrl()}User/UpdateUser`,{
                   method: 'post',

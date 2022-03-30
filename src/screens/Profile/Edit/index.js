@@ -103,7 +103,7 @@ const EditProfile = ({
                             label="Date of Birth"
                             onPressIn={() => { setCalendarVisible(true)}}
                             editable={false}
-                            value={Moment(profile.dateOfBirth).format("MM/DD/YYYY")}
+                            value={profile.dateOfBirth !== null ? Moment(profile.dateOfBirth).format("MM/DD/YYYY") : ''}
                             hasValue={selectedDate !== '' || profile.dateOfBirth !== null}
                         /> 
                     </View>

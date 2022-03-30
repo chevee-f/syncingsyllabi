@@ -25,7 +25,7 @@ export function DrawerContent (props) {
     const {state, signOut} = useContext(AuthContext);
 
     const dispatch = useDispatch();
-
+    const { user } = useSelector(state => state.userReducer);
     const [isDarkTheme, setIsDarkTheme] = React.useState(false);
     const toggleTheme = () => {
         setIsDarkTheme(!isDarkTheme)
@@ -44,10 +44,10 @@ export function DrawerContent (props) {
                         />
                         <View style={styles.row}>
                             <View style={{flexDirection:'column'}}>
-                                <Title style={[label.boldExtraLargeHeading, { color: color.textDefault }]}>John Doe</Title>
+                                <Title style={[label.boldExtraLargeHeading, { color: color.textDefault }]}>{user.firstName} {user.lastName}</Title>
                                 <View style={{flexDirection:'row', alignItems:'center'}}>
                                     <Icons name="location-pin" color={color.default} size={18} />
-                                    <Caption style={[label.extraSmallHeading2, { color: color.textDefault, fontSize:12 }]}>California State University, Fresno</Caption>
+                                    <Caption style={[label.extraSmallHeading2, { color: color.textDefault, fontSize:12 }]}>{user.school}</Caption>
                                 </View>
                             </View>
                         </View>

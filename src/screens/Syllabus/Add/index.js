@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
-         Image ,
-         ScrollView
+         Image,
+         Text,
+         ScrollView, Alert
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -14,8 +15,11 @@ import DefaultInput from '../../../components/DefaultInput';
 import DateTimePicker from '../../../components/DateTimePicker'
 import { TextInput } from 'react-native-paper';
 import Colors from '../../../components/GradientColor'
+import GradientItem from '../../../components/GradientItem'
 import DefaultButton from '../../../components/DefaultButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import method from './method'
+import Moment from 'moment';
 
 var {height, width} = Dimensions.get('window');
 
@@ -26,8 +30,17 @@ const AddSyllabus = ({
     ...props
   }) => {
 
+    const {
+        bgColor,
+        selectedColor,
+        classSyllabus,
+        setClassSyllabus,
+        setSelectedColor,
+        handleAddSyllabus
+    } = method();
+
     const [calendarVisible, setCalendarVisible] = useState(false);
-    var colors = [ 1,2,3,4,5,6,7,8,9,10,11,12 ];
+    const colors = [0,1,2,3,4,5,6,7,8,9,10,11];
 
     return (
         <SafeAreaView>
@@ -61,28 +74,29 @@ const AddSyllabus = ({
                         <Label text="Input the Class Name or Class Code" />
                         <DefaultInput 
                             label="Class Name"
+                            value={classSyllabus.className}
+                            onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className})}
+                            hasValue={classSyllabus.className.length}
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="What's the name of your teacher?" />
                         <DefaultInput 
                             label="Name of Teacher"
+                            value={classSyllabus.teacherName}
+                            onChangeText={(teacherName) =>  setClassSyllabus({...classSyllabus, teacherName: teacherName})}
+                            hasValue={classSyllabus.teacherName.length}
                         /> 
                     </View>
-                    <View style={{marginVertical:10}}>
+                    <View style={styles.fieldContainer}>
                         <Label text="What's your Schedule?" />
-                        <View style={[styles.inputContainer, {borderColor: color.default}]}>
-                            <TextInput
-                                mode="flat"
-                                style={[styles.input]}
-                                onPressIn={() => { setCalendarVisible(true)}}
-                                label="Schedule"
-                                editable={false}
-                                selectionColor={color.primary}
-                                activeUnderlineColor={color.primary}
-                                theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                            />
-                        </View> 
+                        <DefaultInput 
+                            label="Schedule"
+                            onPressIn={() => { setCalendarVisible(true)}}
+                            editable={false}
+                            value={classSyllabus.schedule}
+                            hasValue={classSyllabus.schedule.length}
+                        /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="Pick a color" />
@@ -91,7 +105,9 @@ const AddSyllabus = ({
                                 {
                                     colors.map((item) => {
                                         return (
-                                            <Colors />
+                                            <Colors selectedColor={item} 
+                                                    onPress={() => setSelectedColor(item)} 
+                                            />
                                         );
                                     })                
                                 }              
@@ -100,10 +116,19 @@ const AddSyllabus = ({
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="Preview" />
-                        <Colors containerStyle={{alignSelf:'center'}} />
+                        <GradientItem 
+                            containerStyle={{alignSelf:'center'}}
+                            code={classSyllabus.className}
+                            name={classSyllabus.teacherName}
+                            schedule={classSyllabus.schedule}
+                            selectedBgColor={bgColor[selectedColor]}
+                        />
                     </View>
                     <View style={styles.fieldContainer}>
-                        <DefaultButton title="Save" onPress={() => { setModalVisible(!modalVisible); }} />       
+                        <DefaultButton title="Save" 
+                                       onPress={() => { handleAddSyllabus()
+                                                        setModalVisible(!modalVisible)}}
+                        />       
                     </View>
                 </ScrollView>
             </View>
@@ -111,6 +136,13 @@ const AddSyllabus = ({
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
                 showTimePicker={true}
+                onSelectDate={() => {setCalendarVisible(!calendarVisible)
+                                     var scheduleDateTime = classSyllabus.schedule + ' ' + Moment(classSyllabus.scheduleTime).format("hh:mm A")
+                                     setClassSyllabus({...classSyllabus, schedule: scheduleDateTime})
+                                    }}
+                onChangeDate={(schedule) =>  setClassSyllabus({...classSyllabus, schedule: Moment(schedule).format("MM/DD/YYYY")})}
+                onChangeTime={(scheduleTime) =>  setClassSyllabus({...classSyllabus, scheduleTime: scheduleTime})}
+                time={classSyllabus.scheduleTime}
             />
           </Modal>
 

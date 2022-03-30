@@ -87,7 +87,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Email name="envelope" color={color.default} size={30} />
                 <Text style={[label.smallHeading2, {color: color.primary}]}>{user.email}</Text>
             </View>
-                <Text style={[label.smallHeading2, styles.info ]}>Birthdate: {Moment(user.dateOfBirth).format("MM/DD/YYYY")}</Text>
+                <Text style={[label.smallHeading2, styles.info ]}>Birthdate: {user.dateOfBirth !== null ? Moment(user.dateOfBirth).format("MM/DD/YYYY") : ''}</Text>
                 <Text style={[label.smallHeading2, styles.info ]}>Major: {user.major}</Text>
 
             <View style={{marginTop:height * 0.05}}>

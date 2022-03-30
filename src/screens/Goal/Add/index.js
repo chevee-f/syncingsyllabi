@@ -53,7 +53,7 @@ const AddGoal = ({
                         </TouchableOpacity>
                         <View style={styles.fieldContainer}>
                             <Label text="Type of Goal" />
-                            <Dropdown visible={openMenu} onDismiss={() => setOpenMenu(false)} />
+                            <Dropdown isOpen={openMenu} openMenu={() => setOpenMenu(true)} onDismiss={() => setOpenMenu(false)} />
                         </View>
                         <View style={[styles.fieldContainer,{zIndex:-5}]}>
                             <Label text="Description of the Goal" />

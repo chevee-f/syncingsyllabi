@@ -3,7 +3,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient'
 import styles from './styles'
 
-const GradientColor = props => {
+const GradientColor = ({
+  onPress,
+  ...props
+}) => {
   
   const [bgColor, setBgColor] = React.useState(
       [
@@ -23,24 +26,27 @@ const GradientColor = props => {
     );
     const [selectedBgColor, setSelectedBgColor] = React.useState(['transparent', 'transparent']); 
 
-    const getRandomColor = () => {
-      var item = bgColor[Math.floor(Math.random()*bgColor.length)];
+    const getRandomColor = (selectedColor) => {
+      //var item = bgColor[Math.floor(Math.random()*bgColor.length)];
+      var item = bgColor[selectedColor];
       setSelectedBgColor(item);
     }
    
     useEffect(() => {
-      getRandomColor()
+      getRandomColor(props.selectedColor)
     });
  
     return (
-      <TouchableOpacity style={{...styles.itemContainer, ...props.containerStyle}}>
-        <LinearGradient
-          colors={selectedBgColor}
-          style={styles.linearGradient}
-          start={{ x: 0, y: 0.5 }}
-          end={{ x: 1, y: 0.5 }}
-        >
-        </LinearGradient>
+      <TouchableOpacity style={{...styles.itemContainer, ...props.containerStyle}} onPress={onPress}>
+        {selectedBgColor !== undefined &&
+            <LinearGradient
+              colors={selectedBgColor}
+              style={styles.linearGradient}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+            >
+            </LinearGradient>
+        }
       </TouchableOpacity>
     );
 };
