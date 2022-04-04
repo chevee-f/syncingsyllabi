@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
          Image,
-         Text,
-         ScrollView, Alert
+         ScrollView,
+         TouchableOpacity,
+         Platform
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
 import AddItem from '../../../components/AddItem'
 import Label from '../../../components/Label'
-import color from '../../../styles/colors'
 import DefaultInput from '../../../components/DefaultInput';
-import DateTimePicker from '../../../components/DateTimePicker'
-import { TextInput } from 'react-native-paper';
+import WeekdayTimePicker from '../../../components/WeekdayTimePicker'
 import Colors from '../../../components/GradientColor'
 import GradientItem from '../../../components/GradientItem'
 import DefaultButton from '../../../components/DefaultButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import method from './method'
-import Moment from 'moment';
+import {Context as AuthContext} from '../../../components/Context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
 
 var {height, width} = Dimensions.get('window');
 
@@ -27,6 +26,8 @@ const AddSyllabus = ({
     onPress,
     setModalVisible,
     modalVisible,
+    syllabusId,
+    setSyllabusId,
     ...props
   }) => {
 
@@ -34,13 +35,53 @@ const AddSyllabus = ({
         bgColor,
         selectedColor,
         classSyllabus,
+        weekday,
+        inputValidation,
+        hasValue,
+        setHasValue,
+        setWeekday,
         setClassSyllabus,
         setSelectedColor,
-        handleAddSyllabus
+        handleAddSyllabus,
+        handleUpdateSyllabus,
+        addSchedule,
+        handleCallback,
+        handleValidClassName,
+        handleValidTeacherName,
+        resetClassSyllabus
     } = method();
 
     const [calendarVisible, setCalendarVisible] = useState(false);
     const colors = [0,1,2,3,4,5,6,7,8,9,10,11];
+
+    const { state } = useContext(AuthContext);
+    const { syllabus } = useSelector(state => state.syllabusReducer);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if(modalVisible){
+            if(syllabusId !== null && !hasValue){
+                    let data = syllabus.filter((item) => item.id == syllabusId)
+                    let dataArray = [];  
+                    data[0].classSchedule.map(
+                        function(data){
+                            dataArray.push({schedule: data});
+                        }
+                    )
+                    setClassSyllabus({...classSyllabus, 
+                                        id: syllabusId,
+                                        className: data[0].className,
+                                        teacherName: data[0].teacherName,
+                                        schedule: !data[0].classSchedule ? '' : data[0].classSchedule.map(function(data){return data;}).join("|"),
+                                        scheduleStartTime: new Date(),
+                                        scheduleEndTime: new Date(),
+                                        scheduleList: dataArray
+                                    })
+                    setSelectedColor(parseInt(data[0].colorInHex))             
+                    setHasValue(true)
+            }
+        }
+    }, [modalVisible,classSyllabus,syllabusId,syllabus,hasValue]);
 
     return (
         <SafeAreaView>
@@ -50,16 +91,24 @@ const AddSyllabus = ({
           backdropOpacity={0.5}
           animationIn='slideInUp'
           animationOut='slideOutDown'
-          //isVisible={props.modalVisible}
           isVisible={modalVisible}
           hideModalContentWhileAnimating
           style={styles.modal}
-          onBackButtonPress={props.onClose}
-          onBackdropPress={props.onClose}>
+          onBackButtonPress={() => { setModalVisible(!modalVisible);
+                                     setSyllabusId(null)
+                                     setHasValue(false)
+                                     resetClassSyllabus() }}
+          onBackdropPress={() => { setModalVisible(!modalVisible);
+                                   setSyllabusId(null)
+                                   setHasValue(false)
+                                   resetClassSyllabus() }}>
 
             <View style={styles.modalContainer}>
                 <ScrollView>
-                    <TouchableOpacity onPress={() => { setModalVisible(!modalVisible); }}>
+                    <TouchableOpacity onPress={() => { setModalVisible(!modalVisible);
+                                                       setSyllabusId(null)
+                                                       setHasValue(false)
+                                                       resetClassSyllabus() }}>
                         <Image 
                             source={require('../../../assets/icons/closeButton.png')}
                             resizeMode='contain'
@@ -67,7 +116,7 @@ const AddSyllabus = ({
                         />
                     </TouchableOpacity>
                     <View style={styles.fieldContainer}>
-                        <Label text="Add your Syllabus" />
+                        <Label text={`${syllabusId === null ? 'Add' : 'Update'} your Syllabus`} />
                         <AddItem />
                     </View>
                     <View style={styles.fieldContainer}>
@@ -77,6 +126,9 @@ const AddSyllabus = ({
                             value={classSyllabus.className}
                             onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className})}
                             hasValue={classSyllabus.className.length}
+                            hasError={!inputValidation.isValidClassName}
+                            errorMsg={inputValidation.classNameErrMsg}
+                            onEndEditing={(e)=>handleValidClassName(e.nativeEvent.text)}    
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
@@ -86,17 +138,37 @@ const AddSyllabus = ({
                             value={classSyllabus.teacherName}
                             onChangeText={(teacherName) =>  setClassSyllabus({...classSyllabus, teacherName: teacherName})}
                             hasValue={classSyllabus.teacherName.length}
+                            hasError={!inputValidation.isValidTeacherName}
+                            errorMsg={inputValidation.teacherNameErrMsg}
+                            onEndEditing={(e)=>handleValidTeacherName(e.nativeEvent.text)}    
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="What's your Schedule?" />
-                        <DefaultInput 
-                            label="Schedule"
-                            onPressIn={() => { setCalendarVisible(true)}}
-                            editable={false}
-                            value={classSyllabus.schedule}
-                            hasValue={classSyllabus.schedule.length}
-                        /> 
+                            {Platform.OS === 'android' ?
+                                <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
+                                    <View>
+                                        <DefaultInput 
+                                            label="Schedule"
+                                            editable={false}
+                                            value={classSyllabus.schedule}
+                                            hasValue={classSyllabus.schedule.length}
+                                            hasError={!inputValidation.isValidSchedule}
+                                            errorMsg={inputValidation.scheduleErrMsg}  
+                                        /> 
+                                    </View>
+                                </TouchableOpacity> : 
+                                 <DefaultInput 
+                                    label="Schedule"
+                                    onPressIn={() => { setCalendarVisible(true)}}
+                                    editable={false}
+                                    value={classSyllabus.schedule}
+                                    hasValue={classSyllabus.schedule.length}
+                                    hasError={!inputValidation.isValidSchedule}
+                                    errorMsg={inputValidation.scheduleErrMsg}
+                                /> 
+                            }
+                          
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="Pick a color" />
@@ -124,25 +196,43 @@ const AddSyllabus = ({
                             selectedBgColor={bgColor[selectedColor]}
                         />
                     </View>
-                    <View style={styles.fieldContainer}>
-                        <DefaultButton title="Save" 
-                                       onPress={() => { handleAddSyllabus()
-                                                        setModalVisible(!modalVisible)}}
-                        />       
-                    </View>
+                    {syllabusId !== null ?
+                        <View style={[styles.actionContainer]}>
+                            <DefaultButton containerStyle={{width: width * 0.44}} title="Remove" />    
+                            <DefaultButton containerStyle={{width: width * 0.44}} 
+                                           title="Update" 
+                                           onPress={() => { handleUpdateSyllabus()
+                                                            setModalVisible(!modalVisible)
+                                                            setSyllabusId(null)
+                                                            setHasValue(false)}}/>         
+                        </View> :
+                        <View style={styles.fieldContainer}>
+                            <DefaultButton title="Save" 
+                                    onPress={() => { handleAddSyllabus()
+                                                     setModalVisible(!modalVisible)
+                                                     setSyllabusId(null)
+                                                     setHasValue(false)}}
+                            />       
+                        </View>
+                    }
                 </ScrollView>
             </View>
-            <DateTimePicker 
+
+            <WeekdayTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
                 showTimePicker={true}
-                onSelectDate={() => {setCalendarVisible(!calendarVisible)
-                                     var scheduleDateTime = classSyllabus.schedule + ' ' + Moment(classSyllabus.scheduleTime).format("hh:mm A")
-                                     setClassSyllabus({...classSyllabus, schedule: scheduleDateTime})
-                                    }}
-                onChangeDate={(schedule) =>  setClassSyllabus({...classSyllabus, schedule: Moment(schedule).format("MM/DD/YYYY")})}
-                onChangeTime={(scheduleTime) =>  setClassSyllabus({...classSyllabus, scheduleTime: scheduleTime})}
-                time={classSyllabus.scheduleTime}
+                title='Select day and time' 
+                weekday={weekday}
+                setWeekday={setWeekday}
+                startTime={classSyllabus.scheduleStartTime}
+                onChangeStartTime={(startTime) =>  setClassSyllabus({...classSyllabus, scheduleStartTime: startTime})}
+                onChangeEndTime={(endTime) =>  setClassSyllabus({...classSyllabus, scheduleEndTime: endTime})}
+                endTime={classSyllabus.scheduleEndTime}
+                list={classSyllabus.scheduleList}
+                add={() => addSchedule()}
+                parentCallback = {handleCallback}
+                onSelectDate={() => setCalendarVisible(!calendarVisible)}
             />
           </Modal>
 

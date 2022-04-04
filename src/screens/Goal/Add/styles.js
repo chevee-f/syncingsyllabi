@@ -10,7 +10,7 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     modalContainer:{
-        backgroundColor: '#fff', 
+        backgroundColor: '#ffffff', 
         //alignItems: 'center',
         borderRadius: 16,
         width: width * 1,
@@ -34,7 +34,7 @@ export default StyleSheet.create({
         borderTopRightRadius: 0,
         height: height * 0.063,
         overflow: 'hidden',
-        backgroundColor: '#fff',
+        backgroundColor: '#fbfbfb',
         paddingLeft:5,
         fontFamily: "Manrope",
         fontSize: height * 0.016,

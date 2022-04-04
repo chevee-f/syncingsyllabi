@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { updateUser } from '../../actions/user';
-import AsyncStorage from '@react-native-community/async-storage';
+import { getSyllabusDetail } from '../../actions/syllabus';
 
 const method = ({navigation}) => {
    
@@ -21,6 +21,7 @@ const method = ({navigation}) => {
 
     const [modalVisible, setModalVisible] = useState(false);
     const [goalVisible, setGoalVisible] = useState(false);
+    const [syllabusId, setSyllabusId] = useState(null);
 
     const [profile, setProfile] = React.useState({
         firstName: '',
@@ -35,7 +36,7 @@ const method = ({navigation}) => {
     const handleLetsGetStarted = async() => {
         setIsLoading(true)
         let userId = state.userId
-        let token = await AsyncStorage.getItem('userToken')
+        let token = state.token
         await dispatch(updateUser(profile, userId, token))
         if(hasError){
             Alert.alert("Error", error,
@@ -46,6 +47,14 @@ const method = ({navigation}) => {
             setIsLoading(false)
             navigation.navigate('MainTabScreen')
         }
+    }
+
+    const handleCallback = async(id) => {
+       setSyllabusId(id)
+       //let userId = state.userId
+       //let token = state.token
+       //await dispatch(getSyllabusDetail(id, userId, token))
+       setModalVisible(true)
     }
 
     const [semesterGoals, setSemesterGoals] = React.useState([
@@ -87,10 +96,13 @@ const method = ({navigation}) => {
         semesterGoals,
         modalVisible,
         goalVisible,
+        syllabusId,
         setProfile,
         setGoalVisible,
         setModalVisible,
-        handleLetsGetStarted
+        handleLetsGetStarted,
+        handleCallback,
+        setSyllabusId
     };
   };
   

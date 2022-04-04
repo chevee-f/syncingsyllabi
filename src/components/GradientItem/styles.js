@@ -7,18 +7,20 @@ export default StyleSheet.create({
     itemContainer:{
         width: width * 0.21,
         marginTop: height * 0.012,
-        marginHorizontal:6
+        marginHorizontal: 2
     },
     linearGradient:{
         alignItems:'center',
-        borderRadius:16
+        justifyContent:'center',
+        borderRadius:16,
+        height: Platform.OS == 'ios' ? height * 0.1 : height * 0.127,
     },
     text:{
       color:color.textDefault
     },
     textSchedule:{
       color:color.textDefault,
-      marginHorizontal:10,
+      marginHorizontal:5,
       textAlign: 'center'
     }
 })

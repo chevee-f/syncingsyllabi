@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './styles'
 
@@ -9,25 +9,33 @@ const Dropdown = ({
     isOpen,
   ...props
 }) => {
+
+  const onSelect = (item) => {
+    props.onSelectItem(item);
+  }
+
   return (
             <DropDownPicker
                 open={isOpen}
                 setOpen={openMenu}
                 onClose={onDismiss}
-                items={[
-                    {label: 'Item 1', value: 'item1'},
-                    {label: 'Item 2', value: 'item2', selected: true},
-                ]}
-
-                //itemStyle={{alignItems: 'center'}}
-                //labelStyle={{fontSize: 25, color: '#000'}}
-                //defaultValue="TypeScript"
-                //defaultIndex={1}
-
-                containerStyle={styles.containerStyle}
+                items={props.items}
+                value={props.selectedItem}
+                onSelectItem={(item) => {
+                  onSelect(item.value)
+                }}
                 style={styles.dropDown}
+                containerStyle={styles.containerStyle}
                 placeholderStyle={styles.placeHolder}
                 placeholder="Select Goal"
+                dropDownContainerStyle={styles.dropDownContainerStyle}
+                itemProps={{
+                  style:{ 
+                   padding: 10,
+                   paddingLeft: 20
+                  }
+                }}
+                textStyle={styles.text}
             />
   );
 };

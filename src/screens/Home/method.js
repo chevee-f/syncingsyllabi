@@ -13,7 +13,8 @@ const method = (setModalVisible) => {
     const dispatch = useDispatch();
     const fetchUser = () => {
         let userId = state.userId
-        dispatch(getUser(userId));
+        let token = state.token
+        dispatch(getUser(userId, token));
     }
 
     const [goals, setGoals] = React.useState([

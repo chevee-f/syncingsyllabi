@@ -11,7 +11,7 @@ import CancelButton from '../../components/SecondaryButton'
 
 var {height, width} = Dimensions.get('window');
 
-const SelectSyllabus = ({
+const DateTimePicker = ({
     onPress,
     ...props
   }) => {
@@ -30,18 +30,10 @@ const SelectSyllabus = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={[styles.modalContainer,{height: props.showTimePicker ? height * 0.71 : height * 0.5}]}>
+                <View style={styles.modalContainer}>
                     <CalendarPicker
-                        previousComponent={<Icon 
-                                            name="chevron-thin-left"
-                                            color={color.primary}
-                                            size={20} />
-                                          } 
-                        nextComponent={<Icon 
-                                        name="chevron-thin-right"
-                                        color={color.primary}
-                                        size={20} />
-                                      } 
+                        previousComponent={<Icon name="chevron-thin-left" color={color.primary} size={20} />} 
+                        nextComponent={<Icon name="chevron-thin-right" color={color.primary} size={20} />} 
                         textStyle={styles.textStyle}
                         selectedDayColor={color.primary}
                         todayBackgroundColor='#fff'
@@ -52,6 +44,7 @@ const SelectSyllabus = ({
                         monthTitleStyle={styles.titleStyle}
                         yearTitleStyle={styles.titleStyle}
                         onDateChange={props.onChangeDate}
+                        date={props.selectedDate}
                     />
 
                     {props.showTimePicker &&
@@ -79,4 +72,4 @@ const SelectSyllabus = ({
     )
 }
 
-export default SelectSyllabus;
+export default DateTimePicker;

@@ -42,7 +42,8 @@ const authReducer = (state, action) => {
                 isEmailVerified: action.payload.isEmailVerified,
                 codeType: action.payload.codeType,
                 isForCodeVerification: action.payload.isForCodeVerification,
-                currentPassword: action.payload.currentPassword
+                currentPassword: action.payload.currentPassword,
+                token: action.payload.token
      };
      case 'recoverAccount':
       return {
@@ -80,7 +81,7 @@ const generateAuth = (email,password,isGoogleSignIn) => {
             const userId = ["userId", JSON.stringify(res.data.data.item.userId)]
             AsyncStorage.multiSet([userToken, userId])
 
-            return res.data.data.item;
+            return res.data.data.item.authToken;
           }else{
             return null
           }
@@ -241,6 +242,7 @@ const verifyUserCode = dispatch => {
   return async({userId, verificationCode, codeType, email}) => {
       try {
             let userInfo = await getUserInfo(email)    
+            let userToken = ''
             axios.post(`${getAPIBaseUrl()}User/VerifyUserCode`,
             {
                 "UserId": userId,
@@ -254,7 +256,7 @@ const verifyUserCode = dispatch => {
                     currentPassword = await decryptPassword(userInfo.password)
                     Alert.alert("Email Verification","Success! You may now reset your password")
                   }else{
-                   const userToken = await generateAuth(email, null, true);
+                    userToken = await generateAuth(email, null, true);
                   }
                   dispatch({type: 'verifyUserCode',
                             payload: { userId: userId,
@@ -262,7 +264,8 @@ const verifyUserCode = dispatch => {
                                        isEmailVerified: res.data.data.success,
                                        codeType: codeType,
                                        isForCodeVerification: false,
-                                       currentPassword: currentPassword
+                                       currentPassword: currentPassword,
+                                       token: userToken
                                     }
                           });
                 }
