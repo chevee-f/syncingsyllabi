@@ -41,5 +41,10 @@ export default StyleSheet.create({
     },
     fieldContainer:{
         marginVertical:10
+    },
+    actionContainer: {
+        flexDirection: 'row', 
+        justifyContent:'space-between',
+        marginVertical:10
     }
 })

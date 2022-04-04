@@ -1,4 +1,4 @@
-import { GET_SYLLABUS, ADD_SYLLABUS } from './../actions/syllabus';
+import { GET_SYLLABUS_BY_USER, ADD_SYLLABUS, GET_SYLLABUS_DETAIL } from './../actions/syllabus';
 
 const initialState = {
   syllabus: [],
@@ -6,7 +6,9 @@ const initialState = {
 
 function syllabusReducer(state = initialState, action) {
   switch (action.type) {
-    case GET_SYLLABUS:
+    case GET_SYLLABUS_BY_USER:
+      return {...state, syllabus: action.payload};
+    case GET_SYLLABUS_DETAIL:
       return {...state, syllabus: action.payload};
     case ADD_SYLLABUS:
       return {...state, syllabus: action.payload};

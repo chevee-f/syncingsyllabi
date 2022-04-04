@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Text, 
          View, 
          Image,
          ScrollView,
-         Dimensions, Alert,
+         Dimensions, 
          Platform } from 'react-native';
 import DefaultInput from '../../components/DefaultInput';
 import GradientItem from '../../components/GradientItem'
@@ -18,8 +18,9 @@ import styles from './styles'
 import Label from '../../components/Label'
 import method from './method'
 import { useSelector, useDispatch } from 'react-redux';
-import Moment from 'moment';
 import { ActivityIndicator } from 'react-native-paper';
+import { getSyllabusByUser } from '../../actions/syllabus';
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
 
@@ -32,34 +33,24 @@ const SetUpScreen = ({navigation}) => {
         semesterGoals,
         modalVisible,
         goalVisible,
+        syllabusId,
         setProfile,
         setGoalVisible,
         setModalVisible,
-        handleLetsGetStarted
+        handleLetsGetStarted,
+        handleCallback,
+        setSyllabusId
     } = method({navigation});
 
+    const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
-    const [classSyllabi, setClassSyllabi] = React.useState([
-        {
-            code: "MKTG 100S",
-            name: "Brian Goerlich",
-            schedule: "M 6pm-9pm"
-        },
-        {
-            code: "MKTG 100S",
-            name: "Brian Goerlich",
-            schedule: "M 6pm-9pm"
-        },
-        {
-            code: "MKTG 100S",
-            name: "Brian Goerlich",
-            schedule: "M 6pm-9pm"
-        }
-    ]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-
-    }, [syllabus]);
+        let userId = state.userId
+        let token = state.token
+        dispatch(getSyllabusByUser(userId, token));
+    }, [syllabus.length]);
 
     return (
       <View style={{ flex:1}}>
@@ -100,22 +91,23 @@ const SetUpScreen = ({navigation}) => {
                 <View style={{marginTop:height * 0.02}}>
                     <Label text="Add your class syllabi" />
                     <View style={{flexDirection:'row'}}>
-                        <AddItem onPress={() => setModalVisible(true)} />
-                        {
-                        //classSyllabi.map((item) => {
-                              //  return (
+                        <AddItem onPress={() => {setSyllabusId(null)
+                                                 setModalVisible(true)}} />
+                        <ScrollView horizontal>
+                            {syllabus.length > 0 &&
+                            syllabus.map((item) => {
+                                return (
                                     <GradientItem 
-                                        //code={item.code}
-                                        code={syllabus.className}
-                                        name={syllabus.teacherName}
-                                        schedule={Moment(syllabus.classSchedule).format("MM/DD/YYYY hh:mm A")}
-                                        selectedBgColor={bgColor[syllabus.colorInHex]}
-                                        />
-
-                                   
-                               // );
-                        //    })                
-                        }
+                                        parentCallback = {handleCallback}
+                                        code={item.className}
+                                        name={item.teacherName}
+                                        schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
+                                        selectedBgColor={bgColor[parseInt(item.colorInHex)]}
+                                        id={item.id}
+                                    />
+                                );
+                            })}
+                        </ScrollView>
                     </View>
                 </View>
                 <View style={{marginTop:height * 0.02}}>
@@ -142,9 +134,10 @@ const SetUpScreen = ({navigation}) => {
             </View>
 
             <AddSyllabus 
-                onClose={() => { setModalVisible(!modalVisible); }}
                 modalVisible={modalVisible} 
                 setModalVisible={setModalVisible}
+                syllabusId={syllabusId}
+                setSyllabusId={setSyllabusId}
             />
 
             <AddGoal 

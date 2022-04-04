@@ -7,10 +7,9 @@ export const GET_USER = 'GET_USER';
 export const GET_USER_BY_EMAIL = 'GET_USER_BY_EMAIL';
 export const UPDATE_USER = 'UPDATE_USER';
 
-export const getUser = (userId) => {
+export const getUser = (userId, token) => {
     try {
       return async dispatch => {
-        let token = await AsyncStorage.getItem('userToken')
         const res = await axios.get(`${getAPIBaseUrl()}User/GetUserById/${userId}`,
         { headers: {"Authorization" : `Bearer ${token}`} })
           dispatch({
@@ -37,10 +36,9 @@ export const getUserByEmail = email => {
   }
 };
 
-export const updateUser = (profile, userId) => {
+export const updateUser = (profile, userId, token) => {
     return async dispatch => {
       try{  
-        let token = await AsyncStorage.getItem('userToken')
         const formData = new FormData();
         formData.append('UserId', userId)
         formData.append('FirstName', profile.firstName); 

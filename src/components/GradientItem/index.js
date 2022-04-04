@@ -31,12 +31,16 @@ const GradientItem = props => {
       setSelectedBgColor(item);
     }
    
+    const onTrigger = (id) => {
+        props.parentCallback(id);
+    }
+
     useEffect(() => {
       //getRandomColor(props.selectedColor)
     });
  
     return (
-      <TouchableOpacity style={{...styles.itemContainer, ...props.containerStyle}}>
+      <TouchableOpacity onPress={() => onTrigger(props.id)} style={{...styles.itemContainer, ...props.containerStyle}}>
         {props.selectedBgColor !== undefined && props.selectedBgColor !== null &&
             <LinearGradient
               colors={props.selectedBgColor}

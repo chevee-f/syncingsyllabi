@@ -8,15 +8,32 @@ export default StyleSheet.create({
         height: 50,
         width: width * 0.9,
         marginTop: 10,
-        zIndex: 30,
+        zIndex: 30
     },
     dropDown:{
         borderRadius: 15,
-        borderColor: color.default
+        borderColor: color.default,
+        borderBottomStartRadius: 10,
+        borderBottomEndRadius: 10,
+        backgroundColor: '#fbfbfb'
+    },
+    dropDownContainerStyle: {
+        borderWidth: 0,
+        borderTopStartRadius: 10,
+        borderTopEndRadius: 10,
+        marginTop: 1,
+        paddingVertical: 10
     },
     placeHolder:{
         color: color.primary,
         fontSize: 14,
-        fontFamily: 'Manrope'
+        fontFamily: 'Manrope',
+        fontWeight: 'normal'
+    },
+    text:{
+        color: color.primary,
+        fontFamily: 'Manrope',
+        fontWeight: 'bold',
+        fontSize: 16
     }
 })
