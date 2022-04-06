@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, 
          Text, 
          SafeAreaView,
-         Image ,
-         ScrollView
+         Image,
+         ScrollView,
+         Platform,
+         KeyboardAvoidingView
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -51,7 +53,7 @@ const EditProfile = ({
           onBackButtonPress={props.onClose}
           onBackdropPress={props.onClose}>
 
-            <View style={styles.modalContainer}>
+            <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
                 <ScrollView>
                     <TouchableOpacity onPress={props.onClose}>
                         <Image 
@@ -121,7 +123,7 @@ const EditProfile = ({
                             onPress={() => {handleUpdateProfile()}} />       
                     </View>
                 </ScrollView>
-            </View>
+            </KeyboardAvoidingView>
             <DateTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 onSelectDate={() => {setProfile({...profile, dateOfBirth: Moment(selectedDate).format("MM/DD/YYYY")}) 

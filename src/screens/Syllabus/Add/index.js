@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
          Image,
          ScrollView,
          TouchableOpacity,
-         Platform
+         Platform,
+         KeyboardAvoidingView,
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -16,9 +17,10 @@ import WeekdayTimePicker from '../../../components/WeekdayTimePicker'
 import Colors from '../../../components/GradientColor'
 import GradientItem from '../../../components/GradientItem'
 import DefaultButton from '../../../components/DefaultButton';
+import ConfirmationModal from '../../../components/ConfirmationModal'
 import method from './method'
-import {Context as AuthContext} from '../../../components/Context/AuthContext';
-import { useSelector, useDispatch } from 'react-redux';
+import color from '../../../styles/colors'
+import { useSelector } from 'react-redux';
 
 var {height, width} = Dimensions.get('window');
 
@@ -38,25 +40,27 @@ const AddSyllabus = ({
         weekday,
         inputValidation,
         hasValue,
+        confirmationMessage,
+        confirmationVisible,
+        setConfirmationVisible,
+        setAction,
         setHasValue,
+        setConfirmationMessage,
         setWeekday,
         setClassSyllabus,
         setSelectedColor,
-        handleAddSyllabus,
-        handleUpdateSyllabus,
         addSchedule,
         handleCallback,
         handleValidClassName,
         handleValidTeacherName,
-        resetClassSyllabus
+        resetClassSyllabus,
+        onConfirm
     } = method();
 
     const [calendarVisible, setCalendarVisible] = useState(false);
     const colors = [0,1,2,3,4,5,6,7,8,9,10,11];
 
-    const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
-    const dispatch = useDispatch();
 
     useEffect(() => {
         if(modalVisible){
@@ -96,18 +100,14 @@ const AddSyllabus = ({
           style={styles.modal}
           onBackButtonPress={() => { setModalVisible(!modalVisible);
                                      setSyllabusId(null)
-                                     setHasValue(false)
                                      resetClassSyllabus() }}
           onBackdropPress={() => { setModalVisible(!modalVisible);
                                    setSyllabusId(null)
-                                   setHasValue(false)
                                    resetClassSyllabus() }}>
-
-            <View style={styles.modalContainer}>
-                <ScrollView>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
+            <ScrollView>
                     <TouchableOpacity onPress={() => { setModalVisible(!modalVisible);
                                                        setSyllabusId(null)
-                                                       setHasValue(false)
                                                        resetClassSyllabus() }}>
                         <Image 
                             source={require('../../../assets/icons/closeButton.png')}
@@ -177,9 +177,7 @@ const AddSyllabus = ({
                                 {
                                     colors.map((item) => {
                                         return (
-                                            <Colors selectedColor={item} 
-                                                    onPress={() => setSelectedColor(item)} 
-                                            />
+                                            <Colors selectedColor={item} onPress={() => setSelectedColor(item)} />
                                         );
                                     })                
                                 }              
@@ -197,27 +195,28 @@ const AddSyllabus = ({
                         />
                     </View>
                     {syllabusId !== null ?
-                        <View style={[styles.actionContainer]}>
-                            <DefaultButton containerStyle={{width: width * 0.44}} title="Remove" />    
+                        <View style={styles.actionContainer}>
+                            <DefaultButton containerStyle={{width: width * 0.44, backgroundColor: color.error}} 
+                                            title="Remove" 
+                                            onPress={() => {setAction('Delete')
+                                                            setConfirmationMessage('Remove this Syllabi?')
+                                                            setConfirmationVisible(true)}}/>    
                             <DefaultButton containerStyle={{width: width * 0.44}} 
                                            title="Update" 
-                                           onPress={() => { handleUpdateSyllabus()
-                                                            setModalVisible(!modalVisible)
-                                                            setSyllabusId(null)
-                                                            setHasValue(false)}}/>         
+                                           onPress={() => {setAction('Update')
+                                                           setConfirmationMessage('Update this Syllabi?')
+                                                           setConfirmationVisible(true)}}/>         
                         </View> :
                         <View style={styles.fieldContainer}>
                             <DefaultButton title="Save" 
-                                    onPress={() => { handleAddSyllabus()
-                                                     setModalVisible(!modalVisible)
-                                                     setSyllabusId(null)
-                                                     setHasValue(false)}}
+                                    onPress={() => {setAction('Add')
+                                                    setConfirmationMessage('Add this Syllabi?')
+                                                    setConfirmationVisible(true)}}
                             />       
                         </View>
                     }
-                </ScrollView>
-            </View>
-
+            </ScrollView>
+        </KeyboardAvoidingView>                               
             <WeekdayTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
@@ -232,11 +231,18 @@ const AddSyllabus = ({
                 list={classSyllabus.scheduleList}
                 add={() => addSchedule()}
                 parentCallback = {handleCallback}
-                onSelectDate={() => setCalendarVisible(!calendarVisible)}
+                onConfirm={() => setCalendarVisible(!calendarVisible)}
+            />
+
+            <ConfirmationModal 
+                modalVisible={confirmationVisible} 
+                confirmationMessage={confirmationMessage}
+                onClose={() => setConfirmationVisible(!confirmationVisible)}
+                onConfirm={() => {onConfirm()
+                                  setSyllabusId(null)
+                                  setModalVisible(!modalVisible)}}
             />
           </Modal>
-
-          
       </SafeAreaView>
             
         

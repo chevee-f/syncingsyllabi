@@ -15,8 +15,9 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         width: width * 1,
-        height: height * 0.15,
-        paddingHorizontal: 10
+        //height: height * 0.15,
+       paddingHorizontal: 10,
+       marginTop:height * 0.05
       },
       topLineContainer:{
         position:'absolute',

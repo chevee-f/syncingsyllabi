@@ -44,7 +44,7 @@ const DateTimePicker = ({
                         monthTitleStyle={styles.titleStyle}
                         yearTitleStyle={styles.titleStyle}
                         onDateChange={props.onChangeDate}
-                        date={props.selectedDate}
+                        initialDate={props.selectedDate}
                     />
 
                     {props.showTimePicker &&

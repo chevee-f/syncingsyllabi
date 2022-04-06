@@ -1,45 +1,62 @@
-import React, { useState } from 'react';
-import { Button, Text, View } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
 import TabButton from './../../components/TabButton'
 import DropDownPicker from 'react-native-dropdown-picker';
 import Card from '../../components/Card/Item'
 import styles from './styles'
 import label from '../../styles/label'
 import color from '../../styles/colors'
-
-var terms = [{ name: "Short-Term", isActive: true },
-             { name: "Medium-Term", isActive: false },
-             { name: "Long-Term", isActive: false },
-             { name: "Archived", isActive: false }];
+import method from './method'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { getGoalByUser } from '../../actions/goal';
+import AddGoal from '../../screens/Goal/Add'
+import ConfirmationModal from '../../components/ConfirmationModal'
+import SuccessModal from '../../components/SuccessModal'
 
 const GoalScreen = ({ navigation }) => {
-  const data = [
-      {
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },{
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },{
-        class: 'Get 4.0 GPA for the semester',
-        term: 'Short-Term',
-        due: "Due Tomorrow at 10:00am"
-      },
-  ];
+    const {
+      typeOfGoal,
+      activeTab,
+      goalVisible,
+      goalId,
+      confirmationMessage,
+      confirmationVisible,
+      successMessage,
+      successModalVisible, 
+      action,
+      setSuccessModalVisible,
+      setConfirmationVisible,
+      setGoalId,
+      setGoalVisible,
+      onSelect,
+      onClickAction,
+      onConfirm
+    } = method();
+
+    const { state } = useContext(AuthContext);
+    const { goals } = useSelector(state => state.goalReducer);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        let userId = state.userId
+        let token = state.token
+        dispatch(getGoalByUser(userId, token));
+    }, [goals.length]);
 
     return (
-      <View style={{ flex:1 }}>
+      <View>
         <View style={styles.header}>
-          {
-            terms.map((item) => {
+          {typeOfGoal.map((item) => {
                 return (
-                    <TabButton title={item.name} isActive={item.isActive} />
+                  <TabButton title={item.name} 
+                             isActive={item.value === activeTab}
+                             onSelect={onSelect}
+                             value={item.value} />
                 );
-            })                
-          }     
+          })}     
         </View>
+        
         <View style={styles.sortContainer}>
             <Text style={[label.boldExtraSmallHeading, {color: color.default, marginLeft:10}]}>Sort by</Text>
             <DropDownPicker
@@ -56,7 +73,34 @@ const GoalScreen = ({ navigation }) => {
                 placeholder="Due Date"
             />
         </View>
-        <Card data={data} />
+        <Card data={goals.filter((x) => x.goalType == activeTab)} 
+              onClickAction={onClickAction} />
+
+        <AddGoal 
+            onClose={() => { setGoalVisible(!goalVisible); }}
+            goalVisible={goalVisible} 
+            setGoalVisible={setGoalVisible}
+            goalId={goalId}
+            setGoalId={setGoalId}
+        />
+        <ConfirmationModal 
+            modalVisible={confirmationVisible} 
+            confirmationMessage={confirmationMessage}
+            onClose={() => setConfirmationVisible(!confirmationVisible)}
+            onConfirm={() => {onConfirm()
+                              setGoalId(null)
+                              setGoalVisible(!goalVisible)
+                              }}
+        />
+
+        <SuccessModal 
+            isRemove={action === 'Delete' ? true : false}
+            successModalVisible={successModalVisible} 
+            successMessage={successMessage}
+            onClose={() => setSuccessModalVisible(!successModalVisible)}
+        />
+        
+
       </View>
     )
 }

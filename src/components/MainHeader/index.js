@@ -16,38 +16,42 @@ const MainHeader = props => {
     const navigation = useNavigation()
     const [goalVisible, setGoalVisible] = useState(false);
     const { user } = useSelector(state => state.userReducer);
-
+    const [goalId, setGoalId] = useState(null);
+    
     return (
         <View style={[styles.headerContainer,{height: props.screen === 'Home' ? 
                                                       Platform.OS === 'ios' ? height * 0.21 : height * 0.28 :
-                                                      Platform.OS === 'ios' ? height * 0.11 : height * 0.04}]}>
-            <View style={styles.topLineContainer}>
-                <Image 
-                    source={require('../../assets/carousel/TopLines.png')}
-                    resizeMode='contain'
-                    style={{width: props.screen === 'Home' ? width * 0.92 : width * 0.75,
-                            height: props.screen === 'Home' ? height * 0.6 : height * 0.55 }}
-                />
-            </View>
-            <View style={styles.bottomLineContainer}>
-                <Image 
-                    source={require('../../assets/carousel/BottomLines.png')}
-                    resizeMode='contain'
-                    style={{width: props.screen === 'Home' ? width * 0.75 : width * 0.8,
-                            height: props.screen === 'Home' ? height * 0.25 : height * 0.13 }}
-                />
-            </View>
-
+                                                      Platform.OS === 'ios' ? height * 0.11 : height * 0.02}]}>
+         
             {props.screen === 'Goal' &&
-                    <View style={styles.titleContainer}>
-                        <Text style={[label.boldMediumHeading, {color: color.textDefault,textAlign:'right', width:'57%'}]}>Goals</Text>
-                        <TouchableOpacity onPress={() => setGoalVisible(true)}>
-                            <Icon name="add-outline" color={color.textDefault} size={40} />
-                        </TouchableOpacity>
-                    </View>
+                <View style={styles.titleContainer}>
+                    <Text style={[label.boldMediumHeading, {color: color.textDefault,textAlign:'right', width:'57%'}]}>Goals</Text>
+                    <TouchableOpacity onPress={() => setGoalVisible(true)}>
+                        <Icon name="add-outline" color={color.textDefault} size={40} />
+                    </TouchableOpacity>
+                </View>
+                
             }
 
             {props.screen === 'Home' &&
+            <View>
+                  <View style={styles.topLineContainer}>
+                    <Image 
+                        source={require('../../assets/carousel/TopLines.png')}
+                        resizeMode='contain'
+                        style={{width: props.screen === 'Home' ? width * 0.92 : width * 0.75,
+                                height: props.screen === 'Home' ? height * 0.6 : height * 0.55
+                            }}
+                    />
+                </View>
+                <View style={styles.bottomLineContainer}>
+                    <Image 
+                        source={require('../../assets/carousel/BottomLines.png')}
+                        resizeMode='contain'
+                        style={{width: props.screen === 'Home' ? width * 0.75 : width * 0.8,
+                                height: props.screen === 'Home' ? height * 0.25 : height * 0.13 }}
+                    />
+                </View>
                 <View style={styles.container}>
                     <View style={styles.profileContainer}>
                         <View style={{ justifyContent:'center' }}>
@@ -74,12 +78,17 @@ const MainHeader = props => {
                         </View>
                     </View>
                 </View>
+            </View>
             }
+ 
+         
 
         <AddGoal 
             onClose={() => { setGoalVisible(!goalVisible); }}
             goalVisible={goalVisible} 
             setGoalVisible={setGoalVisible}
+            goalId={goalId}
+            setGoalId={setGoalId}
         />
 
         </View>

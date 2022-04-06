@@ -5,10 +5,18 @@ import Icon from 'react-native-vector-icons/EvilIcons';
 import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import styles from './styles'
+import Moment from 'moment';
 
-const renderLeftAction = (action, imgSrc) => {
+const CardItem = ({
+  data,
+  ...props
+}) => {
+  const tomorrow = Moment().add(1, 'days');
+
+const renderLeftAction = (action, imgSrc, id) => {
     return (
-        <TouchableOpacity style={[styles.action,{backgroundColor: action === 'delete' ? color.error : color.archive }]}>
+        <TouchableOpacity style={[styles.action,{backgroundColor: action === 'Delete' ? color.error : color.archive }]}
+                          onPress={() => onclick(action,id)}>
           <Image 
               source={imgSrc}
               resizeMode='contain'
@@ -17,10 +25,15 @@ const renderLeftAction = (action, imgSrc) => {
         </TouchableOpacity>
     );
   };
-  
-const renderRightAction = (action, imgSrc) => {
+
+const onclick = (action,id) => {
+    props.onClickAction(action,id);
+}
+
+const renderRightAction = (action, imgSrc, id) => {
     return (
-        <TouchableOpacity style={[styles.action,{backgroundColor: action === 'done' ? color.green : color.warning }]}>
+        <TouchableOpacity style={[styles.action,{backgroundColor: action === 'Complete' ? color.green : color.warning }]}
+                          onPress={() => onclick(action,id)}>
           <Image 
               source={imgSrc}
               resizeMode='contain'
@@ -30,33 +43,36 @@ const renderRightAction = (action, imgSrc) => {
     );
 };
 
-const renderLeftActions = () => (
+const renderLeftActions = (id) => (
   <View style={styles.actionContainer}>
-      {renderLeftAction('delete', require('../../../assets/icons/X.png'))}
-      {renderLeftAction('archive', require('../../../assets/icons/Archive.png'))}
+      {renderLeftAction('Delete', require('../../../assets/icons/X.png'), id)}
+      {renderLeftAction('Archive', require('../../../assets/icons/Archive.png'), id)}
   </View>
 );
 
-const renderRightActions = () => (
+const renderRightActions = (id) => (
     <View style={styles.actionContainer}>
-        {renderRightAction('done', require('../../../assets/icons/checkIcon.png'))}
-        {renderRightAction('edit', require('../../../assets/icons/NotePencil.png'))}
+        {renderRightAction('Complete', require('../../../assets/icons/checkIcon.png'), id)}
+        {renderRightAction('Edit', require('../../../assets/icons/NotePencil.png'), id)}
     </View>
 );
   
 const Row = ({ item }) => (
     <View style={styles.container}>
         <Text style={label.boldSmallHeading2}>
-          {item.class}
+          {item.goalDescription}
         </Text>
         <Text style={label.extraSmallHeading2}>
-          {item.term}
+          {item.goalTypeName}
         </Text>
         <View style={styles.horizontalLine} />
         <View style={{flexDirection:'row', alignItems:'center'}}>
             <Icon name="clock" size={28} />
-            <Text style={[label.boldExtraSmallHeading, {color: color.error, marginLeft: 5}]}>
-              {item.due}
+            <Text style={[label.boldExtraSmallHeading, {color: Moment(item.goalDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ? color.error : '#000', 
+                                                        marginLeft: 5}]}>
+              {Moment(item.goalDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ?
+               'Due Tomorrow' : Moment(item.goalDateEnd).format("MM/DD/YYYY")
+              }
             </Text>
         </View>
     </View>
@@ -68,25 +84,23 @@ const SwipeableRow = ({ item, index }) => {
           friction={2}
           leftThreshold={30}
           rightThreshold={40}
-          renderLeftActions={renderLeftActions}
-          renderRightActions={renderRightActions}>
+          renderLeftActions={() => renderLeftActions(item.id)}
+          renderRightActions={() => renderRightActions(item.id)}>
               <Row item={item} />
         </Swipeable>
     );
 };
 
-const CardItem = ({data}) => {
-    return (
-        <View>
-          <FlatList
-              data={data}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-              renderItem={({ item, index }) => (
-                                                  <SwipeableRow item={item} index={index} />
-                                               )}
-          />
-        </View>
-      )
-};
+  return (
+    <View>
+      <FlatList
+          data={data}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          renderItem={({ item, index }) => (<SwipeableRow item={item} index={index} />)}
+      />
+    </View>
+  )
+}
+
 
 export default CardItem;

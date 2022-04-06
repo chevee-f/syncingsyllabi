@@ -23,10 +23,6 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
             .then((res) => {
                 dispatch({ type: 'CLEAR_ERROR', payload: [] });
                 dispatch(getSyllabusByUser(userId, token));
-                //dispatch({
-                //    type: ADD_SYLLABUS,
-                //    payload: res.data.data.item
-                //});
             })
       };
     } catch (error) {
@@ -100,3 +96,17 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
       Alert.alert(JSON.stringify(error.message))
     }
   };
+
+  export const removeSyllabus = (syllabusId, userId, token) => {
+    try {
+      return async dispatch => {
+        const res = await axios.get(`${getAPIBaseUrl()}Syllabus/DeleteSyllabus/${syllabusId}/${userId}`,
+        { headers: {"Authorization" : `Bearer ${token}`} })
+          dispatch({ type: 'CLEAR_ERROR', payload: [] });
+          dispatch(getSyllabusByUser(userId, token));
+      };
+    } catch (error) {
+      Alert.alert(JSON.stringify(error.message))
+    }
+  };
+  

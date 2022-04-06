@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
          Image ,
-         ScrollView
+         ScrollView,
+         KeyboardAvoidingView
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -16,6 +17,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import Dropdown from '../../../components/Dropdown'
 import method from './method'
 import Moment from 'moment';
+import { useSelector } from 'react-redux';
+import ConfirmationModal from '../../../components/ConfirmationModal'
+import SuccessModal from '../../../components/SuccessModal'
 
 var {height, width} = Dimensions.get('window');
 
@@ -23,6 +27,8 @@ const AddGoal = ({
     onPress,
     setGoalVisible,
     goalVisible,
+    goalId,
+    setGoalId,
     ...props
   }) => {
 
@@ -30,15 +36,47 @@ const AddGoal = ({
         openMenu,
         goal,
         typeOfGoal,
+        hasValue,
+        confirmationMessage,
+        confirmationVisible,
+        action,
+        successMessage,
+        successModalVisible,
+        setSuccessModalVisible,
+        setConfirmationVisible,
+        setAction,
+        setConfirmationMessage,
+        setHasValue,
         setGoal,
         setOpenMenu,
         handleSelectItem,
-        handleAddGoal,
-        validateDate
+        resetGoal,
+        onConfirm
     } = method();
 
     const [startDateVisible, setStartDateVisible] = useState(false);
     const [endDateVisible, setEndDateVisible] = useState(false);
+
+    const { goals } = useSelector(state => state.goalReducer);
+
+    useEffect(() => {
+        if(goalVisible){
+            if(goalId !== null && !hasValue){
+                    let data = goals.filter((item) => item.id == goalId)                  
+                    setGoal({...goal, 
+                                id: goalId,
+                                title: data[0].goalTitle,
+                                type: data[0].goalType,
+                                description: data[0].goalDescription,
+                                startDate: data[0].goalDateStart,
+                                endDate: data[0].goalDateEnd,
+                                stringStartDate: Moment(data[0].goalDateStart).format("MM/DD/YYYY"),
+                                stringEndDate: Moment(data[0].goalDateEnd).format("MM/DD/YYYY")                
+                            })
+                    setHasValue(true)
+            }
+        }
+    }, [goalVisible,goal,goalId,goals,hasValue]);
 
     return (
         <SafeAreaView>
@@ -52,12 +90,18 @@ const AddGoal = ({
                 isVisible={goalVisible}
                 hideModalContentWhileAnimating
                 style={styles.modal}
-                onBackButtonPress={props.onClose}
-                onBackdropPress={props.onClose}>
+                onBackButtonPress={() => { setGoalVisible(!goalVisible);
+                                           setGoalId(null)
+                                           resetGoal() }}
+                onBackdropPress={() => { setGoalVisible(!goalVisible);
+                                         setGoalId(null)
+                                         resetGoal() }}>
 
-                <View style={styles.modalContainer}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
                     <ScrollView>
-                        <TouchableOpacity onPress={() => { setGoalVisible(!goalVisible); }}>
+                        <TouchableOpacity onPress={() => { setGoalVisible(!goalVisible);
+                                                           setGoalId(null)
+                                                           resetGoal() }}>
                             <Image 
                                 source={require('../../../assets/icons/closeButton.png')}
                                 resizeMode='contain'
@@ -82,8 +126,8 @@ const AddGoal = ({
                                     placeholder="Description of Goal"
                                     selectionColor={color.primary}
                                     activeUnderlineColor={color.primary}
-                                    multiline={true}
-                                    numberOfLines={5}
+                                    //multiline={true}
+                                    //numberOfLines={5}
                                     theme={{ colors: { text: color.primary, placeholder: color.default } }}
                                     value={goal.description}
                                     onChangeText={(description) =>  setGoal({...goal, description: description})}
@@ -100,7 +144,7 @@ const AddGoal = ({
                                         onPressIn={() => { setStartDateVisible(true)}}
                                         placeholder="DD/MM/YYYY"
                                         editable={false}
-                                        value={goal.startDate}
+                                        value={goal.stringStartDate}
                                         selectionColor={color.primary}
                                         activeUnderlineColor={color.primary}
                                         theme={{ colors: { text: color.primary, placeholder: color.default } }}
@@ -116,7 +160,7 @@ const AddGoal = ({
                                         onPressIn={() => { setEndDateVisible(true)}}
                                         placeholder="DD/MM/YYYY"
                                         editable={false}
-                                        value={goal.endDate}
+                                        value={goal.stringEndDate}
                                         selectionColor={color.primary}
                                         activeUnderlineColor={color.primary}
                                         theme={{ colors: { text: color.primary, placeholder: color.default } }}
@@ -124,30 +168,67 @@ const AddGoal = ({
                                 </View> 
                             </View>
                         </View>
-                        <View style={styles.fieldContainer}>
-                            <DefaultButton title="Save" onPress={() => {handleAddGoal() 
-                                                                        setGoalVisible(!goalVisible); }} />       
-                        </View>
+                        {goalId !== null ?
+                            <View style={styles.actionContainer}>
+                                <DefaultButton containerStyle={{width: width * 0.44, backgroundColor: color.error }} 
+                                                title="Remove" 
+                                                onPress={() => {setAction('Delete')
+                                                                setConfirmationMessage('Remove this Goal?')
+                                                                setConfirmationVisible(true)}}/>    
+                                <DefaultButton containerStyle={{width: width * 0.44}} 
+                                                title="Update" 
+                                                onPress={() => {setAction('Update')
+                                                                setConfirmationMessage('Update this Goal?')
+                                                                setConfirmationVisible(true)}}/>         
+                            </View> :
+                            <View style={styles.fieldContainer}>
+                                <DefaultButton title="Save"
+                                                onPress={() => {setAction('Add')
+                                                                setConfirmationMessage('Add this Goal?')
+                                                                setConfirmationVisible(true)}} />       
+                            </View>
+                        }
                     </ScrollView>
-                </View>
+                </KeyboardAvoidingView>
+
                 <DateTimePicker 
-                    onClose={() => { setStartDateVisible(!startDateVisible); }}
+                    onClose={() => setStartDateVisible(!startDateVisible)}
                     modalVisible={startDateVisible} 
                     showTimePicker={false}
-                    onChangeDate={(startDate) =>  setGoal({...goal, startDate: Moment(startDate).format("MM/DD/YYYY")})}
-                    onSelectDate={() => { validateDate()
-                                          setStartDateVisible(!startDateVisible); }}
-                    selectedDate={goal.startDate}
+                    onChangeDate={(startDate) =>  setGoal({...goal, 
+                                                            startDate: startDate,
+                                                            stringStartDate: Moment(startDate).format("MM/DD/YYYY")})}
+                    onSelectDate={() => setStartDateVisible(!startDateVisible)}
+                    //selectedDate={Moment(goal.startDate).format("MM/DD/YYYY")}
                 />
+
                 <DateTimePicker 
-                    onClose={() => { setEndDateVisible(!endDateVisible); }}
+                    onClose={() => setEndDateVisible(!endDateVisible)}
                     modalVisible={endDateVisible} 
                     showTimePicker={false}
-                    onSelectDate={() => { validateDate()
-                                          setEndDateVisible(!endDateVisible); }}
-                    onChangeDate={(endDate) =>  setGoal({...goal, endDate: Moment(endDate).format("MM/DD/YYYY")})}
-                    selectedDate={goal.endDate}
+                    onSelectDate={() => setEndDateVisible(!endDateVisible)}
+                    onChangeDate={(endDate) =>  setGoal({...goal, 
+                                                            endDate: endDate,
+                                                            stringEndDate: Moment(endDate).format("MM/DD/YYYY")})}
+                    //selectedDate={Moment(goal.endDate).format("MM/DD/YYYY")}
                 />
+
+                <ConfirmationModal 
+                    modalVisible={confirmationVisible} 
+                    confirmationMessage={confirmationMessage}
+                    onClose={() => setConfirmationVisible(!confirmationVisible)}
+                    onConfirm={() => {onConfirm()
+                                      setGoalId(null)
+                                      setGoalVisible(!goalVisible)}}
+                />
+
+                <SuccessModal 
+                    isRemove={action === 'Delete' ? true : false}
+                    successModalVisible={successModalVisible} 
+                    successMessage={successMessage}
+                    onClose={() => setSuccessModalVisible(!successModalVisible)}
+                />
+
           </Modal>
         </SafeAreaView>
     )

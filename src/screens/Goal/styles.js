@@ -5,12 +5,13 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
     header:{
+        //marginTop: 150,
         borderBottomWidth: 2,
         height: 65,
         borderColor: '#ccc',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 10,
+        paddingHorizontal: 20,
         backgroundColor: '#fff'
     },
     containerStyle:{
@@ -18,6 +19,13 @@ export default StyleSheet.create({
         width: width * 0.3,
         marginTop: -15,
         zIndex: 30
+    },
+    btnContainer:{
+        width: 98,
+        height: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 16
     },
     dropDown:{
         borderWidth: 0,

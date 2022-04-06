@@ -6,8 +6,12 @@ import styles from './styles'
 
 const Item = props => {
  
+    const onClick = (id) => {
+      props.onClick(id);
+    }
+
     return (
-      <TouchableOpacity style={{...styles.itemContainer, ...props.containerStyle}}>
+      <TouchableOpacity onPress={() => onClick(props.id)} style={{...styles.itemContainer, ...props.containerStyle}}>
           <Text style={{...styles.text, ...label.boldExtraSmallHeading2, ...props.textStyle}}>{props.code}</Text>
           <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.goal}</Text>
       </TouchableOpacity>
