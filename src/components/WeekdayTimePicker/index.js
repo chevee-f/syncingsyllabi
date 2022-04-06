@@ -108,7 +108,7 @@ const WeekdayTimePicker = ({
                                 <View style={styles.timeSubContainer}>
                                     <Text style={[label.boldSmallHeading,styles.timeLabel]}>From</Text>
                                     <TouchableOpacity onPress={() => { setShowStartTime(true)
-                                                                    setShowEndTime(false) }} 
+                                                                       setShowEndTime(false) }} 
                                                     style={styles.timeValueContainer}>
                                         <Text style={[label.smallHeading, {color: color.primary}]}>{Moment(props.startTime).format("hh:mm A")}</Text>
                                     </TouchableOpacity>
@@ -117,7 +117,7 @@ const WeekdayTimePicker = ({
                                         <View>
                                             <View style={styles.dateTimePickerHeader}>
                                                 <TouchableOpacity onPress={() => { setShowStartTime(false)
-                                                                                setShowEndTime(false) }} >
+                                                                                   setShowEndTime(false) }} >
                                                 <Text style={{ color:'#218bf7',fontWeight:'bold'}}>
                                                     Done
                                                 </Text>
@@ -142,7 +142,7 @@ const WeekdayTimePicker = ({
                                 <View style={styles.timeSubContainer}>
                                     <Text style={[label.boldSmallHeading,styles.timeLabel]}>To</Text>
                                     <TouchableOpacity onPress={() => { setShowStartTime(false)
-                                                                    setShowEndTime(true) }} 
+                                                                       setShowEndTime(true) }} 
                                                     style={styles.timeValueContainer}>
                                         <Text style={[label.smallHeading, {color: color.primary}]}>{Moment(props.endTime).format("hh:mm A")}</Text>
                                     </TouchableOpacity>
@@ -151,7 +151,7 @@ const WeekdayTimePicker = ({
                                     <View>
                                         <View style={styles.dateTimePickerHeader}>
                                             <TouchableOpacity onPress={() => { setShowStartTime(false)
-                                                                            setShowEndTime(false) }} >
+                                                                               setShowEndTime(false) }} >
                                             <Text style={{ color:'#218bf7',fontWeight:'bold'}}>
                                                 Done
                                             </Text>
@@ -186,11 +186,9 @@ const WeekdayTimePicker = ({
                         </View>
                     </View>
                    
-                    
-                  
                     <View style={styles.buttonContainer}>
                         <CancelButton title="Cancel" containerStyle={styles.button} onPress={props.onClose} />
-                        <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onSelectDate} />
+                        <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onConfirm} />
                     </View>
                 </View>
             </Modal>

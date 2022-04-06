@@ -2,7 +2,7 @@ import React, { useState,useContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../../components/Context/AuthContext';
-import { addSyllabus, updateSyllabus } from '../../../actions/syllabus';
+import { addSyllabus, updateSyllabus, removeSyllabus } from '../../../actions/syllabus';
 import Moment from 'moment';
 
 const method = () => {
@@ -38,9 +38,12 @@ const method = () => {
     });
 
     const days = ['SU', 'M', 'T', 'W', 'TH', 'F', 'S'];
+    const [action, setAction] = React.useState('')
+    const [confirmationVisible, setConfirmationVisible] = React.useState('')
     const [weekday, setWeekday] = React.useState(-1)
     const [selectedColor, setSelectedColor] = useState(0);
     const [hasValue, setHasValue] = useState(false);
+    const [confirmationMessage, setConfirmationMessage] = useState('');
     const [bgColor, setBgColor] = React.useState(
         [
             ['#FF9966', '#FF5E62'],
@@ -86,6 +89,17 @@ const method = () => {
         } 
     }
 
+    const handleRemoveSyllabus = async() => {
+        let userId = state.userId
+        let token = state.token
+        await dispatch(removeSyllabus(classSyllabus.id, userId, token))
+        if(hasError){
+            Alert.alert("Error", error);
+        }else{
+            resetClassSyllabus()
+        }
+    }
+
     const resetClassSyllabus = () => {
         setClassSyllabus({...classSyllabus,        
                             id: null, 
@@ -97,6 +111,7 @@ const method = () => {
                             scheduleList: []})
         setWeekday(-1)
         setSelectedColor(0)
+        setHasValue(false)
     }
 
     const addSchedule = () => {
@@ -196,6 +211,18 @@ const method = () => {
             return true
         }
     }
+
+    const onConfirm = () => {
+        setConfirmationVisible(!confirmationVisible)
+        if(action === 'Add'){
+            handleAddSyllabus()
+        }else if(action === 'Update'){
+            handleUpdateSyllabus()
+        }else{
+            handleRemoveSyllabus()
+        }
+        setHasValue(false)
+    }
       
     return {
         bgColor,
@@ -204,17 +231,21 @@ const method = () => {
         weekday,
         inputValidation,
         hasValue,
+        confirmationMessage,
+        confirmationVisible,
+        setConfirmationVisible,
+        setAction,
         setHasValue,
+        setConfirmationMessage,
         setWeekday,
         setClassSyllabus,
         setSelectedColor,
-        handleAddSyllabus,
-        handleUpdateSyllabus,
         addSchedule,
         handleCallback,
         handleValidClassName,
         handleValidTeacherName,
-        resetClassSyllabus
+        resetClassSyllabus,
+        onConfirm
     };
   };
   

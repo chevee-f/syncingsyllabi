@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Text, TouchableOpacity, Platform } from 'react-native';
+import { View, Image, Text, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Modal from "react-native-modal";
 import PasswordInput from '../../components/PasswordInput';
 import DefaultButton from '../../components/DefaultButton';
@@ -35,7 +35,7 @@ const CodeVerificationScreen = ({ navigation }) => {
 
 
     return (
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}  style={styles.container}>
             <View style={styles.topLineContainer}>
                 <Image 
                     source={require('../../assets/carousel/TopLines.png')}
@@ -58,72 +58,74 @@ const CodeVerificationScreen = ({ navigation }) => {
                 />
             </View>
             <View style={styles.mainContainer}>
-                <View>
-                    <TouchableOpacity onPress={closeModal}>
-                        <Image 
-                            source={require('../../assets/icons/closeButton.png')}
-                            resizeMode='contain'
-                            style={styles.close}
-                        />
-                    </TouchableOpacity>
-                    <Text style={[label.boldLargeHeading, {color:color.primary}]}>Change Password</Text>
-                    <View style={{marginVertical: 20}}>
-                        <Text style={[label.smallHeading, {color:color.primary}]}>
-                            In order to protect your account, make sure your password:
-                        </Text>
-                        <View style={{flexDirection: 'row',paddingLeft:15}}>
-                            <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
-                            <Text style={[label.smallHeading, {color:color.primary}]}>must be at least 8 characters long</Text>
-                        </View>
-                        <View style={{flexDirection: 'row',paddingLeft:15}}>
-                            <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
-                            <Text style={[label.smallHeading, {color:color.primary}]}>does not contain any common information of your profile. e.g. username123</Text>
+                <ScrollView>
+                    <View>
+                        <TouchableOpacity onPress={closeModal}>
+                            <Image 
+                                source={require('../../assets/icons/closeButton.png')}
+                                resizeMode='contain'
+                                style={styles.close}
+                            />
+                        </TouchableOpacity>
+                        <Text style={[label.boldLargeHeading, {color:color.primary}]}>Change Password</Text>
+                        <View style={{marginVertical: 20}}>
+                            <Text style={[label.smallHeading, {color:color.primary}]}>
+                                In order to protect your account, make sure your password:
+                            </Text>
+                            <View style={{flexDirection: 'row',paddingLeft:15}}>
+                                <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
+                                <Text style={[label.smallHeading, {color:color.primary}]}>must be at least 8 characters long</Text>
+                            </View>
+                            <View style={{flexDirection: 'row',paddingLeft:15}}>
+                                <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
+                                <Text style={[label.smallHeading, {color:color.primary}]}>does not contain any common information of your profile. e.g. username123</Text>
+                            </View>
                         </View>
                     </View>
-                </View>
-                <View style={{marginBottom: !inputValidation.isValidCurrentPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
-                    <PasswordInput 
-                        label="Current Password"
-                        onChangeText={(currentPassword) => setCurrentPassword(currentPassword)}
-                        secureTextEntry={secureCurrentPassword ? true : false}
-                        updateSecureTextEntry={updateSecureCurrentPassword}
-                        hasValue={currentPassword.length}
-                        hasError={!inputValidation.isValidCurrentPassword}
-                        errorMsg={inputValidation.currentPasswordErrMsg}
-                        onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'currentPassword')}
-                    /> 
-                </View>
-                <View style={{marginBottom: !inputValidation.isValidNewPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
-                    <PasswordInput 
-                        label="New Password"
-                        onChangeText={(newPassword) => setNewPassword(newPassword)}
-                        secureTextEntry={secureNewPassword ? true : false}
-                        updateSecureTextEntry={updateSecureNewPassword}
-                        hasValue={newPassword.length}
-                        hasError={!inputValidation.isValidNewPassword}
-                        errorMsg={inputValidation.newPasswordErrMsg}
-                        onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'newPassword')}
-                    /> 
-                </View>
-                <View style={{marginBottom: !inputValidation.isValidConfirmNewPassword ? 0 : 20}}>
-                    <PasswordInput 
-                        label="Confirm New Password"
-                        onChangeText={(confirmNewPassword) => setConfirmNewPassword(confirmNewPassword)}
-                        secureTextEntry={secureConfirmNewPassword ? true : false}
-                        updateSecureTextEntry={updateSecureConfirmNewPassword}
-                        hasValue={confirmNewPassword.length}
-                        hasError={!inputValidation.isValidConfirmNewPassword}
-                        errorMsg={inputValidation.confirmNewPasswordErrMsg}
-                        onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'confirmNewPassword')}
-                    /> 
-                    <Text style={[label.smallHeading, { color: color.primary}]}>This field must match your New Password</Text>
-                </View>
-                <View style={styles.button}>
-                    <DefaultButton 
-                        title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Update'}
-                        onPress={() => {handleChangePassword()}}
-                    />
-                </View>
+                    <View style={{marginBottom: !inputValidation.isValidCurrentPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
+                        <PasswordInput 
+                            label="Current Password"
+                            onChangeText={(currentPassword) => setCurrentPassword(currentPassword)}
+                            secureTextEntry={secureCurrentPassword ? true : false}
+                            updateSecureTextEntry={updateSecureCurrentPassword}
+                            hasValue={currentPassword.length}
+                            hasError={!inputValidation.isValidCurrentPassword}
+                            errorMsg={inputValidation.currentPasswordErrMsg}
+                            onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'currentPassword')}
+                        /> 
+                    </View>
+                    <View style={{marginBottom: !inputValidation.isValidNewPassword ? 0 : Platform.OS === 'ios' ? 20 : 10}}>
+                        <PasswordInput 
+                            label="New Password"
+                            onChangeText={(newPassword) => setNewPassword(newPassword)}
+                            secureTextEntry={secureNewPassword ? true : false}
+                            updateSecureTextEntry={updateSecureNewPassword}
+                            hasValue={newPassword.length}
+                            hasError={!inputValidation.isValidNewPassword}
+                            errorMsg={inputValidation.newPasswordErrMsg}
+                            onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'newPassword')}
+                        /> 
+                    </View>
+                    <View style={{marginBottom: !inputValidation.isValidConfirmNewPassword ? 0 : 20}}>
+                        <PasswordInput 
+                            label="Confirm New Password"
+                            onChangeText={(confirmNewPassword) => setConfirmNewPassword(confirmNewPassword)}
+                            secureTextEntry={secureConfirmNewPassword ? true : false}
+                            updateSecureTextEntry={updateSecureConfirmNewPassword}
+                            hasValue={confirmNewPassword.length}
+                            hasError={!inputValidation.isValidConfirmNewPassword}
+                            errorMsg={inputValidation.confirmNewPasswordErrMsg}
+                            onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'confirmNewPassword')}
+                        /> 
+                        <Text style={[label.smallHeading, { color: color.primary}]}>This field must match your New Password</Text>
+                    </View>
+                    <View style={styles.button}>
+                        <DefaultButton 
+                            title={isLoading ? <ActivityIndicator size="small" color={color.textDefault} /> : 'Update'}
+                            onPress={() => {handleChangePassword()}}
+                        />
+                    </View>
+                </ScrollView>
             </View>
             
 
@@ -157,7 +159,7 @@ const CodeVerificationScreen = ({ navigation }) => {
                     </View>
                 </Modal>
 
-        </View>
+        </KeyboardAvoidingView>
     )
 
 };

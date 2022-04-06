@@ -20,6 +20,7 @@ import method from './method'
 import { useSelector, useDispatch } from 'react-redux';
 import { ActivityIndicator } from 'react-native-paper';
 import { getSyllabusByUser } from '../../actions/syllabus';
+import { getGoalByUser } from '../../actions/goal';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
@@ -30,27 +31,32 @@ const SetUpScreen = ({navigation}) => {
         profile,
         bgColor,
         isLoading,
-        semesterGoals,
         modalVisible,
         goalVisible,
         syllabusId,
+        typeOfGoal,
+        goalId,
+        setGoalId,
         setProfile,
         setGoalVisible,
         setModalVisible,
         handleLetsGetStarted,
         handleCallback,
-        setSyllabusId
+        setSyllabusId,
+        handleSelectGoal
     } = method({navigation});
 
     const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
+    const { goals } = useSelector(state => state.goalReducer);
     const dispatch = useDispatch();
 
     useEffect(() => {
         let userId = state.userId
         let token = state.token
         dispatch(getSyllabusByUser(userId, token));
-    }, [syllabus.length]);
+        dispatch(getGoalByUser(userId, token));
+    }, [syllabus.length, goals.length]);
 
     return (
       <View style={{ flex:1}}>
@@ -95,17 +101,17 @@ const SetUpScreen = ({navigation}) => {
                                                  setModalVisible(true)}} />
                         <ScrollView horizontal>
                             {syllabus.length > 0 &&
-                            syllabus.map((item) => {
-                                return (
-                                    <GradientItem 
-                                        parentCallback = {handleCallback}
-                                        code={item.className}
-                                        name={item.teacherName}
-                                        schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
-                                        selectedBgColor={bgColor[parseInt(item.colorInHex)]}
-                                        id={item.id}
-                                    />
-                                );
+                                syllabus.map((item) => {
+                                    return (
+                                        <GradientItem 
+                                            parentCallback = {handleCallback}
+                                            code={item.className}
+                                            name={item.teacherName}
+                                            schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
+                                            selectedBgColor={bgColor[parseInt(item.colorInHex)]}
+                                            id={item.id}
+                                        />
+                                    );
                             })}
                         </ScrollView>
                     </View>
@@ -113,16 +119,24 @@ const SetUpScreen = ({navigation}) => {
                 <View style={{marginTop:height * 0.02}}>
                     <Label text="What are your semester goals?" />
                     <View style={{flexDirection:'row'}}>
-                        <AddItem onPress={() => setGoalVisible(true)} />
-                        {semesterGoals.map((item) => {
-                                return (
-                                    <Item 
-                                        code={item.code}
-                                        goal={item.goal}
-                                    />
-                                );
-                            })                
-                        }
+                        <AddItem onPress={() => {setGoalId(null)
+                                                 setGoalVisible(true)}} />
+                        <ScrollView horizontal>
+                            {goals.map((item) => {
+                                    let data = typeOfGoal.filter((x) => x.value == item.goalType)
+                                    return (
+                                        <View>
+                                            <Item 
+                                                onClick = {handleSelectGoal}
+                                                code={data[0].label}
+                                                goal={item.goalDescription}
+                                                id={item.id}
+                                            />
+                                        </View>
+                                    );
+                                })                
+                            }   
+                        </ScrollView>
                     </View>
                 </View>
                 <View style={{marginVertical: height * 0.05}}>
@@ -144,6 +158,8 @@ const SetUpScreen = ({navigation}) => {
                 onClose={() => { setGoalVisible(!goalVisible); }}
                 goalVisible={goalVisible} 
                 setGoalVisible={setGoalVisible}
+                goalId={goalId}
+                setGoalId={setGoalId}
             />
 
         </ScrollView>

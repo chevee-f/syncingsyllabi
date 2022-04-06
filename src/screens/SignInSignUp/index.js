@@ -6,7 +6,8 @@ import {
     Image,
     Dimensions,
     ScrollView,
-    Platform 
+    Platform ,
+    KeyboardAvoidingView
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { TextInput } from 'react-native-paper';
@@ -43,7 +44,7 @@ const SignUpScreen = ({ navigation }) => {
     } = method(navigation);
 
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
         <View style={styles.topLineContainer}>
             <Image 
                 source={require('../../assets/carousel/TopLines.png')}
@@ -156,7 +157,7 @@ const SignUpScreen = ({ navigation }) => {
                 </View>
             </ScrollView>
         </Animatable.View>
-      </View>
+      </KeyboardAvoidingView>
     );
 };
 

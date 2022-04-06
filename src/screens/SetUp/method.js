@@ -3,7 +3,6 @@ import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { updateUser } from '../../actions/user';
-import { getSyllabusDetail } from '../../actions/syllabus';
 
 const method = ({navigation}) => {
    
@@ -22,6 +21,7 @@ const method = ({navigation}) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [goalVisible, setGoalVisible] = useState(false);
     const [syllabusId, setSyllabusId] = useState(null);
+    const [goalId, setGoalId] = useState(null);
 
     const [profile, setProfile] = React.useState({
         firstName: '',
@@ -31,7 +31,13 @@ const method = ({navigation}) => {
         dateOfBirth: null,
         major: null
     });
-    
+
+    const typeOfGoal = [
+        {label: 'Short-Term', value: 1},
+        {label: 'Medium-Term', value: 2},
+        {label: 'Long-Term', value: 3}
+    ]
+
     const [isLoading, setIsLoading] = useState(false);
     const handleLetsGetStarted = async() => {
         setIsLoading(true)
@@ -57,20 +63,10 @@ const method = ({navigation}) => {
        setModalVisible(true)
     }
 
-    const [semesterGoals, setSemesterGoals] = React.useState([
-        {
-            code: "SHORT-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        },
-        {
-            code: "MED-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        },
-        {
-            code: "LONG-TERM",
-            goal: "Get a 4.0 GPA this semester",
-        }
-    ]);
+    const handleSelectGoal = async(id) => {
+        setGoalId(id)
+        setGoalVisible(true)
+     }
 
     const [bgColor, setBgColor] = React.useState(
         [
@@ -93,16 +89,19 @@ const method = ({navigation}) => {
         profile,
         bgColor,
         isLoading,
-        semesterGoals,
         modalVisible,
         goalVisible,
         syllabusId,
+        typeOfGoal,
+        goalId,
+        setGoalId,
         setProfile,
         setGoalVisible,
         setModalVisible,
         handleLetsGetStarted,
         handleCallback,
-        setSyllabusId
+        setSyllabusId,
+        handleSelectGoal
     };
   };
   
