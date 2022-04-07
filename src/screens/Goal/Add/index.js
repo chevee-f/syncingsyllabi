@@ -4,6 +4,7 @@ import { View,
          SafeAreaView,
          Image ,
          ScrollView,
+         TouchableOpacity,
          KeyboardAvoidingView
         } from 'react-native';
 import styles from './styles'
@@ -13,7 +14,6 @@ import color from '../../../styles/colors'
 import DateTimePicker from '../../../components/DateTimePicker'
 import { TextInput } from 'react-native-paper';
 import DefaultButton from '../../../components/DefaultButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import Dropdown from '../../../components/Dropdown'
 import method from './method'
 import Moment from 'moment';
@@ -62,18 +62,20 @@ const AddGoal = ({
     useEffect(() => {
         if(goalVisible){
             if(goalId !== null && !hasValue){
-                    let data = goals.filter((item) => item.id == goalId)                  
-                    setGoal({...goal, 
-                                id: goalId,
-                                title: data[0].goalTitle,
-                                type: data[0].goalType,
-                                description: data[0].goalDescription,
-                                startDate: data[0].goalDateStart,
-                                endDate: data[0].goalDateEnd,
-                                stringStartDate: Moment(data[0].goalDateStart).format("MM/DD/YYYY"),
-                                stringEndDate: Moment(data[0].goalDateEnd).format("MM/DD/YYYY")                
-                            })
-                    setHasValue(true)
+                    let data = goals.filter((item) => item.id == goalId)     
+                    if(data.length > 0){
+                        setGoal({...goal, 
+                            id: goalId,
+                            title: data[0].goalTitle,
+                            type: data[0].goalType,
+                            description: data[0].goalDescription,
+                            startDate: data[0].goalDateStart,
+                            endDate: data[0].goalDateEnd,
+                            stringStartDate: Moment(data[0].goalDateStart).format("MM/DD/YYYY"),
+                            stringEndDate: Moment(data[0].goalDateEnd).format("MM/DD/YYYY")                
+                        })
+                        setHasValue(true)
+                    }             
             }
         }
     }, [goalVisible,goal,goalId,goals,hasValue]);
@@ -217,9 +219,9 @@ const AddGoal = ({
                     modalVisible={confirmationVisible} 
                     confirmationMessage={confirmationMessage}
                     onClose={() => setConfirmationVisible(!confirmationVisible)}
-                    onConfirm={() => {onConfirm()
-                                      setGoalId(null)
-                                      setGoalVisible(!goalVisible)}}
+                    onConfirm={() => {setGoalVisible(!goalVisible)
+                                      onConfirm()
+                                      setGoalId(null)}}
                 />
 
                 <SuccessModal 

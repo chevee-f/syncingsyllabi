@@ -5,9 +5,11 @@ import MenuIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import styles from './styles'
+import Moment from 'moment';
 
 const Goals = props => {
- 
+
+    const tomorrow = Moment().add(1, 'days');
     return (
         <View>
             <View style={styles.header}>
@@ -23,14 +25,17 @@ const Goals = props => {
                         <View style={styles.container}>
                             <ImageBackground source={require('../../../assets/backgrounds/fetti.png')} resizeMode="cover" style={styles.backgroundImage}>
                             <View>
-                                <Text style={[label.boldSmallHeading2,{color:'#fbe206',marginBottom:5}]}>{item.goal}</Text>
+                                <Text style={[label.boldSmallHeading2,{color:'#fbe206',marginBottom:5}]}>{item.goalDescription}</Text>
                                 <View style={{flexDirection:'row'}}>
                                     <Icon 
                                         name="clock"
                                         color={item.isDue ? color.error : '#011232cc'}
                                         size={23}
                                     />
-                                    <Text style={[label.boldSmallHeading,{color:`${item.isDue ? color.error : '#011232cc'}`,marginLeft:3}]}>{item.dateTime}</Text>
+                                    <Text style={[label.boldExtraSmallHeading, {color: Moment(item.goalDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ? color.error : '#000', marginLeft: 5}]}>
+                                        {Moment(item.goalDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ?
+                                        'Due Tomorrow' : Moment(item.goalDateEnd).format("MM/DD/YYYY")}
+                                    </Text>
                                 </View>
                             </View>
                             <Image 

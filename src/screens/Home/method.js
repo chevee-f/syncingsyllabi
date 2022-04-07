@@ -17,31 +17,12 @@ const method = (setModalVisible) => {
         dispatch(getUser(userId, token));
     }
 
-    const [goals, setGoals] = React.useState([
-        {
-            goal: "Get an A for IS Exam!",
-            dateTime: "Due Tomorrow at 10:00am",
-            isDue: true
-        },
-        {
-            goal: "Get an A for IS Exam!",
-            dateTime: "10-29-2021  |  1:00 PM",
-            isDue: false
-        },
-        {
-            goal: "Get an A for IS Exam!",
-            dateTime: "10-29-2021  |  1:00 PM",
-            isDue: false
-        }
-    ]);
-
     useEffect(() => {
-      if(state.token !== '' && state.userId !== '') fetchUser();
-      }, [state]);
+        fetchUser();
+    }, [state]);
    
 
     return {
-        goals
     };
   };
   

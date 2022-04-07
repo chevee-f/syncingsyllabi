@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Text, View, ScrollView } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
@@ -8,14 +8,27 @@ import moment from 'moment';
 import styles from './styles'
 import Goals from '../Goal/Goals'
 import method from './method'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { getGoalByUser } from '../../actions/goal';
 
 const HomeScreen = ({ navigation }) => {
 
   const {
-    goals
   } = method();
 
   let startingDate = moment().subtract(2, 'days');
+
+  const { state } = useContext(AuthContext);
+  const { goals } = useSelector(state => state.goalReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+      let userId = state.userId
+      let token = state.token
+      dispatch(getGoalByUser(userId, token));
+  }, [goals.length]);
+
     return (
       <View  style={styles.container}>
           <ScrollView>
@@ -52,13 +65,10 @@ const HomeScreen = ({ navigation }) => {
                 upperCaseDays={false}
                 dayContainerStyle={styles.dayContainer}
                 startingDate={startingDate}
+                //onDateSelected={(selectedDate) => alert(JSON.stringify(selectedDate))}
                 />
               </View>
               <Goals goals={goals} />
-              <View>
-                  <Text>{//user.email
-                  }</Text>
-              </View>
         </ScrollView>
       </View>
     )

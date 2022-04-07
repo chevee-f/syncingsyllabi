@@ -28,7 +28,7 @@ const method = () => {
         scheduleList: []
     });
 
-    const [inputValidation, setInputValidation] = React.useState({
+    const [inputValidation, setInputValidation] = useState({
         isValidClassName: true,
         isValidTeacherName: true,
         isValidSchedule: true,
@@ -38,13 +38,14 @@ const method = () => {
     });
 
     const days = ['SU', 'M', 'T', 'W', 'TH', 'F', 'S'];
-    const [action, setAction] = React.useState('')
-    const [confirmationVisible, setConfirmationVisible] = React.useState('')
-    const [weekday, setWeekday] = React.useState(-1)
+    const [action, setAction] = useState('')
+    const [confirmationVisible, setConfirmationVisible] = useState('')
+    //const [weekday, setWeekday] = React.useState(-1)
+    const [weekday, setWeekday] = useState([-1])
     const [selectedColor, setSelectedColor] = useState(0);
     const [hasValue, setHasValue] = useState(false);
     const [confirmationMessage, setConfirmationMessage] = useState('');
-    const [bgColor, setBgColor] = React.useState(
+    const [bgColor, setBgColor] = useState(
         [
             ['#FF9966', '#FF5E62'],
             ['#56CCF2', '#2F80ED'],
@@ -109,13 +110,13 @@ const method = () => {
                             scheduleStartTime: new Date(),
                             scheduleEndTime: new Date(),
                             scheduleList: []})
-        setWeekday(-1)
+        setWeekday([-1])
         setSelectedColor(0)
         setHasValue(false)
     }
 
     const addSchedule = () => {
-        if(weekday === -1){
+        if(weekday.length === 1){
             Alert.alert('Please select day')
         }else{
             let dataArray = classSyllabus.scheduleList;  
@@ -132,11 +133,19 @@ const method = () => {
             let endTime = endTimeMinute > 0 ? `${endTimeHour}:${endTimeMinute}${endTimeDesc}`:
                             `${endTimeHour}${endTimeDesc}`
 
-            dataArray.push({schedule: `${days[weekday - 1]} ${startTime}-${endTime}`,
-                            dayNo: weekday,
-                            startTime: classSyllabus.scheduleStartTime,
-                            endTime: classSyllabus.scheduleEndTime
-                          });
+            
+            weekday.map(
+                function(data){
+                    if(data !== -1){
+                        dataArray.push({schedule: `${days[data - 1]} ${startTime}-${endTime}`,
+                                        dayNo: weekday,
+                                        startTime: classSyllabus.scheduleStartTime,
+                                        endTime: classSyllabus.scheduleEndTime
+                                      });
+                    }
+                }
+            )
+            
             setClassSyllabus({...classSyllabus, scheduleList: dataArray})
             let schedules = (dataArray.map(
                             function(data){
