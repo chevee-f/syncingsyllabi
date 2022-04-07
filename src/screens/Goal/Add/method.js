@@ -66,8 +66,9 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            //setSuccessMessage('Your goal has been updated!')
+            setSuccessMessage('Your goal has been updated!')
             resetGoal()
+            //setSuccessModalVisible(true)
             //setTimeout(function(){setSuccessModalVisible(true)}, 1000)
         }
     }

@@ -13,12 +13,12 @@ const method = () => {
     const dispatch = useDispatch();
     
     const [hasError, setHasError] = useState(false);
-    const [goalVisible, setGoalVisible] = useState(false);
     const [goalId, setGoalId] = useState(null);
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
     const [confirmationVisible, setConfirmationVisible] = React.useState(false)
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [goalVisible, setGoalVisible] = React.useState(false);
     const [action, setAction] = useState('');
     const [activeTab, setActiveTab] = useState(1);
     const typeOfGoal = [
@@ -54,6 +54,7 @@ const method = () => {
                   isArchived: false,
                   isCompleted: false
               })
+      setGoalId(null)
     }
 
     useEffect(() => {
@@ -117,8 +118,9 @@ const method = () => {
               resetGoal()
               setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }else{
+              setSuccessMessage('Your goal has been moved to archive!')
               resetGoal()
-              Alert.alert('Success', 'Your goal has been moved to archive');
+              setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }
         }
     }

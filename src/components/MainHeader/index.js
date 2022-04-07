@@ -21,7 +21,7 @@ const MainHeader = props => {
     return (
         <View style={[styles.headerContainer,{height: props.screen === 'Home' ? 
                                                       Platform.OS === 'ios' ? height * 0.21 : height * 0.28 :
-                                                      Platform.OS === 'ios' ? height * 0.11 : height * 0.02}]}>
+                                                      Platform.OS === 'ios' ? height * 0.11 : height * 0.13}]}>
          
             {props.screen === 'Goal' &&
                 <View style={styles.titleContainer}>

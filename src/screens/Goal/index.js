@@ -87,10 +87,7 @@ const GoalScreen = ({ navigation }) => {
             modalVisible={confirmationVisible} 
             confirmationMessage={confirmationMessage}
             onClose={() => setConfirmationVisible(!confirmationVisible)}
-            onConfirm={() => {onConfirm()
-                              setGoalId(null)
-                              setGoalVisible(!goalVisible)
-                              }}
+            onConfirm={() => onConfirm()}
         />
 
         <SuccessModal 
@@ -99,7 +96,6 @@ const GoalScreen = ({ navigation }) => {
             successMessage={successMessage}
             onClose={() => setSuccessModalVisible(!successModalVisible)}
         />
-        
 
       </View>
     )
