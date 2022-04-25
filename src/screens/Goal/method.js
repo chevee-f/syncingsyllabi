@@ -19,6 +19,8 @@ const method = () => {
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [goalVisible, setGoalVisible] = React.useState(false);
+    const [isOpenMenu, setIsOpenMenu] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(7);
     const [action, setAction] = useState('');
     const [activeTab, setActiveTab] = useState(1);
     const typeOfGoal = [
@@ -138,6 +140,10 @@ const method = () => {
         }
     }
 
+    const handleCallback = (index) => {
+      setActiveTab(index)
+    }
+
     return {
       typeOfGoal,
       activeTab,
@@ -148,13 +154,18 @@ const method = () => {
       successMessage,
       successModalVisible, 
       action,
+      isOpenMenu,
+      selectedItem,
+      setSelectedItem,
+      setIsOpenMenu,
       setSuccessModalVisible,
       setConfirmationVisible,
       setGoalId,
       setGoalVisible,
       onSelect,
       onClickAction,
-      onConfirm
+      onConfirm,
+      handleCallback
     };
   };
   

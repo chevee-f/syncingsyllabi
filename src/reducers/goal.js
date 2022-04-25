@@ -1,4 +1,4 @@
-import { GET_GOAL_BY_USER, ADD_GOAL, GET_GOAL_DETAIL } from './../actions/goal';
+import { GET_GOAL_BY_USER, ADD_GOAL, GET_GOAL_DETAIL, GET_GOAL_BY_USER_SORT_BY } from './../actions/goal';
 
 const initialState = {
   goals: [],
@@ -11,6 +11,8 @@ function goalReducer(state = initialState, action) {
     case GET_GOAL_DETAIL:
       return {...state, goals: action.payload};
     case ADD_GOAL:
+      return {...state, goals: action.payload};
+    case GET_GOAL_BY_USER_SORT_BY:
       return {...state, goals: action.payload};
     default:
       return state;

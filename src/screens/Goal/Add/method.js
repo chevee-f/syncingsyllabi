@@ -55,7 +55,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            resetGoal()
+            setSuccessMessage('Your goal has been added!')
+            setTimeout(function(){setSuccessModalVisible(true)}, 1000)
         }
     }
 
@@ -67,9 +68,7 @@ const method = () => {
             Alert.alert("Error", error);
         }else{
             setSuccessMessage('Your goal has been updated!')
-            resetGoal()
-            //setSuccessModalVisible(true)
-            //setTimeout(function(){setSuccessModalVisible(true)}, 1000)
+            setTimeout(function(){setSuccessModalVisible(true)}, 1000)
         }
     }
 

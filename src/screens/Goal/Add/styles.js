@@ -5,13 +5,11 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
     modal:{
-        justifyContent: 'flex-end', 
-        marginBottom: height * -0.04,
+        //justifyContent: 'flex-end', 
+        marginBottom: height * -0.35,
         alignItems:'center'
     },
     modalContainer:{
-        backgroundColor: '#ffffff', 
-        //alignItems: 'center',
         borderRadius: 16,
         width: width * 1,
         height: height * 0.66,
@@ -26,7 +24,8 @@ export default StyleSheet.create({
         overflow: 'hidden',
         borderWidth:1,
         borderRadius:16,
-        marginVertical:8
+        marginVertical:8,
+        borderColor: color.default
     },
     input: {
         borderRadius: 0,

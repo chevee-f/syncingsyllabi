@@ -5,6 +5,7 @@ import { Alert } from 'react-native';
 import Moment from 'moment';
 
 export const GET_GOAL_BY_USER = 'GET_GOAL_BY_USER';
+export const GET_GOAL_BY_USER_SORT_BY = 'GET_GOAL_BY_USER_SORT_BY';
 export const ADD_GOAL = 'ADD_GOAL';
 export const GET_GOAL_DETAIL= 'GET_GOAL_DETAIL';
 
@@ -12,19 +13,19 @@ export const addGoal = (goal, userId, token) => {
     try {
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Goal/CreateGoal`,
-            {
-                "userId": parseInt(userId),
-                "goalTitle": '',
-                "goalType": goal.type,
-                "goalDescription": goal.description,
-                "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
-                "goalDateEnd": Moment(goal.endDate, 'MM-DD-YYYY HH:mm')
-            },
-            { headers: {"Authorization" : `Bearer ${token}`} })
-            .then((res) => {
-                dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                dispatch(getGoalByUser(userId, token));
-            })
+        {
+            "userId": parseInt(userId),
+            "goalTitle": '',
+            "goalType": goal.type,
+            "goalDescription": goal.description,
+            "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
+            "goalDateEnd": Moment(goal.endDate, 'MM-DD-YYYY HH:mm')
+        },
+        { headers: {"Authorization" : `Bearer ${token}`} })
+        .then((res) => {
+            dispatch({ type: 'CLEAR_ERROR', payload: [] });
+            dispatch(getGoalByUser(userId, token));
+        })
       };
     } catch (error) {
         Alert.alert(error.message)
@@ -36,22 +37,22 @@ export const updateGoal = (goal, userId, token) => {
   try {
     return async dispatch => {
       axios.post(`${getAPIBaseUrl()}Goal/UpdateGoal`,
-          {
-              "goalId": goal.id,
-              "userId": parseInt(userId),
-              "goalTitle": '',
-              "goalType": goal.type,
-              "goalDescription": goal.description,
-              "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
-              "goalDateEnd": Moment(goal.endDate, 'MM-DD-YYYY HH:mm'),
-              "isCompleted": goal.isCompleted,
-              "isArchived": goal.isArchived
-          },
-          { headers: {"Authorization" : `Bearer ${token}`} })
-          .then((res) => {
-              dispatch({ type: 'CLEAR_ERROR', payload: [] });
-              dispatch(getGoalByUser(userId, token));
-          })
+      {
+          "goalId": goal.id,
+          "userId": parseInt(userId),
+          "goalTitle": '',
+          "goalType": goal.type,
+          "goalDescription": goal.description,
+          "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
+          "goalDateEnd": Moment(goal.endDate, 'MM-DD-YYYY HH:mm'),
+          "isCompleted": goal.isCompleted,
+          "isArchived": goal.isArchived
+      },
+      { headers: {"Authorization" : `Bearer ${token}`} })
+      .then((res) => {
+          dispatch({ type: 'CLEAR_ERROR', payload: [] });
+          dispatch(getGoalByUser(userId, token));
+      })
     };
   } catch (error) {
       Alert.alert(error.message)
@@ -63,17 +64,46 @@ export const getGoalByUser = (userId, token) => {
   try {
     return async dispatch => {
       axios.post(`${getAPIBaseUrl()}Goal/GetGoalDetailsList`,
-          {
-              "UserId": parseInt(userId)
-          },
-          { headers: {"Authorization" : `Bearer ${token}`} })
-          .then((res) => {
-              dispatch({ type: 'CLEAR_ERROR', payload: [] });
-              dispatch({
-                  type: GET_GOAL_BY_USER,
-                  payload: res.data.data.items
-              });
-          })
+      {
+          "UserId": parseInt(userId)
+      },
+      { headers: {"Authorization" : `Bearer ${token}`} })
+      .then((res) => {
+          dispatch({ type: 'CLEAR_ERROR', payload: [] });
+          dispatch({
+              type: GET_GOAL_BY_USER,
+              payload: res.data.data.items
+          });
+      })
+    };
+  } catch (error) {
+      Alert.alert(error.message)
+      dispatch({ type: 'HAS_ERROR', payload: error.message });
+  }
+};
+
+export const getGoalByUserSortBy = (userId, token, sortBy) => {
+  try {
+    return async dispatch => {
+      axios.post(`${getAPIBaseUrl()}Goal/GetGoalDetailsList`,
+      {
+          "UserId": parseInt(userId),
+          "Sort": 
+          [
+              {
+                  "FieldCode": sortBy,
+                  "Direction": "asc"
+              }
+          ]
+      },
+      { headers: {"Authorization" : `Bearer ${token}`} })
+      .then((res) => {
+          dispatch({ type: 'CLEAR_ERROR', payload: [] });
+          dispatch({
+              type: GET_GOAL_BY_USER,
+              payload: res.data.data.items
+          });
+      })
     };
   } catch (error) {
       Alert.alert(error.message)

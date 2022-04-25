@@ -12,23 +12,28 @@ const authReducer = (state, action) => {
       return {
                 token: action.payload.token,
                 userId: action.payload.userId,
-                isForCodeVerification: false
+                isForCodeVerification: false,
+                isLoggedIn: action.payload.isLoggedIn,
+                isDarkTheme: action.payload.isDarkTheme
              };
     case 'signOut':
       return {
                 token: null, 
-                isSignOut: true
+                isSignOut: true,
+                isLoggedIn: false
              };
     case 'signIn':
       return {
                 token: action.payload.token,
                 userId: action.payload.userId,
                 email: action.payload.email,
-                isForCodeVerification: action.payload.isForCodeVerification
+                isForCodeVerification: action.payload.isForCodeVerification,
+                isLoggedIn: true,
+                isDarkTheme: 'false'
              };
     case 'signUp':
       return {
-                token: null,
+                token: action.payload.token,
                 userId: action.payload.userId,
                 email: action.payload.email,
                 isForCodeVerification: action.payload.isForCodeVerification,
@@ -58,6 +63,10 @@ const authReducer = (state, action) => {
                 userId: action.payload.userId,
                 isSuccessChangePassword: action.payload.isSuccessChangePassword
              };
+     case 'setTheme':
+      return {
+                isDarkTheme: action.payload.isDarkTheme
+             };
     default:
       return state;
   }
@@ -79,7 +88,8 @@ const generateAuth = (email,password,isGoogleSignIn) => {
 
             const userToken = ["userToken",res.data.data.item.authToken]
             const userId = ["userId", JSON.stringify(res.data.data.item.userId)]
-            AsyncStorage.multiSet([userToken, userId])
+            const isLoggedIn = ["isLoggedIn", 'true']
+            AsyncStorage.multiSet([userToken, userId, isLoggedIn])
 
             return res.data.data.item.authToken;
           }else{
@@ -94,15 +104,24 @@ const generateAuth = (email,password,isGoogleSignIn) => {
 const retrieveToken = dispatch => {
   return async() => {
     var obj;
-    await AsyncStorage.multiGet(["userToken","userId"]).then(response => {
+    await AsyncStorage.multiGet(["userToken",
+                                 "userId",
+                                 "isLoggedIn",
+                                 "isDarkTheme"])
+    .then(response => {
         obj = {
           userToken: response[0][1],
-          userId:response[1][1]
+          userId: response[1][1],
+          isLoggedIn: response[2][1],
+          isDarkTheme: response[3][1],
         }
     })
-
     dispatch({type: 'retrieveToken',
-              payload: { token: obj.userToken, userId: obj.userId }
+              payload: { token: obj.userToken, 
+                         userId: obj.userId, 
+                         isLoggedIn: obj.isLoggedIn,
+                         isDarkTheme: obj.isDarkTheme === null ? 'false' : obj.isDarkTheme
+                       }
             });
   };
 };
@@ -111,39 +130,42 @@ const retrieveToken = dispatch => {
 const signUp = dispatch => {
   return async({email, password, isGoogleSignIn}) => {
     try{
+
       let userInfo = await getUserInfo(email)
-      
       if(userInfo != null){
         Alert.alert('Account','Email already exists. Please use other email.')
         return
       }
+
+      let userToken = '';
       const formData = new FormData();
       formData.append('Email', email); 
       if(!isGoogleSignIn) formData.append('Password', password); 
       formData.append('IsGoogle', isGoogleSignIn); 
 
-      let res = await fetch(`${getAPIBaseUrl()}User/CreateUser`,{
-                method: 'post',
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-                body: formData
-             })
+      let res = await fetch(`${getAPIBaseUrl()}User/CreateUser`,
+                              {
+                                method: 'post',
+                                headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                },
+                                body: formData
+                              })
 
       let responseJson = await res.json();   
       if(!isGoogleSignIn){
           Alert.alert("2-Step Verification","We have sent you the code for verification. Please check your email."); 
       }else{
-          const userToken = await generateAuth(email, null, isGoogleSignIn);
+        userToken = await generateAuth(email, null, isGoogleSignIn);
       }
-      
       dispatch({type: 'signUp',
                 payload: { userId: responseJson.data.item.id, 
                            email: email,
                            isForCodeVerification: !isGoogleSignIn,
-                           isGoogle: isGoogleSignIn
+                           isGoogle: isGoogleSignIn,
+                           token: isGoogleSignIn ? userToken : null
                          }
-               });
+              });
       
     }catch (error) {
       Alert.alert(error.message)
@@ -217,17 +239,17 @@ const signIn = dispatch => {
               else if(res.data.data.item.isActive){
                 const userToken = await generateAuth(email, password, isGoogleSignIn);
                 dispatch({type: 'signIn',
-                          payload: { token: userToken, 
-                                      email: email,
-                                      userId: res.data.data.item.id,
-                                      isForCodeVerification: false
+                          payload: {token: userToken, 
+                                    email: email,
+                                    userId: res.data.data.item.id,
+                                    isForCodeVerification: false
                           }});
               }else{
                 dispatch({type: 'signIn',
-                          payload: { token: null, 
-                                      userId: res.data.data.item.id,
-                                      email: email,
-                                      isForCodeVerification: true
+                          payload: {token: null, 
+                                    userId: res.data.data.item.id,
+                                    email: email,
+                                    isForCodeVerification: true
                         }});
               }
             })
@@ -295,7 +317,6 @@ const changePassword = dispatch => {
                 }
             })
       } catch (error) {
-
       }
   };
 };
@@ -329,6 +350,13 @@ const signOut = dispatch => {
   };
 };
 
+const setTheme = dispatch => {
+  return async({isDarkTheme}) => {
+    await AsyncStorage.setItem('isDarkTheme', JSON.stringify(isDarkTheme))
+    dispatch({type: 'setTheme', payload: { isDarkTheme: JSON.stringify(isDarkTheme) }});
+  };
+};
+
 export const {Provider, Context} = createDataContext(
   authReducer,
   { signIn, 
@@ -337,6 +365,7 @@ export const {Provider, Context} = createDataContext(
     retrieveToken, 
     verifyUserCode,
     changePassword,
-    sendVerificationCode },
+    sendVerificationCode,
+    setTheme },
   {token: null, email: ''},
 );
