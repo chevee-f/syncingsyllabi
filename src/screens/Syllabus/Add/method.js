@@ -45,6 +45,8 @@ const method = () => {
     const [selectedColor, setSelectedColor] = useState(0);
     const [hasValue, setHasValue] = useState(false);
     const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [successModalVisible, setSuccessModalVisible] = React.useState(false)
+    const [successMessage, setSuccessMessage] = useState('');
     const [bgColor, setBgColor] = useState(
         [
             ['#FF9966', '#FF5E62'],
@@ -72,6 +74,8 @@ const method = () => {
                 Alert.alert("Error", error);
             }else{
                 resetClassSyllabus()
+                setSuccessMessage('Your class has been added!')
+                setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }
         } 
     }
@@ -242,6 +246,9 @@ const method = () => {
         hasValue,
         confirmationMessage,
         confirmationVisible,
+        successMessage,
+        successModalVisible,
+        setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
         setHasValue,
