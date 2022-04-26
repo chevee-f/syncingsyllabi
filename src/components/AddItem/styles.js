@@ -6,7 +6,7 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
     itemContainer:{
         width: width * 0.21,
-        height: Platform.OS == 'ios' ? height * 0.1 : height * 0.127,
+        height: Platform.OS == 'ios' ? height * 0.1 : 88,
         marginTop: height * 0.012,
         marginHorizontal:6,
         alignItems:'center',

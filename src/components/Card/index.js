@@ -2,107 +2,152 @@ import 'react-native-gesture-handler';
 import React from 'react';
 import { Button, Text, View, StyleSheet, Animated, I18nManager } from 'react-native';
 import { Swipeable, RectButton, FlatList } from 'react-native-gesture-handler';
+import Moment from 'moment';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const tomorrow = Moment().add(1, 'days');
+const Card = ({data, ...props}) => {
+  const renderLeftActions = (progress, item) => {
+    return (
+      <View style={{ width: 96, height: 106, marginTop: 10, }}>
+        <RectButton style={styles.leftAction}
+          onPress={() => removePressHandler(item)}>
+          <Animated.Text
+            style={[
+              styles.actionText
+            ]}
+            >
+            Remove
+          </Animated.Text>
+        </RectButton>
+      </View>
+    );
+  };
 
-const renderLeftActions = (progress, dragX) => {
-  const trans = dragX.interpolate({
-    inputRange: [0, 50, 100, 101],
-    outputRange: [-20, 0, 0, 1],
-  });
-  return (
-    <View style={{ width: 96, height: 106, marginTop: 10, }}>
-      <RectButton style={styles.leftAction}>
-        <Animated.Text
-          style={[
-            styles.actionText
-          ]}
-          >
-          Remove
-        </Animated.Text>
-      </RectButton>
+  const removePressHandler = (item) => {
+    props.showRemoveModal(item, 'Remove this Assignment?', 'remove');
+  }
+
+  const editCardData = (item) => {
+    props.editCardData(item);
+  };
+
+  const completeCardData = (item) => {
+    props.showRemoveModal(item, 'Complete this Assignment?', 'complete');
+  };
+  
+  const renderRightAction = (item, text, color, progress) => {
+    return (
+      <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
+        <RectButton
+          style={[styles.rightAction, { backgroundColor: color }]}
+          onPress={() => editCardData(item)}>
+          <Text style={styles.actionText}>{text}</Text>
+        </RectButton>
+      </Animated.View>
+    );
+  };
+
+  const renderCompleteRightAction = (item, text, color, progress) => {
+    return (
+      <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
+        <RectButton
+          style={[styles.rightAction, { backgroundColor: color }]}
+          onPress={() => completeCardData(item)}>
+          <Text style={styles.actionText}>{text}</Text>
+        </RectButton>
+      </Animated.View>
+    );
+  };
+  
+  const renderRightActions = (progress, item) => (
+    <View style={{ width: 192, height: 106, marginTop: 10, flexDirection: I18nManager.isRTL? 'row-reverse' : 'row' }}>
+      {renderCompleteRightAction(item, 'Done', '#70C862', progress)}
+      {renderRightAction(item, 'Edit', '#FDC830', progress)}
     </View>
   );
-};
+  
+  const handleCardPress = (props) => {
+    // console.log(props)
+    // console.log('hi')
+  }
+  const Row = ({ item }) => {
+    let dueColor = "#1B325F";
+    if(new Date(item.assignmentDateEnd) <= new Date()) {
+      dueColor = "#E54C29";
+    }
 
-const renderRightAction = (text, color, x, progress) => {
-  const trans = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: [x, 0],
-  });
-  const pressHandler = () => {
-  //   this.close();
-    alert(text);
+    return <RectButton style={styles.rectButton} onPress={() => {
+      // props.cardD(item);
+    }}>
+      <View style={{
+        width: 8,
+        backgroundColor: 'red',
+        position: 'absolute',
+        top: 0,
+        bottom: 0
+      }} />
+      <Text style={styles.fromText}>{item.assignmentTitle}</Text>
+      <View
+        style={{
+          borderBottomColor: '#E6EAF2',
+          borderBottomWidth: 1,
+        }}
+      />
+      <Text style={[styles.dateText, {color: dueColor}]}>
+        {Moment(item.assignmentDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ?
+               'Due Tomorrow ' + Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a") : Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a")}
+      </Text>
+    </RectButton>;
   };
-  return (
-    <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
-      <RectButton
-        style={[styles.rightAction, { backgroundColor: color }]}
-        onPress={pressHandler}>
-        <Text style={styles.actionText}>{text}</Text>
-      </RectButton>
-    </Animated.View>
-  );
-};
-
-const renderRightActions = progress => (
-  <View style={{ width: 192, height: 106, marginTop: 10, flexDirection: I18nManager.isRTL? 'row-reverse' : 'row' }}>
-    {renderRightAction('Done', '#70C862', 192, progress)}
-    {renderRightAction('Edit', '#FDC830', 128, progress)}
-    
-  </View>
-);
-
-const Row = ({ item }) => (
-  <RectButton style={styles.rectButton} onPress={() => alert(item.class)}>
-    <View style={{
-      width: 10,
-      backgroundColor: 'red',
-      position: 'absolute',
-      top: 0,
-      bottom: 0
-    }} />
-    <Text style={styles.fromText}>{item.class}</Text>
-    <View
-      style={{
-        borderBottomColor: '#E6EAF2',
-        borderBottomWidth: 1,
-      }}
-    />
-    <Text style={styles.dateText}>
-      {item.due}
-    </Text>
-  </RectButton>
-);
-
-const SwipeableRow = ({ item, index }) => {
-  return (   
-      <Swipeable
-      friction={2}
-      leftThreshold={30}
-      rightThreshold={40}
-      renderLeftActions={renderLeftActions}
-      renderRightActions={renderRightActions}>
-          <Row item={item} />
-      </Swipeable>
-  );
-};
-
-const Card = ({data}) => {
+  
+  const SwipeableRow = ({ props, item, index }) => {
+    // console.log(item)
+    return (   
+        <Swipeable
+        friction={2}
+        leftThreshold={30}
+        rightThreshold={40}
+        index={index}
+        renderLeftActions={(progress) => renderLeftActions(progress, item)}
+        renderRightActions={(progress) => renderRightActions(progress, item)}>
+            <Row item={item} props={props} />
+        </Swipeable>
+    );
+  };
+  
+  // console.log(data.length);
+  if(data.length > 0) {
     return (
-      <View style={{ flex:1,alignItems:'center',justifyContent:'center', width: '100%' }}>
+      <View style={{ 
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center', 
+        width: '100%' }}>
         <FlatList
             style={{width: '100%'}}
             data={data}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             renderItem={({ item, index }) => (
-            <SwipeableRow item={item} index={index} />
+            <SwipeableRow props={props} item={item} index={index} />
             )}
             keyExtractor={(item, index) => `message ${index}`}
         />
       </View>
-    )
+    );
+  }
+  else {
+    return (
+      <View style={{ 
+        flex: 1,
+        alignItems: 'center', 
+        marginTop: 50, 
+        width: '100%' }}>
+        <Text style={{ color: '#959595'}}>No Assignments</Text>
+      </View>
+    );
+  } 
 }
 
 const styles = StyleSheet.create({
@@ -150,7 +195,6 @@ const styles = StyleSheet.create({
   },
   dateText: {
     backgroundColor: 'transparent',
-    color: 'red',
     fontWeight: 'bold',
     paddingLeft: 27,
     paddingTop: 16,

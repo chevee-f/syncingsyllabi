@@ -8,7 +8,12 @@ import CancelButton from '../../components/SecondaryButton'
 
 const ConfirmationModal = props => {
  
-
+    let buttonText = "Yes";
+    let buttonColor = "#0036A1";
+    if(props.status === 'remove') {
+        buttonText = "Remove";
+        buttonColor = "#E54C29";
+    }
     return (
         <SafeAreaView>
                 <Modal
@@ -27,7 +32,7 @@ const ConfirmationModal = props => {
                         <Text style={label.boldMediumHeading}>{props.confirmationMessage}</Text>
                         <View style={styles.buttonContainer}>
                             <CancelButton title="Close" containerStyle={styles.button} onPress={props.onClose} />
-                            <DefaultButton title="Yes" containerStyle={styles.button} onPress={props.onConfirm} />
+                            <DefaultButton title={buttonText} buttonColor={{backgroundColor: buttonColor}} containerStyle={styles.button} onPress={props.onConfirm} />
                         </View>
                     </View>
                 </Modal>

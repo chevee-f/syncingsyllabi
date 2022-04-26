@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Text, View, ScrollView } from 'react-native';
+import { Text, View, ScrollView, Platform } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
 import label from '../../styles/label'
@@ -50,7 +50,11 @@ const HomeScreen = ({ navigation }) => {
                 style={styles.calendar}
                 calendarHeaderFormat='MMMM'
                 calendarHeaderStyle={styles.calendarHeader}
-                iconContainer={{flex: 0.1}}
+                iconContainer={Platform.OS === "ios" ? {flex: 0.1} : {
+                  width: 10,
+                  height: 0,
+                  overflow: 'hidden'
+                }}
                 calendarAnimation={{type: 'sequence', duration: 30}}
                 dateNumberStyle={styles.dateNumber}
                 dateNameStyle={styles.dateName}
