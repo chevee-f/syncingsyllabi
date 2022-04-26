@@ -20,6 +20,12 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Syncing Syllabi wants to access the photo library</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Syncing Syllabi wants to access the camera</string>
+
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

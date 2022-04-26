@@ -10,29 +10,28 @@ import styles from './styles'
 import color from '../../styles/colors'
 import label from '../../styles/label'
 import Moment from 'moment';
+import method from './method'
+import FastImage from 'react-native-fast-image'
 
 var {height, width} = Dimensions.get('window');
 
 const ProfileScreen = ({ navigation }) => {
 
-    const {user} = useSelector(state => state.userReducer);
+    const { user } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
     const [modalVisible, setModalVisible] = useState(false);
-    const data = [
-        {
-            title: 'Classes',
-            count: '3'
-        },{
-            title: 'Goals',
-            count: '3'
-        },{
-            title: 'Friends',
-            count: '7'
-        },
-    ];
+   
 
     useEffect(() => {
     }, [user]);
+
+    const {
+       data,
+       imageLoading,
+       setImageLoading,
+       selectImage
+    } = method();
+
 
     return (
       <View style={styles.mainContainer}>
@@ -46,15 +45,25 @@ const ProfileScreen = ({ navigation }) => {
               <ImageBackground 
                   source={require('../../assets/backgrounds/ProfileBackground.png')} 
                   style={styles.backgroundImage}>
-                      <Avatar.Image 
-                          source={{uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'}}
-                          size={height * 0.28}
-                      />
-                      <Image 
-                          source={require('../../assets/icons/CameraGroup.png')}
-                          resizeMode='contain'
-                          style={styles.cameraImage}
-                      />
+                        {imageLoading ? <Avatar.Image size={height * 0.28} source={require('../../assets/load-loading.gif')} /> : null}
+                        <FastImage
+                            style={{height: imageLoading ? 1 : height * 0.28, 
+                                    width: imageLoading ? 1 : height * 0.28,
+                                    borderRadius: 120
+                                  }} 
+                            source={{uri: user.imageUrl === null ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU' :
+                                          user.imageUrl,
+                                     priority: FastImage.priority.high}} 
+                            onLoadEnd={() => setImageLoading(false)}
+                        />
+                      
+                      <TouchableOpacity style={{alignItems:'center'}} onPress={selectImage}>
+                            <Image 
+                                source={require('../../assets/icons/CameraGroup.png')}
+                                resizeMode='contain'
+                                style={styles.cameraImage}
+                            />
+                      </TouchableOpacity>
               </ImageBackground>
           </View>
         <View style={{ marginTop: height * 0.38 }}>
@@ -90,7 +99,7 @@ const ProfileScreen = ({ navigation }) => {
                 <Text style={[label.smallHeading2, styles.info ]}>Birthdate: {user.dateOfBirth !== null ? Moment(user.dateOfBirth).format("MM/DD/YYYY") : ''}</Text>
                 <Text style={[label.smallHeading2, styles.info ]}>Major: {user.major}</Text>
 
-            <View style={{marginTop:height * 0.05}}>
+            <View style={{marginTop:height * 0.03}}>
                 <DefaultButton 
                     title="Edit Profile" 
                     onPress={() => setModalVisible(true)}

@@ -34,12 +34,12 @@ const HomeScreen = ({ navigation }) => {
           <ScrollView>
               <View style={{margin:20}}>
                   <View style={styles.progressContainer}>
-                      <Text style={[label.boldExtraSmallHeading,{color:color.primary}]}>SEMESTER PROGRESS</Text>
-                      <Text style={[label.extraSmallHeading2,{color:color.primary}]}>26/45</Text>
+                      <Text style={[label.boldExtraSmallHeading,{color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>SEMESTER PROGRESS</Text>
+                      <Text style={[label.extraSmallHeading2,{color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>26/45</Text>
                   </View>
                   
-                  <ProgressBar progress={0.5} color={color.primary} />
-                  <Text style={[label.boldExtraSmallHeading, styles.textPercentage]}>57% COMPLETE</Text>
+                  <ProgressBar progress={0.5} color={state.isDarkTheme === 'true' ? color.default : color.primary} />
+                  <Text style={[label.boldExtraSmallHeading, styles.textPercentage, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>57% COMPLETE</Text>
               </View>
               <View>
               <CalendarStrip
@@ -49,12 +49,8 @@ const HomeScreen = ({ navigation }) => {
                 numDaysInWeek={5}
                 style={styles.calendar}
                 calendarHeaderFormat='MMMM'
-                calendarHeaderStyle={styles.calendarHeader}
-                iconContainer={Platform.OS === "ios" ? {flex: 0.1} : {
-                  width: 10,
-                  height: 0,
-                  overflow: 'hidden'
-                }}
+                calendarHeaderStyle={[styles.calendarHeader, {color:state.isDarkTheme === 'true' ? color.default : color.primary}]}
+                iconContainer={{flex: 0.1}}
                 calendarAnimation={{type: 'sequence', duration: 30}}
                 dateNumberStyle={styles.dateNumber}
                 dateNameStyle={styles.dateName}
@@ -72,7 +68,7 @@ const HomeScreen = ({ navigation }) => {
                 //onDateSelected={(selectedDate) => alert(JSON.stringify(selectedDate))}
                 />
               </View>
-              <Goals goals={goals} />
+              <Goals goals={goals.filter((x) => x.isArchived == false && x.isCompleted == false)} />
         </ScrollView>
       </View>
     )

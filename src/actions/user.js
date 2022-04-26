@@ -41,13 +41,18 @@ export const updateUser = (profile, userId, token) => {
       try{  
         const formData = new FormData();
         formData.append('UserId', userId)
-        formData.append('FirstName', profile.firstName); 
+        if(profile.firstName !== null) formData.append('FirstName', profile.firstName); 
         if(profile.lastName !== null) formData.append('LastName', profile.lastName); 
         if(profile.email !== null) formData.append('Email', profile.email); 
-        formData.append('School', profile.school); 
+        if(profile.school !== null) formData.append('School', profile.school); 
         if(profile.dateOfBirth !== null) formData.append('DateOfBirth', profile.dateOfBirth); 
         if(profile.major !== null) formData.append('Major', profile.major); 
-  
+        if(profile.image !== null){
+          formData.append('ImageFile', {uri: profile.image,
+                                        type: profile.imgType,
+                                        name: profile.imgFileName
+                                       })
+        }
         let res = await fetch(`${getAPIBaseUrl()}User/UpdateUser`,{
                   method: 'post',
                   headers: {

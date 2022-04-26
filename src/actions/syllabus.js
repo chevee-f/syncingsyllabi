@@ -11,23 +11,23 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
     try {
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Syllabus/CreateSyllabus`,
-            {
-                "userId": parseInt(userId),
-                "classCode": syllabus.className,
-                "className": syllabus.className,
-                "teacherName": syllabus.teacherName,
-                "classSchedule": syllabus.schedule,
-                "colorInHex": JSON.stringify(selectedColor)
-            },
-            { headers: {"Authorization" : `Bearer ${token}`} })
-            .then((res) => {
-                dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                dispatch(getSyllabusByUser(userId, token));
-            })
+        {
+            "userId": parseInt(userId),
+            "classCode": syllabus.className,
+            "className": syllabus.className,
+            "teacherName": syllabus.teacherName,
+            "classSchedule": syllabus.schedule,
+            "colorInHex": JSON.stringify(selectedColor)
+        },
+        { headers: {"Authorization" : `Bearer ${token}`} })
+        .then((res) => {
+          dispatch({ type: 'CLEAR_ERROR', payload: [] });
+          dispatch(getSyllabusByUser(userId, token));
+        })
       };
     } catch (error) {
-        Alert.alert(error.message)
-        dispatch({ type: 'HAS_ERROR', payload: error.message });
+      Alert.alert(error.message)
+      dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
   };
 
@@ -46,17 +46,17 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
             },
             { headers: {"Authorization" : `Bearer ${token}`} })
             .then((res) => {
-                dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                dispatch(getSyllabusByUser(userId, token));
-                //dispatch({
-                //    type: ADD_SYLLABUS,
-                //    payload: res.data.data.item
-                //});
+              dispatch({ type: 'CLEAR_ERROR', payload: [] });
+              dispatch(getSyllabusByUser(userId, token));
+              //dispatch({
+              //    type: ADD_SYLLABUS,
+              //    payload: res.data.data.item
+              //});
             })
       };
     } catch (error) {
-        Alert.alert(error.message)
-        dispatch({ type: 'HAS_ERROR', payload: error.message });
+      Alert.alert(error.message)
+      dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
   };
 
@@ -64,21 +64,21 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
     try {
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Syllabus/GetSyllabusDetailsList`,
-            {
-                "UserId": parseInt(userId)
-            },
-            { headers: {"Authorization" : `Bearer ${token}`} })
-            .then((res) => {
-                dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                dispatch({
-                    type: GET_SYLLABUS_BY_USER,
-                    payload: res.data.data.items
-                });
-            })
+        {
+            "UserId": parseInt(userId)
+        },
+        { headers: {"Authorization" : `Bearer ${token}`} })
+        .then((res) => {
+            dispatch({ type: 'CLEAR_ERROR', payload: [] });
+            dispatch({
+                type: GET_SYLLABUS_BY_USER,
+                payload: res.data.data.items
+            });
+        })
       };
     } catch (error) {
-        Alert.alert(error.message)
-        dispatch({ type: 'HAS_ERROR', payload: error.message });
+      Alert.alert(error.message)
+      dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
   };
 

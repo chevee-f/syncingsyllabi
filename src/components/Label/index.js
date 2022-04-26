@@ -6,7 +6,7 @@ import color from '../../styles/colors'
 const Label = props => {
  
     return (
-        <Text style={[label.boldMediumHeading,{color:color.primary}]}>{props.text}</Text>
+        <Text style={[label.boldMediumHeading,{color: props.isDarkTheme ? color.default : color.primary}]}>{props.text}</Text>
     );
 };
 

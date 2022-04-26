@@ -193,7 +193,7 @@ const HomeStackScreen = ({navigation}) => {
       },
       title: '',
       headerTintColor:'#fff',
-      header: () => <MainHeader screen='Home' />
+      header: () => <MainHeader/>
       
     }}>
         <Stack.Screen 
@@ -204,18 +204,10 @@ const HomeStackScreen = ({navigation}) => {
   )
 }
 
-const GoalStackScreen = ({navigation}) => {
+const GoalStackScreen = (props) => {
   return(
-    <Stack.Navigator screenOptions={{
-      headerStyle:{
-        backgroundColor: color.primary
-      },
-      title: '',
-      headerTintColor:'#fff',
-      header: () => <MainHeader screen='Goal' />
-      
-    }}>
-        <Stack.Screen 
+    <Stack.Navigator>
+        <Stack.Screen
           name="Goal" 
           component={GoalScreen} 
           options={{ headerLeft: null }} />
