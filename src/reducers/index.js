@@ -4,11 +4,13 @@ import userReducer from './user';
 import errorReducer from './error'
 import syllabusReducer from './syllabus'
 import goalReducer from './goal'
+import assignmentsReducer from './assignments'
 
 const rootReducer = combineReducers({
     userReducer,
     errorReducer,
     syllabusReducer,
-    goalReducer
+    goalReducer,
+    assignmentsReducer
 });
 export const store = createStore(rootReducer, applyMiddleware(thunk));

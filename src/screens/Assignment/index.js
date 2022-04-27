@@ -1,59 +1,197 @@
-import React from 'react';
-import { Button, Text, View, StyleSheet, Image, Dimensions, Picker } from 'react-native';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import { Button, Text, View, StyleSheet, Image, Dimensions, Picker, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import Modal from "react-native-modal";
 import Card from '../../components/Card';
 import CalendarStrip from 'react-native-calendar-strip';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import DefaultInput from '../../components/DefaultInput';
+import DefaultButton from '../../components/DefaultButton';
+import Label from '../../components/Label';
+import AddItem from '../../components/AddItem';
+import GradientItem from '../../components/GradientItem';
+// import color from '../../../styles/colors';
+import color from '../../styles/colors';
+import { TextInput } from 'react-native-paper';
+import DateTimePicker from '../../components/DateTimePicker';
+import { getAssignmentsByUser } from '../../actions/assignments';
 
+import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import method from './method';
+import WeekdayTimePicker from '../../components/WeekdayTimePicker';
+import Moment from 'moment';
+import ConfirmationModal from '../../components/ConfirmationModal';
+import SuccessModal from '../../components/SuccessModal';
+
+var {height, width} = Dimensions.get('window');
 const AssignmentScreen = () => {
-  const [selectedDate, setSelectedDate] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(false);
 
-  const [value, setValue] = React.useState('duedate');
+  const [value, setValue] = React.useState('id');
   const [isFocus, setIsFocus] = React.useState(false);
+  // const [hasData, setHasData] = React.useState(false);
+  const calendarRef = useRef(null);
+  const titleField = useRef(null);
+  const [calendarVisible, setCalendarVisible] = useState(false);
 
-  let fetchedDates = ["2022-02-25"];
-  let markedDatesArray = [];
+  const [title, setTitle] = useState("");
+  
+  const [item, setItem] = useState();
 
-  const data1 = {
-    '2012-05-22': [
-      {name: 'MKTG 100S1', due: 'Due Tomorrow at 10:00am'}, 
-      {name: 'CS111', due: 'Due Tomorrow at 10:00am'}
-    ]
-  };
+  const { state } = useContext(AuthContext);
+  const { assignments } = useSelector(state => state.assignmentsReducer);
+  const [confirmationStatus, setConfirmationStatus] = useState("");
+  const dispatch = useDispatch();
+  let fetchedDates = [];
+  useEffect(() => {
+      let userId = state.userId
+      let token = state.token
+      dispatch(getAssignmentsByUser(userId, token));
+      fetchedDates = [];
+      if(assignments.length > 0) {
+        let dates = [];
+        for(let i = 0; i < assignments.length; i++) {
+          let thedate = assignments[i]["assignmentDateEnd"].split("T")[0];
+          if(dates.indexOf(thedate) < 0) {
+            dates.push(thedate);
+          }
+        }
+        dates = dates.sort();
 
-  const data = [
+        for(let i = 0; i < dates.length; i++) {
+          let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
+          let dots = [];
+          let newArrCount = newArr.length > 3 ? 3 : newArr.length;
+          for(let j = 0; j < newArrCount; j++) {
+            dots.push({
+              id: 'item' + i + j,
+              color: '#70C862'
+            })
+          }
+          fetchedDates.push({date: dates[i], dots: dots, data: newArr});
+        }
+
+        let ds = [];
+        for (let i = 0; i < fetchedDates.length; i++) {
+          ds.push({
+            date: fetchedDates[i].date,
+            dots: fetchedDates[i].dots,
+            data: fetchedDates[i].data
+          });
+        }
+        setMarkedDatesArray(ds);
+
+        const d = new Date();
+        let m = (d.getMonth()+1);
+        if(m.toString().length === 1) {
+          m = "0" + m;
+        }
+        let dt = d.getDate();
+        if(dt.toString().length === 1) {
+          dt = "0" + dt;
+        }
+        let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
+        let hasData = false;
+        for (let i = 0; i < fetchedDates.length; i++) {
+          if(selectedDateY === fetchedDates[i].date && !hasData) {
+            // console.log(fetchedDates[i].data)
+            hasData = true;
+            setCardData(fetchedDates[i].data);
+          }
+        }
+
+        if(!hasData) {
+          setCardData([]);
+        } 
+      }
+  }, [assignments.length]);
+
+
+  const {
+    classAssignments,
+    weekday,
+    markedDatesArray,
+    isModalVisible,
+    selectedDate,
+    successMessage,
+    successModalVisible,
+    action,
+    confirmationMessage,
+    confirmationVisible,
+    cardData,
+    setCardData,
+    setConfirmationVisible,
+    setConfirmationMessage,
+    setAction,
+    setSuccessModalVisible,
+    setSuccessMessage,
+    setSelectedDate,
+    setModalVisible,
+    toggleModal,
+    setMarkedDatesArray,
+    setClassAssignments,
+    setWeekday,
+    addSchedule,
+    handleAddAssignments,
+    handleUpdateAssignment,
+    handleDeleteAssignment,
+    handleCompleteAssignment,
+    handleSortAssignment,
+    callme
+  } = method();
+
+  let fetchedDates1 = [
     {
-      class: 'MKTG 10',
-      due: "09:00am",
-      isDue: false
-    },{
-      class: 'CS 111',
-      due: "10:00am",
-      isDue: false
-    },{
-      class: 'MKTG',
-      due: "Due Tomorrow at 11:00am",
-      isDue: true
+      date: "2022-04-06",
+      data : [
+        {
+          id: '100',
+          class: 'ACCOUNTING 101',
+          due: "09:00am",
+          color: '#70C862', 
+          isDue: false
+        },{
+          id: '101',
+          class: 'ALGEBRA',
+          due: "10:00am",
+          color: '#70C862', 
+          isDue: false
+        },{
+          id: '102',
+          class: 'PHYSICS',
+          due: "Due Tomorrow at 11:00am",
+          color: '#70C862', 
+          isDue: true
+        },
+      ]
     },
+    {
+      date: "2022-04-07",
+      data : [
+        {
+          id: '103',
+          class: 'MKTG 10',
+          due: "09:00am",
+          color: '#70C862', 
+          isDue: false
+        },{
+          id: '104',
+          class: 'CS 111',
+          due: "10:00am",
+          color: '#70C862', 
+          isDue: false
+        },
+      ]
+    }
   ];
 
-  for (let i = 0; i < fetchedDates.length; i++) {
-    markedDatesArray.push({
-      date: fetchedDates[i],
-      dots: [
-        {
-          color: '#70C862', 
-        },
-        {
-          color: '#70C862', 
-        },
-        {
-          color: '#70C862', 
-        },
-      ],
-    });
-  }
+  // for (let i = 0; i < fetchedDates.length; i++) {
+  //   markedDatesArray.push({
+  //     date: fetchedDates[i].date,
+  //     dots: fetchedDates[i].data,
+  //   });
+  // }
 
   const renderItem = (item) => {
     return (
@@ -62,11 +200,41 @@ const AssignmentScreen = () => {
       </View>
     );
   };
-  
+
+  // const checkHasData = () => {
+  //   return <Card cardD={getCardData} onPress={toggleModal} data={cardData} />;
+  // }
+
   const sortData = [
-    { label: 'Due Date', value: 'duedate' },
-    { label: 'Class', value: 'class' },
+    { label: 'Class', value: 'id' },
+    { label: 'Due Date', value: 'assignmentDateEnd' },
+    { label: 'Title', value: 'assignmentTitle' },
   ];
+  
+  const editCardData = (res) => {
+    toggleModal();
+    setClassAssignments({...classAssignments, 
+      id: res.id, 
+      title: res.assignmentTitle, 
+      dueDate: res.assignmentDateEnd, 
+      notes: res.notes 
+    });
+  }
+
+  const saveAssignment = () => {
+    if(classAssignments.id !== '')
+      handleUpdateAssignment();
+    else
+      handleAddAssignments();
+  }
+
+  const openConfirmationModal = (item, message = '', status = '') => {
+    setItem(item);
+    setConfirmationVisible(true);
+    setConfirmationMessage(message);
+    setConfirmationStatus(status);
+  }
+
   return (
     <>
       <View style={styles.container}>
@@ -86,14 +254,45 @@ const AssignmentScreen = () => {
           borderBottomLeftRadius: 13,
           borderBottomRightRadius: 13
         }}>
-          <Text style={{ textAlign: 'center', color: 'white', marginTop: 18, fontSize: 18, fontWeight: 'bold'}}>Assignments</Text>
+          <Text style={{ 
+            textAlign: 'center', 
+            color: 'white', 
+            marginTop: 18, 
+            fontSize: 18, 
+            fontFamily:'Manrope',
+            fontWeight: 'bold'
+            }}>Assignments</Text>
         </View>
+          <View
+            style={{
+              position: 'absolute', 
+              top: 12, 
+              right: 15
+            }}
+          >
+          <TouchableOpacity onPress={toggleModal}><Text
+            style={{
+              color: 'white',
+              fontSize: 25
+            }}>+</Text>
+            </TouchableOpacity></View>
         <CalendarStrip
-          currentScreen={"Home"}
+          ref={calendarRef}
+          onDateSelected={callme}
           scrollable
-          selectedDate={'2022-02-25'}
+          // scrollerPaging={true}
+          selectedDate={selectedDate}
           style={{height: 80, marginTop: 110, paddingBottom: 10, overflow: 'visible'}}
-          calendarHeaderStyle={{color: 'white', marginBottom: 30, position: 'absolute', left: 15, top: -45, fontSize: 16, fontWeight: '100'}}
+          calendarHeaderFormat={"MMMM YYYY"}
+          calendarHeaderStyle={{
+            color: 'white', 
+            marginBottom: 30, 
+            position: 'absolute', 
+            left: 15, 
+            top: -45, 
+            fontSize: 16, 
+            fontWeight: '100'
+          }}
           iconContainer={{flex: 0.1}}
           calendarAnimation={{type: 'sequence', duration: 30}}
           daySelectionAnimation={{type: 'background', duration: 200, highlightColor: 'black'}}
@@ -102,20 +301,24 @@ const AssignmentScreen = () => {
           weekendDateNameStyle={{
             fontSize: 12,
             fontWeight: 'bold',
-            color: '#0036A1'
+            color: '#0036A1',
+            top: -5
           }}
           weekendDateNumberStyle={{
             color: 'black',
-            top: 14
+            top: 9,
+            marginBottom: -10
           }}
           dateNumberStyle={{ // day number
             color: 'black',
-            top: 14
+            top: 9,
+            marginBottom: -10
           }}
           dateNameStyle={{ // day name
             fontSize: 12,
             fontWeight: 'bold',
-            color: '#0036A1'
+            color: '#0036A1',
+            top: -5
           }}
           dayContainerStyle={{
             backgroundColor: 'white'
@@ -160,24 +363,195 @@ const AssignmentScreen = () => {
             onFocus={() => setIsFocus(true)}
             onBlur={() => setIsFocus(false)}
             onChange={item => {
+              console.log(item);
+              handleSortAssignment(item.value, selectedDate);
               setValue(item.value);
               setIsFocus(false);
             }}
-            maxHeight={100}
+            maxHeight={150}
           />
         </View>
-        <Card data={data} />
+        {/* <Button title="Show modal" onPress={toggleModal} /> */}
+
+        <Modal 
+          isVisible={isModalVisible} 
+          style={{
+            margin: 0,
+            justifyContent: 'flex-end'
+          }} 
+          onBackdropPress={toggleModal} 
+          transparent={true} 
+          animationInTiming={500}
+          animationOutTiming={1000}
+          backdropOpacity={0.4}
+          // propagateSwipe={true}
+          >
+          <View style={{
+            height: '66%',
+            marginTop: 'auto',
+            backgroundColor:'white',
+            position: 'relative',
+            borderTopRightRadius: 16,
+            borderTopLeftRadius: 16
+          }}>
+          <TouchableOpacity 
+            onPress={toggleModal}>
+              <Image 
+                  source={require('../../assets/icons/closeButton.png')}
+                  resizeMode='contain'
+                  style={styles.close}
+              />
+            </TouchableOpacity>
+            <ScrollView style={{ }}>
+                <View style={{ marginHorizontal: 13 }}>
+                  <View style={{marginTop: 24}}>
+                      <Label text="Title" />
+                      <DefaultInput 
+                          label="Title"
+                          // value={title}
+                          value={classAssignments.title}
+                          onChangeText={(title) => setClassAssignments({...classAssignments, title: title})}
+                      />
+                  </View>
+                  <View style={{marginTop: 24}}>
+                      <Label text="Select Class" />
+                      <View style={{flexDirection:'row'}}>
+                        <AddItem onPress={() => setModalVisible(true)} />
+                        {
+                        // classSyllabi.map((item) => {
+                        //         return (
+                        //             <GradientItem 
+                        //                 code={item.code}
+                        //                 name={item.name}
+                        //                 schedule={item.schedule}
+                        //             />
+                        //         );
+                        //     })                
+                        }
+                    </View>
+                  </View>
+                  <View style={{marginTop: 24, width: '49%'}}>
+                    <Label text="Due date" />
+                    <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
+                      <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                          <TextInput
+                              mode="flat"
+                              style={[styles.input]}
+                              placeholder="DD/MM/YYYY"
+                              value={classAssignments.dueDate}
+                              editable={false}
+                              selectionColor={color.primary}
+                              activeUnderlineColor={color.primary}
+                              theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                          />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{marginTop: 24, width: '49%'}}>
+                  <Label text="Reminder" />
+                    <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                      {/* <TextInput
+                          mode="flat"
+                          style={[styles.input]}
+                          onPress={() => { setCalendarVisible(true)}}
+                          onPressIn={() => { setCalendarVisible(true)}}
+                          label="DD/MM/YYYY"
+                          editable={false}
+                          selectionColor={color.primary}
+                          activeUnderlineColor={color.primary}
+                          theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                      /> */}
+                    </View> 
+                  </View>
+                  <View style={{marginTop: 24}}>
+                      <Label text="Note" />
+                      <TextInput 
+                        style={{backgroundColor: '#FAF6EA', height: 180, marginTop: 10}}
+                        value={classAssignments.notes}
+                        onChangeText={(notes) =>  setClassAssignments({...classAssignments, notes: notes})}
+                      />
+                  </View>
+                  <View style={{marginTop: 24}}>
+                      <Label text="Attachments" />
+                      <DefaultInput 
+                          label="Title"
+                          editable={false}
+                      />
+                  </View>
+        <DefaultButton 
+                  title="Save" 
+                  onPress={saveAssignment}
+                  style={{ marginBottom: 10 }}
+          /> 
+          <View style={{marginTop: 24}}></View>
+                </View>
+            </ScrollView>
+          </View>
+        </Modal>
+        <DateTimePicker 
+            onClose={() => { setCalendarVisible(!calendarVisible); }}
+            modalVisible={calendarVisible} 
+            showTimePicker={false}
+            onChangeDate={(startDate) =>  setClassAssignments({...classAssignments, 
+                                                    dueDate: Moment(startDate).format("MM/DD/YYYY")})}
+            onSelectDate={() => setCalendarVisible(!calendarVisible)}
+        />
+        {/* <WeekdayTimePicker 
+                onClose={() => { setCalendarVisible(!calendarVisible); }}
+                modalVisible={calendarVisible} 
+                showTimePicker={true}
+                title='Select day and time' 
+                weekday={weekday}
+                setWeekday={setWeekday}
+                startTime={classAssignments.dueDate}
+                onChangeStartTime={(startTime) =>  setClassAssignments({...classAssignments, dueDate: startTime})}
+                onChangeEndTime={(endTime) =>  setClassAssignments({...classAssignments, dueDate: endTime})}
+                endTime={classAssignments.dueDate}
+                // list={classSyllabus.scheduleList}
+                add={() => addSchedule()}
+                // parentCallback = {handleCallback}
+                // onSelectDate={() => setCalendarVisible(!calendarVisible)}
+            /> */}
+        {/* {checkHasData()} */}
+        <Card 
+          showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
+          editCardData={editCardData} 
+          completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
+          onPress={toggleModal} 
+          data={cardData} />
       </View>
     {/* <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
       <Text>Assignment Screen</Text>
       <Card />
     </View> */}
+
+      <SuccessModal 
+        successModalVisible={successModalVisible} 
+        successMessage={successMessage}
+        onClose={() => {
+          setSuccessModalVisible(!successModalVisible);
+          callme(selectedDate)
+        }}
+      />
+
+      <ConfirmationModal 
+          modalVisible={confirmationVisible} 
+          confirmationMessage={confirmationMessage}
+          status={confirmationStatus}
+          onClose={() => setConfirmationVisible(!confirmationVisible)}
+          onConfirm={() => {
+            if(confirmationStatus === 'remove')
+              handleDeleteAssignment(item);
+            if(confirmationStatus === 'complete')
+              handleCompleteAssignment(item);
+          }}
+      />
     </>
   )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: 24 },
+  container: { flex: 1, marginTop: 24, marginBottom: 100 },
   sortContainer: {
   },
   dropdown: {
@@ -213,6 +587,45 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  inputContainer: {
+    borderRadius: 4,
+    height: height * 0.055,
+    overflow: 'hidden',
+    borderWidth:1,
+    borderRadius:16,
+    marginVertical:8
+  },
+  input: {
+    borderRadius: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    height: height * 0.063,
+    overflow: 'hidden',
+    backgroundColor: '#fbfbfb',
+    paddingLeft:5,
+    fontFamily: "Manrope",
+    fontSize: height * 0.016,
+    justifyContent:'center',
+  },
+  closeBtn: {
+    zIndex: 999,
+    alignSelf: 'flex-end',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 40,
+    borderRadius: 100,
+    backgroundColor: '#E6EAF2',
+    marginTop: 13,
+    marginRight: 13,
+    marginBottom: 5
+  },
+  close:{
+    alignSelf:'flex-end',
+    marginTop: 13,
+    marginRight: 13,
+    marginBottom: 5
   },
 });
 

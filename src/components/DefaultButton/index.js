@@ -6,9 +6,11 @@ const DefaultButton = ({
   onPress,
   ...props
 }) => {
+  if(!props.buttonColor)
+    props.buttonColor = {backgroundColor: '#0036A1'};
   return (
     <TouchableOpacity 
-      style={{...styles.btnContainer, ...props.containerStyle}}
+      style={{...styles.btnContainer, ...props.containerStyle, ...props.buttonColor}}
       onPress={onPress}>
         <Text style={{...styles.text, ...props.textStyle}}>
           {props.title}

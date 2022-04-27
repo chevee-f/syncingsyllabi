@@ -6,7 +6,6 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
     btnContainer: {
         width: '100%',
-        backgroundColor: color.primary,
         justifyContent: 'center',
         alignItems:'center',
         height: height * 0.058,
