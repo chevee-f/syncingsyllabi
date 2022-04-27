@@ -13,7 +13,7 @@ export default StyleSheet.create({
         marginBottom:5
       },
       textPercentage:{
-        color: color.primary,
+        //color: color.primary,
         alignSelf:'flex-end',
         marginTop:5
       },
@@ -23,7 +23,7 @@ export default StyleSheet.create({
         overflow: 'visible'
       },
       calendarHeader:{
-        color: '#0036A1', // dark blue
+       // color: '#0036A1', // dark blue
         position: 'absolute', 
         left: 20, 
         top: -45, 

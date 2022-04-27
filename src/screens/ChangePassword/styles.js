@@ -6,7 +6,8 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
     container: {
         flex: 1, 
-        backgroundColor: color.primary
+        backgroundColor: color.primary,
+        marginBottom: height * -0.2
     },
     topLineContainer:{
         position:'absolute',

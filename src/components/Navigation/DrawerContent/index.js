@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
-import { View, Image } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Image, TouchableOpacity } from 'react-native';
 import {
     Avatar,
     Title,
     Caption,
     Drawer,
-    Text,
-    TouchableRipple,
-    Switch
+    Text
 } from 'react-native-paper';
 import {
     DrawerContentScrollView,
@@ -20,28 +18,47 @@ import Icons from 'react-native-vector-icons/Entypo';
 import styles from './styles'
 import label from '../../../styles/label'
 import color from '../../../styles/colors'
+import method from './method'
+import AddSyllabus from '../../../screens/Syllabus/Add'
+import { getNavigationDrawerHome } from '../RootNavigation';
+import FastImage from 'react-native-fast-image'
+import { useNavigation } from '@react-navigation/native'
 
 export function DrawerContent (props) {
+    const navigation = useNavigation()
     const {state, signOut} = useContext(AuthContext);
 
-    const dispatch = useDispatch();
+    const navigationDrawerHome = getNavigationDrawerHome()
     const { user } = useSelector(state => state.userReducer);
-    const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-    const toggleTheme = () => {
-        setIsDarkTheme(!isDarkTheme)
-    }
+    const {
+        data,
+        modalVisible,
+        syllabusId,
+        imageLoading,
+        setImageLoading,
+        setSyllabusId,
+        setModalVisible
+    } = method();
 
     return(
         <View style={styles.drawer}>
            <DrawerContentScrollView {... props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <Avatar.Image 
-                            source={{
-                                uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU'
-                            }}
-                            size={70}
-                        />
+                        <TouchableOpacity onPress={() => navigation.navigate('ProfileScreen')}>
+                            {imageLoading ? <Avatar.Image size={70} source={require('../../../assets/load-loading.gif')} /> : null}
+                            <FastImage
+                                style={{height: imageLoading ? 1 : 70, 
+                                        width: imageLoading ? 1 : 70,
+                                        borderRadius: 120
+                                    }} 
+                                source={{uri: user.imageUrl === null ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU' :
+                                            user.imageUrl,
+                                        priority: FastImage.priority.high}} 
+                                onLoadStart={() => setImageLoading(true)}
+                                onLoadEnd={() => setImageLoading(false)}
+                            />
+                        </TouchableOpacity>
                         <View style={styles.row}>
                             <View style={{flexDirection:'column'}}>
                                 <Title style={[label.boldExtraLargeHeading, { color: color.textDefault }]}>{user.firstName} {user.lastName}</Title>
@@ -53,18 +70,15 @@ export function DrawerContent (props) {
                         </View>
 
                         <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>3</Text>
-                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Classes</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>3</Text>
-                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Goals</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>7</Text>
-                                <Caption style={[label.extraSmallHeading2, styles.text ]}>Friends</Caption>
-                            </View>
+                            {data.map((item) => {
+                                return (
+                                    <View style={styles.section}>
+                                        <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>{item.count}</Text>
+                                        <Caption style={[label.extraSmallHeading2, styles.text ]}>{item.title}</Caption>
+                                    </View>
+                                    );
+                                })                
+                            }   
                         </View>
                         <View style={styles.horizontalLine} />
                     </View>
@@ -74,56 +88,50 @@ export function DrawerContent (props) {
                             icon={() => (<Image source={require('../../../assets/icons/CalendarWhite.png')}/>)}
                             label="Calendar"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => {props.navigation.navigate('MainTabScreen', {screen: 'Calendar'})}}
                         />
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/GraduationCap.png')}/>)}
                             label="Goals"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => {props.navigation.navigate('MainTabScreen', {screen: 'Goal'})}}
                         />
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/Note.png')}/>)}
                             label="Assignments"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => {props.navigation.navigate('MainTabScreen', {screen: 'Assignment'})}}
                         />
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/FilePlus.png')}/>)}
                             label="Add a Class"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => {setModalVisible(true)}}
                         />
                         <DrawerItem 
-                            icon={() => (<Image source={require('../../../assets/icons/Gear.png')}/>)}
-                            label="Settings"
-                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Setting')}}
+                            icon={() => (<View style={{flexDirection:'row'}}>
+                                            <Image source={require('../../../assets/icons/Gear.png')}/>
+                                            <Text style={[label.extraSmallHeading3, styles.settingsText]}>
+                                                Settings
+                                            </Text>
+                                            <Image source={require('../../../assets/icons/CaretRight.png')}/>
+                                         </View>
+                                        )}
+                            label=""
+                            //labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => navigationDrawerHome.openDrawer()}
                         />
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/UserCircle.png')}/>)}
                             label="User Profile"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            onPress={() => {props.navigation.navigate('Home')}}
+                            onPress={() => {props.navigation.navigate('ProfileScreen')}}
                         />
                    </Drawer.Section>    
-                   {/*
-                    <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => {toggleTheme()}}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={isDarkTheme} />
-                                </View>
-                            </View>
-                        </TouchableRipple>        
-                   </Drawer.Section>
-                   */}             
                 </View>
            </DrawerContentScrollView>
            <Drawer.Section style={styles.bottomDrawerSection}>
-              {/** <Text style={[label.extraSmallHeading3, {color: color.textDefault}]}>v0.1</Text> 
-              **/}
+              {/** <Text style={[label.extraSmallHeading3, {color: color.textDefault}]}>v0.1</Text> **/}
                     <DrawerItem 
                         icon={({color,size}) => (
                             <Icon 
@@ -137,6 +145,13 @@ export function DrawerContent (props) {
                         onPress={signOut} 
                     />           
             </Drawer.Section>
+
+            <AddSyllabus 
+                modalVisible={modalVisible} 
+                setModalVisible={setModalVisible}
+                syllabusId={syllabusId}
+                setSyllabusId={setSyllabusId}
+            />
         </View>
     )
 }

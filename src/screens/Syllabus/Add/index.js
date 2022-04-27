@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
@@ -21,6 +21,8 @@ import ConfirmationModal from '../../../components/ConfirmationModal'
 import method from './method'
 import color from '../../../styles/colors'
 import { useSelector } from 'react-redux';
+import {Context as AuthContext} from '../../../components/Context/AuthContext';
+import SuccessModal from '../../../components/SuccessModal'
 
 var {height, width} = Dimensions.get('window');
 
@@ -42,6 +44,9 @@ const AddSyllabus = ({
         hasValue,
         confirmationMessage,
         confirmationVisible,
+        successMessage,
+        successModalVisible,
+        setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
         setHasValue,
@@ -60,6 +65,7 @@ const AddSyllabus = ({
     const [calendarVisible, setCalendarVisible] = useState(false);
     const colors = [0,1,2,3,4,5,6,7,8,9,10,11];
 
+    const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
 
     useEffect(() => {
@@ -104,7 +110,8 @@ const AddSyllabus = ({
           onBackdropPress={() => { setModalVisible(!modalVisible);
                                    setSyllabusId(null)
                                    resetClassSyllabus() }}>
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                              style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? '#000' : '#fff'}]}>
             <ScrollView>
                     <TouchableOpacity onPress={() => { setModalVisible(!modalVisible);
                                                        setSyllabusId(null)
@@ -116,11 +123,11 @@ const AddSyllabus = ({
                         />
                     </TouchableOpacity>
                     <View style={styles.fieldContainer}>
-                        <Label text={`${syllabusId === null ? 'Add' : 'Update'} your Syllabus`} />
+                        <Label text={`${syllabusId === null ? 'Add' : 'Update'} your Syllabus`} isDarkTheme={state.isDarkTheme === 'true'}/>
                         <AddItem />
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Input the Class Name or Class Code" />
+                        <Label text="Input the Class Name or Class Code" isDarkTheme={state.isDarkTheme === 'true'}/>
                         <DefaultInput 
                             label="Class Name"
                             value={classSyllabus.className}
@@ -132,7 +139,7 @@ const AddSyllabus = ({
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="What's the name of your teacher?" />
+                        <Label text="What's the name of your teacher?" isDarkTheme={state.isDarkTheme === 'true'}/>
                         <DefaultInput 
                             label="Name of Teacher"
                             value={classSyllabus.teacherName}
@@ -144,7 +151,7 @@ const AddSyllabus = ({
                         /> 
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="What's your Schedule?" />
+                        <Label text="What's your Schedule?" isDarkTheme={state.isDarkTheme === 'true'}/>
                             {Platform.OS === 'android' ?
                                 <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
                                     <View>
@@ -171,7 +178,7 @@ const AddSyllabus = ({
                           
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Pick a color" />
+                        <Label text="Pick a color" isDarkTheme={state.isDarkTheme === 'true'}/>
                         <View style={{flexDirection:'row'}}>
                             <ScrollView horizontal>
                                 {
@@ -185,7 +192,7 @@ const AddSyllabus = ({
                         </View>
                     </View>
                     <View style={styles.fieldContainer}>
-                        <Label text="Preview" />
+                        <Label text="Preview" isDarkTheme={state.isDarkTheme === 'true'}/>
                         <GradientItem 
                             containerStyle={{alignSelf:'center'}}
                             code={classSyllabus.className}
@@ -240,7 +247,16 @@ const AddSyllabus = ({
                 onClose={() => setConfirmationVisible(!confirmationVisible)}
                 onConfirm={() => {onConfirm()
                                   setSyllabusId(null)
-                                  setModalVisible(!modalVisible)}}
+                                 }}
+            />
+
+            <SuccessModal 
+                isRemove={false}
+                successModalVisible={successModalVisible} 
+                successMessage={successMessage}
+                headerText='Success'
+                onClose={() => {setSuccessModalVisible(!successModalVisible)
+                                setModalVisible(!modalVisible)}}
             />
           </Modal>
       </SafeAreaView>

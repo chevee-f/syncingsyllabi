@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import { Text, View, ImageBackground, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import MenuIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -6,17 +6,19 @@ import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import styles from './styles'
 import Moment from 'moment';
+import {Context as AuthContext} from '../../../components/Context/AuthContext';
 
 const Goals = props => {
-
+    const { state } = useContext(AuthContext);
     const tomorrow = Moment().add(1, 'days');
+
     return (
         <View>
             <View style={styles.header}>
-              <Text style={[label.boldSmallHeading2,{color:color.primary}]}>Goals</Text>
+              <Text style={[label.boldSmallHeading2,{color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Goals</Text>
               <MenuIcon 
                   name="dots-vertical"
-                  color={color.primary}
+                  color={state.isDarkTheme === 'true' ? color.default : color.primary}
                   size={28}
               />
             </View>

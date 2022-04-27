@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, 
          Dimensions, 
          SafeAreaView,
-         Image ,
+         Image,
          ScrollView,
          TouchableOpacity,
-         KeyboardAvoidingView
+         KeyboardAvoidingView, Text
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -20,6 +20,7 @@ import Moment from 'moment';
 import { useSelector } from 'react-redux';
 import ConfirmationModal from '../../../components/ConfirmationModal'
 import SuccessModal from '../../../components/SuccessModal'
+import {Context as AuthContext} from '../../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
 
@@ -29,6 +30,7 @@ const AddGoal = ({
     goalVisible,
     goalId,
     setGoalId,
+    setTab,
     ...props
   }) => {
 
@@ -57,25 +59,30 @@ const AddGoal = ({
     const [startDateVisible, setStartDateVisible] = useState(false);
     const [endDateVisible, setEndDateVisible] = useState(false);
 
+    const { state } = useContext(AuthContext);
     const { goals } = useSelector(state => state.goalReducer);
+
+    const setActiveTab = (index) => {
+        setTab(index);
+    }
 
     useEffect(() => {
         if(goalVisible){
             if(goalId !== null && !hasValue){
-                    let data = goals.filter((item) => item.id == goalId)     
-                    if(data.length > 0){
-                        setGoal({...goal, 
-                            id: goalId,
-                            title: data[0].goalTitle,
-                            type: data[0].goalType,
-                            description: data[0].goalDescription,
-                            startDate: data[0].goalDateStart,
-                            endDate: data[0].goalDateEnd,
-                            stringStartDate: Moment(data[0].goalDateStart).format("MM/DD/YYYY"),
-                            stringEndDate: Moment(data[0].goalDateEnd).format("MM/DD/YYYY")                
-                        })
-                        setHasValue(true)
-                    }             
+                let data = goals.filter((item) => item.id == goalId)     
+                if(data.length > 0){
+                    setGoal({...goal, 
+                        id: goalId,
+                        title: data[0].goalTitle,
+                        type: data[0].goalType,
+                        description: data[0].goalDescription,
+                        startDate: data[0].goalDateStart,
+                        endDate: data[0].goalDateEnd,
+                        stringStartDate: Moment(data[0].goalDateStart).format("MM/DD/YYYY"),
+                        stringEndDate: Moment(data[0].goalDateEnd).format("MM/DD/YYYY")                
+                    })
+                    setHasValue(true)
+                }             
             }
         }
     }, [goalVisible,goal,goalId,goals,hasValue]);
@@ -92,14 +99,17 @@ const AddGoal = ({
                 isVisible={goalVisible}
                 hideModalContentWhileAnimating
                 style={styles.modal}
-                onBackButtonPress={() => { setGoalVisible(!goalVisible);
-                                           setGoalId(null)
-                                           resetGoal() }}
-                onBackdropPress={() => { setGoalVisible(!goalVisible);
-                                         setGoalId(null)
-                                         resetGoal() }}>
+                onBackButtonPress={() => {setGoalVisible(!goalVisible);
+                                          setGoalId(null)
+                                          resetGoal() 
+                                         }}
+                onBackdropPress={() => {setGoalVisible(!goalVisible);
+                                        setGoalId(null)
+                                        resetGoal() 
+                                       }}>
 
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
+                                      style={[styles.modalContainer, {backgroundColor: state.isDarkTheme === 'true' ? '#000' : '#fff'}]}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => { setGoalVisible(!goalVisible);
                                                            setGoalId(null)
@@ -111,7 +121,7 @@ const AddGoal = ({
                             />
                         </TouchableOpacity>
                         <View style={styles.fieldContainer}>
-                            <Label text="Type of Goal" />
+                            <Label text="Type of Goal" isDarkTheme={state.isDarkTheme === 'true'} />
                             <Dropdown isOpen={openMenu} 
                                       openMenu={() => setOpenMenu(true)} 
                                       onDismiss={() => setOpenMenu(false)}
@@ -120,8 +130,8 @@ const AddGoal = ({
                                       items = {typeOfGoal} />
                         </View>
                         <View style={[styles.fieldContainer,{zIndex:-5}]}>
-                            <Label text="Description of the Goal" />
-                            <View style={[styles.inputContainer, {borderColor: color.default,height: height * 0.15}]}>
+                            <Label text="Description of the Goal" isDarkTheme={state.isDarkTheme === 'true'} />
+                            <View style={[styles.inputContainer, {height: height * 0.15}]}>
                                 <TextInput
                                     mode="flat"
                                     style={[styles.input,{height: height * 0.16}]}
@@ -138,8 +148,8 @@ const AddGoal = ({
                         </View>
                         <View style={[styles.fieldContainer,{zIndex:-5,flexDirection:'row',justifyContent:'space-between'}]}>
                             <View style={{width: '49%'}}>
-                                <Label text="Start Date" />
-                                <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                                <Label text="Start Date" isDarkTheme={state.isDarkTheme === 'true'} />
+                                <View style={styles.inputContainer}>
                                     <TextInput
                                         mode="flat"
                                         style={[styles.input]}
@@ -154,8 +164,8 @@ const AddGoal = ({
                                 </View> 
                             </View>
                             <View style={{width: '49%'}}>
-                                <Label text="End Date" />
-                                <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                                <Label text="End Date" isDarkTheme={state.isDarkTheme === 'true'} />
+                                <View style={styles.inputContainer}>
                                     <TextInput
                                         mode="flat"
                                         style={[styles.input]}
@@ -219,8 +229,7 @@ const AddGoal = ({
                     modalVisible={confirmationVisible} 
                     confirmationMessage={confirmationMessage}
                     onClose={() => setConfirmationVisible(!confirmationVisible)}
-                    onConfirm={() => {setGoalVisible(!goalVisible)
-                                      onConfirm()
+                    onConfirm={() => {onConfirm()
                                       setGoalId(null)}}
                 />
 
@@ -228,7 +237,11 @@ const AddGoal = ({
                     isRemove={action === 'Delete' ? true : false}
                     successModalVisible={successModalVisible} 
                     successMessage={successMessage}
-                    onClose={() => setSuccessModalVisible(!successModalVisible)}
+                    headerText='Success'
+                    onClose={() => {setSuccessModalVisible(!successModalVisible)
+                                    setGoalVisible(!goalVisible)
+                                    setActiveTab(goal.type)
+                                    resetGoal()}}
                 />
 
           </Modal>

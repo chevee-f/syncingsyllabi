@@ -5,7 +5,7 @@ import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 const method = (navigation) => {
 
-    const errors = useSelector((state) => state.errors);
+    const { user } = useSelector(state => state.userReducer);
     const {state, changePassword, signOut} = useContext(AuthContext);
     const [currentPassword, setCurrentPassword] = useState('');
     const [isLoading, setIsLoading] = React.useState(false);
@@ -14,7 +14,6 @@ const method = (navigation) => {
 
     useEffect(() => {
         if(state.isSuccessChangePassword) setModalVisible(true)
-
     }, [state]); 
 
     const [newPassword, setNewPassword] = useState('');
@@ -44,7 +43,11 @@ const method = (navigation) => {
 
     const closeModal = () => {
         setModalVisible(false)
-        signOut()
+        if(state.isLoggedIn){
+            navigation.navigate('MainDrawerContent')
+        }else{
+            signOut()
+        }
     }
 
     const updateSecureCurrentPassword = () => {
@@ -68,7 +71,7 @@ const method = (navigation) => {
                     currentPasswordErrMsg: 'Current Password field could not be empty'
                 });
                 return false
-            }else if(e !== state.currentPassword){
+            }else if(e !== state.currentPassword && state.currentPassword !== undefined){
                 setInputValidation({
                     ...inputValidation,
                     isValidCurrentPassword: false,

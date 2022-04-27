@@ -9,8 +9,9 @@ import method from './method';
 import styles from './styles';
 import color from './../../styles/colors'
 import label from './../../styles/label'
+import SuccessModal from '../../components/SuccessModal'
 
-const CodeVerificationScreen = ({ navigation }) => {
+const ChangePasswordScreen = ({ navigation }) => {
 
     const {
         currentPassword,
@@ -128,40 +129,17 @@ const CodeVerificationScreen = ({ navigation }) => {
                 </ScrollView>
             </View>
             
-
-                <Modal
-                    useNativeDriver={true}
-                    animationIn='fadeIn'
-                    animationOut='fadeOut'
-                    backdropColor='rgba(0, 0, 0, 0.7)'
-                    backdropOpacity={0.5}
-                    isVisible={modalVisible}
-                    hideModalContentWhileAnimating
-                    style={styles.modal}
-                    onBackButtonPress={closeModal}
-                    onBackdropPress={closeModal}>
-
-                    <View style={[styles.modalContainer]}>
-                        <Image 
-                            source={require('../../assets/carousel/Goals.png')}
-                            resizeMode='contain'
-                            style={styles.image}
-                        />
-                        <Text style={[label.boldMediumHeading,{marginVertical:20}]}>Password Updated!</Text>
-                        <Text style={[label.smallHeading2,{textAlign:'center'}]}>
-                            Your password has been changed successfully. Use your new password to login
-                        </Text>
-                        <CloseButton 
-                            title='Close'
-                            containerStyle={styles.closeButton}
-                            onPress={closeModal}
-                        />
-                    </View>
-                </Modal>
+            <SuccessModal 
+                isRemove={false}
+                successModalVisible={modalVisible} 
+                successMessage='Your password has been changed successfully. Use your new password to login'
+                headerText='Password Updated!'
+                onClose={closeModal}
+            />
 
         </KeyboardAvoidingView>
     )
 
 };
 
-export default CodeVerificationScreen;
+export default ChangePasswordScreen;
