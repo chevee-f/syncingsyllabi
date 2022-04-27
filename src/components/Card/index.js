@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Button, Text, View, StyleSheet, Animated, I18nManager } from 'react-native';
+import { Button, Text, View, StyleSheet, Animated, I18nManager, Image } from 'react-native';
 import { Swipeable, RectButton, FlatList } from 'react-native-gesture-handler';
 import Moment from 'moment';
 
@@ -68,10 +68,17 @@ const Card = ({data, ...props}) => {
     </View>
   );
   
-  const handleCardPress = (props) => {
-    // console.log(props)
-    // console.log('hi')
+  const showNoteIcon = (item) => {
+    if(item.notes === '') {
+      return <></>;
+    } 
+    return <Image 
+              source={require('../../assets/icons/NoteBlank.png')}
+              resizeMode='contain'
+              style={{ position: 'absolute', right: 15, top: 18, width: 20, height: 20 }}
+            />;
   }
+
   const Row = ({ item }) => {
     let dueColor = "#1B325F";
     if(new Date(item.assignmentDateEnd) <= new Date()) {
@@ -99,6 +106,9 @@ const Card = ({data, ...props}) => {
         {Moment(item.assignmentDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ?
                'Due Tomorrow ' + Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a") : Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a")}
       </Text>
+
+      {showNoteIcon(item)}
+      
     </RectButton>;
   };
   
