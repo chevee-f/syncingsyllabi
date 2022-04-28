@@ -7,8 +7,7 @@ export default StyleSheet.create({
     mainContainer: {
         flex:1,
         padding:20,
-        marginTop:35,
-        backgroundColor: '#fafafa'
+        marginTop:35
     },
     headerContainer: {
         flexDirection:'row'
@@ -23,7 +22,8 @@ export default StyleSheet.create({
         width: width * 1,
         alignItems:'center',
         justifyContent:'center',
-        position:'absolute'
+        position:'absolute',
+        backgroundColor: '#fafafa'
     },
     cameraImage: {
         marginTop: height * -0.045,

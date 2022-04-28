@@ -1,8 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { NavigationContainer, 
          DefaultTheme,
-         DarkTheme
-       } from '@react-navigation/native';
+         DarkTheme} from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './src/components/Navigation/DrawerContent';
 
@@ -13,18 +12,16 @@ import ChangePasswordScreen from './src/screens/ChangePassword'
 import ProfileScreen from './src/screens/Profile'
 import CodeVerificationScreen from './src/screens/CodeVerification';
 import SignUpConfirmationScreen from './src/screens/SignUpConfirmation';
-import {Provider} from 'react-redux';
-import {store} from './src/reducers/index';
-
-import {Provider as AuthProvider} from './src/components/Context/AuthContext.js';
-import {Context as AuthContext} from './src/components/Context/AuthContext';
-
-import { SettingsDrawerContent } from './src/components/Navigation/SettingsDrawerContent'
-import { setNavigationDrawerHome } from './src/components/Navigation/RootNavigation';
 import SoundsVibrationScreen from './src/screens/SoundsVibration';
 import SupportScreen from './src/screens/Support';
 
-//const Drawer = createDrawerNavigator();
+import {Provider} from 'react-redux';
+import {store} from './src/reducers/index';
+import {Provider as AuthProvider} from './src/components/Context/AuthContext.js';
+import {Context as AuthContext} from './src/components/Context/AuthContext';
+import { SettingsDrawerContent } from './src/components/Navigation/SettingsDrawerContent'
+import { setNavigationDrawerHome } from './src/components/Navigation/RootNavigation';
+import color from './src/styles/colors'
 
 const SettingsDrawer = createDrawerNavigator();
 const MainDrawer = createDrawerNavigator();
@@ -51,6 +48,15 @@ function MainDrawerContent(props) {
   );
 }
 
+const CustomDarkTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    background: '#202123',
+    text: color.default
+  }
+}
+
 function App() {
   const {state, retrieveToken} = useContext(AuthContext);
 
@@ -60,7 +66,7 @@ function App() {
   
   return (
       <Provider store={store}>
-        <NavigationContainer theme={state.isDarkTheme === 'true' ? DarkTheme : DefaultTheme}>
+        <NavigationContainer theme={state.isDarkTheme === 'true' ? CustomDarkTheme : DefaultTheme}>
           {state.token !== null || state.isForCodeVerification || state.isGoogle ? (
 
             <SettingsDrawer.Navigator
@@ -76,23 +82,6 @@ function App() {
               <SettingsDrawer.Screen name="MainDrawerContent" component={MainDrawerContent} />
               <SettingsDrawer.Screen name="SupportScreen" component={SupportScreen} />
             </SettingsDrawer.Navigator>
-            /*
-              <Drawer.Navigator 
-                //initialRouteName="SetUpScreen"
-                initialRouteName={state.isForCodeVerification ? "CodeVerificationScreen" : state.isGoogle ? "SetUpScreen" : "MainTabScreen" }
-                drawerContent={props => <DrawerContent {... props} />}
-                drawerPosition="left"
-              >
-                  <Drawer.Screen name="MainTabScreen" component={MainTabScreen} />
-                  <Drawer.Screen name="Setting" component={SettingScreen} />
-                  <Drawer.Screen name="SetUpScreen" component={SetUpScreen} />
-                  <Drawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
-                  <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
-                  <Drawer.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen} />
-                  <Drawer.Screen name="CodeVerificationScreen" component={CodeVerificationScreen} />
-
-              </Drawer.Navigator>
-              */
             ) :
             <RootStackScreen />
           }

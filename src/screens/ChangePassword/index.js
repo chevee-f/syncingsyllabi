@@ -1,15 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Image, Text, TouchableOpacity, Platform, KeyboardAvoidingView, ScrollView } from 'react-native';
-import Modal from "react-native-modal";
 import PasswordInput from '../../components/PasswordInput';
 import DefaultButton from '../../components/DefaultButton';
-import CloseButton from '../../components/SecondaryButton'
 import { ActivityIndicator } from 'react-native-paper';
 import method from './method';
 import styles from './styles';
 import color from './../../styles/colors'
 import label from './../../styles/label'
 import SuccessModal from '../../components/SuccessModal'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 const ChangePasswordScreen = ({ navigation }) => {
 
@@ -34,6 +33,7 @@ const ChangePasswordScreen = ({ navigation }) => {
         closeModal
     } = method(navigation);
 
+    const { state } = useContext(AuthContext);
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}  style={styles.container}>
@@ -58,7 +58,7 @@ const ChangePasswordScreen = ({ navigation }) => {
                     style={styles.bottomLineImage}
                 />
             </View>
-            <View style={styles.mainContainer}>
+            <View style={[styles.mainContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
                 <ScrollView>
                     <View>
                         <TouchableOpacity onPress={closeModal}>
@@ -68,18 +68,18 @@ const ChangePasswordScreen = ({ navigation }) => {
                                 style={styles.close}
                             />
                         </TouchableOpacity>
-                        <Text style={[label.boldLargeHeading, {color:color.primary}]}>Change Password</Text>
+                        <Text style={[label.boldLargeHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>Change Password</Text>
                         <View style={{marginVertical: 20}}>
-                            <Text style={[label.smallHeading, {color:color.primary}]}>
+                            <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>
                                 In order to protect your account, make sure your password:
                             </Text>
                             <View style={{flexDirection: 'row',paddingLeft:15}}>
-                                <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
-                                <Text style={[label.smallHeading, {color:color.primary}]}>must be at least 8 characters long</Text>
+                                <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>{'\u2022'}</Text>
+                                <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>must be at least 8 characters long</Text>
                             </View>
                             <View style={{flexDirection: 'row',paddingLeft:15}}>
-                                <Text style={[label.smallHeading, {color:color.primary}]}>{'\u2022'}</Text>
-                                <Text style={[label.smallHeading, {color:color.primary}]}>does not contain any common information of your profile. e.g. username123</Text>
+                                <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>{'\u2022'}</Text>
+                                <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>does not contain any common information of your profile. e.g. username123</Text>
                             </View>
                         </View>
                     </View>
@@ -118,7 +118,7 @@ const ChangePasswordScreen = ({ navigation }) => {
                             errorMsg={inputValidation.confirmNewPasswordErrMsg}
                             onEndEditing={(e)=>handleValidPassword(e.nativeEvent.text, 'confirmNewPassword')}
                         /> 
-                        <Text style={[label.smallHeading, { color: color.primary}]}>This field must match your New Password</Text>
+                        <Text style={[label.smallHeading, {color: state.isDarkTheme === 'true' ? color.default : color.primary}]}>This field must match your New Password</Text>
                     </View>
                     <View style={styles.button}>
                         <DefaultButton 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { TouchableOpacity, Text, View, ImageBackground, Dimensions, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Entypo';
 import Email from 'react-native-vector-icons/EvilIcons';
@@ -12,16 +12,16 @@ import label from '../../styles/label'
 import Moment from 'moment';
 import method from './method'
 import FastImage from 'react-native-fast-image'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
 
 const ProfileScreen = ({ navigation }) => {
 
     const { user } = useSelector(state => state.userReducer);
-    const dispatch = useDispatch();
+    const { state } = useContext(AuthContext);
     const [modalVisible, setModalVisible] = useState(false);
    
-
     useEffect(() => {
     }, [user]);
 
@@ -34,7 +34,7 @@ const ProfileScreen = ({ navigation }) => {
 
 
     return (
-      <View style={styles.mainContainer}>
+      <View style={[styles.mainContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fafafa'}]}>
           <View style={styles.headerContainer}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                   <Icon name="chevron-thin-left" color={color.primary} size={20} />
