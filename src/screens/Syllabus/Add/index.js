@@ -111,7 +111,7 @@ const AddSyllabus = ({
                                    setSyllabusId(null)
                                    resetClassSyllabus() }}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
-                              style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? '#000' : '#fff'}]}>
+                              style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
             <ScrollView>
                     <TouchableOpacity onPress={() => { setModalVisible(!modalVisible);
                                                        setSyllabusId(null)
@@ -214,7 +214,7 @@ const AddSyllabus = ({
                                                            setConfirmationMessage('Update this Syllabi?')
                                                            setConfirmationVisible(true)}}/>         
                         </View> :
-                        <View style={styles.fieldContainer}>
+                        <View style={[styles.fieldContainer,{marginBottom: 50}]}>
                             <DefaultButton title="Save" 
                                     onPress={() => {setAction('Add')
                                                     setConfirmationMessage('Add this Syllabi?')

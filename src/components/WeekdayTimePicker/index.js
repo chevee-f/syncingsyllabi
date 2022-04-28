@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {View, Dimensions, SafeAreaView,Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -10,6 +10,7 @@ import { DayPicker } from 'react-native-picker-weekday'
 import label from '../../styles/label'
 import Moment from 'moment';
 import { Swipeable, FlatList } from 'react-native-gesture-handler';
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
 
@@ -23,6 +24,7 @@ const WeekdayTimePicker = ({
     //const [weekday, setWeekday] = React.useState(-1)
     const [showStartTime, setShowStartTime] = useState(false);
     const [showEndTime, setShowEndTime] = useState(false);
+    const { state } = useContext(AuthContext);
 
     const onTrigger = (index) => {
         props.parentCallback(index);
@@ -89,7 +91,7 @@ const WeekdayTimePicker = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={styles.modalContainer}>
+                <View style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#f2f1f6'}]}>
                     <Text style={[label.boldMediumHeading, {color: color.primary, alignSelf:'flex-start'}]}>{props.title}</Text>
                     <View style={styles.weekPicker}>
                         <DayPicker

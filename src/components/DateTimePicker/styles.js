@@ -12,15 +12,13 @@ export default StyleSheet.create({
         alignItems:'center',
     },
     modalContainer:{
-        backgroundColor: '#fff', 
         alignItems: 'center',
         borderRadius: 16,
         width: width * 0.93,
         padding:30
     },
     textStyle:{
-        fontFamily: 'Manrope',
-        color: color.primary
+        fontFamily: 'Manrope'
     },
     dayLabelsWrapper:{
         borderTopWidth:0,

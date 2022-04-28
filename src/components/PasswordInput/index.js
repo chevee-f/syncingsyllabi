@@ -30,12 +30,9 @@ const PrimaryTextInput = ({
                 hasError={props.hasError}
                 style={[styles.input,{marginTop: isFocused || props.hasValue ? -5 : -2}]}
             />
-            <TouchableOpacity 
-            onPress={updateSecureTextEntry}  
-            style={{justifyContent:'center'}}>
+            <TouchableOpacity onPress={updateSecureTextEntry}  style={{justifyContent:'center'}}>
               {props.secureTextEntry ? 
-              <Text style={[label.extraSmallHeading, {color: props.hasValue ? color.primary : color.default}]}>SHOW</Text>
-              :
+              <Text style={[label.extraSmallHeading, {color: props.hasValue ? color.primary : color.default}]}>SHOW</Text> :
               <Text style={[label.extraSmallHeading, {color: props.hasValue ? color.primary : color.default}]}>HIDE</Text>
               }
           </TouchableOpacity>

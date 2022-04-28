@@ -24,7 +24,7 @@ const method = () => {
             count: syllabus.length
         },{
             title: 'Goals',
-            count: goals.length
+            count: goals.filter((x) => x.isArchived == false && x.isCompleted == false).length
         },{
             title: 'Friends',
             count: '7'

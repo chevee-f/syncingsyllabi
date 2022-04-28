@@ -63,7 +63,7 @@ const AddGoal = ({
     const { goals } = useSelector(state => state.goalReducer);
 
     const setActiveTab = (index) => {
-        setTab(index);
+        if(setTab !== undefined) setTab(index);
     }
 
     useEffect(() => {
@@ -109,7 +109,7 @@ const AddGoal = ({
                                        }}>
 
                 <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
-                                      style={[styles.modalContainer, {backgroundColor: state.isDarkTheme === 'true' ? '#000' : '#fff'}]}>
+                                      style={[styles.modalContainer, {backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
                     <ScrollView>
                         <TouchableOpacity onPress={() => { setGoalVisible(!goalVisible);
                                                            setGoalId(null)

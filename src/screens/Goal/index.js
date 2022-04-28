@@ -74,7 +74,7 @@ const GoalScreen = props => {
 
     return (
       <View>
-        <View style={[styles.header,{backgroundColor: state.isDarkTheme === 'true' ? '#000' : '#fff'}]}>
+        <View style={[styles.header,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
           {typeOfGoal.map((item) => {
               return (
                 <TabButton title={item.name} 
@@ -93,7 +93,7 @@ const GoalScreen = props => {
                 onClose={() => setIsOpenMenu(false)}
                 items={[
                     {label: 'Due Date', value: 7},
-                    {label: 'Alphabetical', value: 3}
+                    {label: 'Alphabetical', value: 4}
                 ]}
                 containerStyle={styles.containerStyle}
                 style={styles.dropDown}
