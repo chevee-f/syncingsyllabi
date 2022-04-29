@@ -44,6 +44,7 @@ const method = () => {
             Alert.alert("Error", error);
         }else{
             setSuccessMessage('Your assignment has been created!');
+            setSuccessTitle('Congratulations!');
             let newArr = markedDatesArray;
             
             setMarkedDatesArray(newArr);
@@ -63,7 +64,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('Your Assignment has been updated!')
+            setSuccessMessage('Your Assignment has been updated!');
+            setSuccessTitle('Success!');
             date = date.split("T")[0];
             let newArr = markedDatesArray;
             for(let i = 0; i < newArr.length; i++) {
@@ -94,7 +96,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('You just removed one of your assignments!')
+            setSuccessMessage('You just removed one of your assignments!');
+            setSuccessTitle('Success');
             setSuccessModalVisible(true);
             setConfirmationVisible(false);
             let newArr = markedDatesArray;
@@ -122,7 +125,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('You just completed one of your assignments!')
+            setSuccessMessage('You just completed one of your assignments!');
+            setSuccessTitle('Congratulations!');
             setSuccessModalVisible(true);
             setConfirmationVisible(false);
             let newArr = markedDatesArray;
@@ -193,6 +197,7 @@ const method = () => {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     console.log("current day = " + selectedDate);
     const [successMessage, setSuccessMessage] = useState('');
+    const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
     const [action, setAction] = React.useState('')
     const [confirmationVisible, setConfirmationVisible] = React.useState(false)
@@ -257,6 +262,8 @@ const method = () => {
         confirmationMessage,
         confirmationVisible,
         cardData,
+        successTitle,
+        setSuccessTitle,
         setCardData,
         setConfirmationVisible,
         setConfirmationMessage,
