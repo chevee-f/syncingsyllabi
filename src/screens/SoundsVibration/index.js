@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, Image, Text, TouchableOpacity, Switch } from 'react-native';
 import styles from './styles';
 import color from './../../styles/colors'
 import label from './../../styles/label'
 import Slider from '@react-native-community/slider';
+import {Context as AuthContext} from '../../components/Context/AuthContext';
+
 
 const SoundsVibrationScreen = ({ navigation }) => {
 
@@ -11,6 +13,7 @@ const SoundsVibrationScreen = ({ navigation }) => {
     const [isVibrate, setIsVibrate] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const toggleVibrateSwitch = () => setIsVibrate(previousState => !previousState);
+    const { state } = useContext(AuthContext);
 
     return (
         <View style={styles.mainContainer}>
@@ -26,11 +29,11 @@ const SoundsVibrationScreen = ({ navigation }) => {
             </View>
             <View>
                 <View style={{paddingVertical: 40}}>
-                    <Text style={[label.extraSmallHeading3, {color: color.primary}]}>Alert Volume</Text>
+                    <Text style={[label.extraSmallHeading3, {color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Alert Volume</Text>
                     <Slider
                         maximumValue={100}
                         minimumValue={0}
-                        minimumTrackTintColor={color.primary}
+                        minimumTrackTintColor={state.isDarkTheme === 'true' ? color.default : color.primary}
                         maximumTrackTintColor={color.light}
                         step={1}
                         value={15}
@@ -40,7 +43,7 @@ const SoundsVibrationScreen = ({ navigation }) => {
                     />
                 </View>
                 <View style={styles.switchContainer}>
-                    <Text style={[label.extraSmallHeading3, {color: color.primary}]}>Alert Vibrations</Text>
+                    <Text style={[label.extraSmallHeading3, {color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Alert Vibrations</Text>
                     <Switch
                         //trackColor={{ false: color.textDefault, true: "#81b0ff" }}
                         trackColor={{ false: color.textDefault, true: color.primary }}
@@ -51,7 +54,7 @@ const SoundsVibrationScreen = ({ navigation }) => {
                     />
                 </View>
                 <View style={styles.switchContainer}>
-                    <Text style={[label.extraSmallHeading3, {color: color.primary}]}>Vibrate on Silent</Text>
+                    <Text style={[label.extraSmallHeading3, {color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Vibrate on Silent</Text>
                     <Switch
                         trackColor={{ false: color.textDefault, true: color.primary }}
                         thumbColor={isVibrate ? color.textDefault : color.primary}

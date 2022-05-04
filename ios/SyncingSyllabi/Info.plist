@@ -20,12 +20,6 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Syncing Syllabi wants to access the photo library</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Syncing Syllabi wants to access the camera</string>
-
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -34,11 +28,23 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>com.googleusercontent.apps.974860535646-b0a3m3q99jks7vnkooljnir4mqcs9aam</string>
+				<string>fb1407826812993283</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>FacebookAppID</key>
+	<string>1407826812993283</string>
+	<key>FacebookDisplayName</key>
+	<string>Syncing Syllabi</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+		<string>fbauth2</string>
+		<string>fbshareextension</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -54,6 +60,10 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Syncing Syllabi wants to access the camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Syncing Syllabi wants to access the photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>manrope-bold.otf</string>

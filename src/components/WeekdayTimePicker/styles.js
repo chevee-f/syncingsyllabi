@@ -9,7 +9,6 @@ export default StyleSheet.create({
         alignItems:'center'
     },
     modalContainer:{
-        backgroundColor: '#f2f1f6', 
         alignItems: 'center',
         borderRadius: 16,
         width: width * 0.93,

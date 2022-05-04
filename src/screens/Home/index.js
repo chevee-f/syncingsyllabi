@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { Text, View, ScrollView, Platform } from 'react-native';
+import { Text, View, ScrollView } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import CalendarStrip from 'react-native-calendar-strip';
 import label from '../../styles/label'

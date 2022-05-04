@@ -32,7 +32,6 @@ export default StyleSheet.create({
     mainContainer: {
         flex: 1,
         marginTop: height * 0.32,
-        backgroundColor: '#fff',
         borderTopLeftRadius: 23,
         borderTopRightRadius: 23,
         paddingHorizontal: 20,

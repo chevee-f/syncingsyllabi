@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { getAPIBaseUrl } from "../../config/env";
 import { Alert } from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';  
-
+import { LoginManager } from 'react-native-fbsdk';
 const authReducer = (state, action) => {
 
   switch (action.type) {
@@ -337,10 +337,14 @@ const decryptPassword = (password) => {
 const signOut = dispatch => {
   return async() => {
     let isGoogleSignIn = await AsyncStorage.getItem('isGoogleSignIn')
-    if(JSON.stringify(isGoogleSignIn) === "true"){
-      await GoogleSignin.revokeAccess();
-      await GoogleSignin.signOut();
-      auth().signOut()
+    if(isGoogleSignIn){
+      try{
+        await GoogleSignin.revokeAccess();
+        await GoogleSignin.signOut();
+        auth().signOut()
+      }catch(e){
+        await LoginManager.logOut();
+      }
     }
 
     await AsyncStorage.removeItem('userToken');

@@ -11,6 +11,7 @@ export default StyleSheet.create({
         borderWidth:1,
         borderRadius:16,
         marginVertical:8,
+        backgroundColor: '#fff',
     },
     input: {
         borderRadius: 0,
