@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { Button, Text, View, StyleSheet, Animated, I18nManager, Image } from 'react-native';
+import { Button, Text, View, StyleSheet, Animated, I18nManager, Image, TouchableOpacity } from 'react-native';
 import { Swipeable, RectButton, FlatList } from 'react-native-gesture-handler';
 import Moment from 'moment';
 
@@ -72,11 +72,13 @@ const Card = ({data, ...props}) => {
     if(item.notes === '') {
       return <></>;
     } 
-    return <Image 
+    return <TouchableOpacity onPress={() => props.toggleAttachments(item.notes)} style={{ position: 'absolute', right: 15, top: 18, height: 20, width: 20}}>
+      <Image 
               source={require('../../assets/icons/NoteBlank.png')}
               resizeMode='contain'
-              style={{ position: 'absolute', right: 15, top: 18, width: 20, height: 20 }}
-            />;
+              style={{ width: 20, height: 20 }}
+            />
+            </TouchableOpacity>;
   }
 
   const Row = ({ item }) => {

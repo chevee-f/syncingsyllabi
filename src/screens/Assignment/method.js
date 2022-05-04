@@ -15,6 +15,7 @@ const method = () => {
     const [weekday, setWeekday] = useState([-1]);
     const [hasError, setHasError] = useState(false);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
+    const [allDatesArray, setAllDatesArray] = useState([]);
     const [classAssignments, setClassAssignments] = useState({
         id: '',
         title: '',
@@ -120,7 +121,6 @@ const method = () => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
         await dispatch(completeAssignment(assignment, userId, token));
-        console.log(assignment);
         let currentDate = assignment.assignmentDateEnd.split("T")[0];
         if(hasError){
             Alert.alert("Error", error);
@@ -145,7 +145,7 @@ const method = () => {
         }
     }
 
-    const handleSortAssignment = async(sort, date) => {
+    const handleSortAssignment = async(sort, date, showAll = false) => {
         const SortByName = (a, b) => {
             var aName = a[sort].toString().toLowerCase();
             var bName = b[sort].toString().toLowerCase(); 
@@ -154,11 +154,14 @@ const method = () => {
 
         let currentDate = Moment(selectedDate).format("YYYY-MM-DD");
         let newArr = markedDatesArray;
-        for(let i = 0; i < newArr.length; i++) {
-            if(currentDate === newArr[i].date) {
-                
-                newArr[i].data.sort(SortByName);
+        if(!showAll) {
+            for(let i = 0; i < newArr.length; i++) {
+                if(currentDate === newArr[i].date) {
+                    newArr[i].data.sort(SortByName);
+                }
             }
+        } else {
+            allDatesArray.sort(SortByName);
         }
     }
 
@@ -232,7 +235,6 @@ const method = () => {
         }
         let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
         console.log(selectedDateY)
-        setSelectedDate(selectedDateY)
         console.log(markedDatesArray)
         let hasData = false;
         for (let i = 0; i < markedDatesArray.length; i++) {
@@ -248,6 +250,7 @@ const method = () => {
         if(!hasData) {
           setCardData([]);
         } 
+        setSelectedDate(selectedDateY)
       }
 
     return {
@@ -263,6 +266,8 @@ const method = () => {
         confirmationVisible,
         cardData,
         successTitle,
+        allDatesArray,
+        setAllDatesArray,
         setSuccessTitle,
         setCardData,
         setConfirmationVisible,
