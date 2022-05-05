@@ -34,6 +34,10 @@ const AssignmentScreen = () => {
   const calendarRef = useRef(null);
   const titleField = useRef(null);
   const [calendarVisible, setCalendarVisible] = useState(false);
+  const [attachmentsVisible, setAttachmentsVisible] = useState(false);
+  const [note, setNote] = useState('');
+  const [allCalendarVisible, setAllCalendarVisible] = useState(false);
+  const [isShowAll, setIsShowAll] = useState(false);
 
   const [title, setTitle] = useState("");
   
@@ -42,6 +46,10 @@ const AssignmentScreen = () => {
   const { state } = useContext(AuthContext);
   const { assignments } = useSelector(state => state.assignmentsReducer);
   const [confirmationStatus, setConfirmationStatus] = useState("");
+  const [titleHasError, setTitleHasError] = useState(false);
+  const [duedateHasError, setDuedateHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(false);
+
   const dispatch = useDispatch();
   let fetchedDates = [];
   useEffect(() => {
@@ -62,7 +70,7 @@ const AssignmentScreen = () => {
         for(let i = 0; i < dates.length; i++) {
           let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
           let dots = [];
-          let newArrCount = newArr.length > 3 ? 3 : newArr.length;
+          let newArrCount = newArr.length;// > 3 ? 3 : newArr.length;
           for(let j = 0; j < newArrCount; j++) {
             dots.push({
               id: 'item' + i + j,
@@ -120,6 +128,10 @@ const AssignmentScreen = () => {
     confirmationMessage,
     confirmationVisible,
     cardData,
+    successTitle,
+    allDatesArray,
+    setAllDatesArray,
+    setSuccessTitle,
     setCardData,
     setConfirmationVisible,
     setConfirmationMessage,
@@ -222,10 +234,18 @@ const AssignmentScreen = () => {
   }
 
   const saveAssignment = () => {
-    if(classAssignments.id !== '')
-      handleUpdateAssignment();
-    else
-      handleAddAssignments();
+    if(classAssignments.dueDate !== "" && classAssignments.title !== "") {
+      if(classAssignments.id !== '')
+        handleUpdateAssignment();
+      else
+        handleAddAssignments();
+    } else {
+      setErrorMessage(true);
+      if(!classAssignments.title)
+        setTitleHasError(true);
+      if(!classAssignments.dueDate)
+        setDuedateHasError(true);
+    }
   }
 
   const openConfirmationModal = (item, message = '', status = '') => {
@@ -235,10 +255,77 @@ const AssignmentScreen = () => {
     setConfirmationStatus(status);
   }
 
+  const showAllAssignments = async () => {
+    let userId = state.userId
+    let token = state.token
+    await dispatch(getAssignmentsByUser(userId, token, '', true));
+    fetchedDates = [];
+    if(assignments.length > 0) {
+      let dates = [];
+      for(let i = 0; i < assignments.length; i++) {
+        let thedate = assignments[i]["assignmentDateEnd"].split("T")[0];
+        if(dates.indexOf(thedate) < 0) {
+          dates.push(thedate);
+        }
+      }
+      dates = dates.sort();
+
+      for(let i = 0; i < dates.length; i++) {
+        let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
+        let dots = [];
+        let newArrCount = newArr.length > 3 ? 3 : newArr.length;
+        for(let j = 0; j < newArrCount; j++) {
+          dots.push({
+            id: 'item' + i + j,
+            color: '#70C862'
+          })
+        }
+        fetchedDates.push({date: dates[i], dots: dots, data: newArr});
+      }
+
+      let ds = [];
+      for (let i = 0; i < fetchedDates.length; i++) {
+        ds.push({
+          date: fetchedDates[i].date,
+          dots: fetchedDates[i].dots,
+          data: fetchedDates[i].data
+        });
+      }
+      setMarkedDatesArray(ds);
+
+      const d = new Date();
+      let m = (d.getMonth()+1);
+      if(m.toString().length === 1) {
+        m = "0" + m;
+      }
+      let dt = d.getDate();
+      if(dt.toString().length === 1) {
+        dt = "0" + dt;
+      }
+      let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
+      let hasData = false;
+      let fd = [];
+      for (let i = 0; i < fetchedDates.length; i++) {
+          hasData = true;
+          for(let j = 0; j < fetchedDates[i].data.length; j++)
+            fd.push(fetchedDates[i].data[j]);
+      }
+      setCardData(fd);
+      setIsShowAll(true);
+      setAllDatesArray(fd);
+    }
+    setAllCalendarVisible(!allCalendarVisible);
+  }
+
+  const toggleAttachments = (notes) => {
+    setNote(notes);
+    setAttachmentsVisible(!attachmentsVisible);
+  }
+
   return (
     <>
       <View style={styles.container}>
-        <View style={{
+        <View style={isShowAll ? { } : {
           backgroundColor: 'white',
           height: 190,
           width: Dimensions.get("window").width,
@@ -280,23 +367,33 @@ const AssignmentScreen = () => {
           ref={calendarRef}
           onDateSelected={callme}
           scrollable
+          showWeek={isShowAll}
           // scrollerPaging={true}
           selectedDate={selectedDate}
-          style={{height: 80, marginTop: 110, paddingBottom: 10, overflow: 'visible'}}
+          style={isShowAll ? {height: 0, marginTop: 100, paddingBottom: 0, overflow: 'visible'} : {height: 80, marginTop: 110, paddingBottom: 10, overflow: 'visible'}}
           calendarHeaderFormat={"MMMM YYYY"}
+          calendarHeaderContainerStyle={isShowAll ? {
+            marginTop: -35,
+            left: 15,
+            position: 'absolute'
+          }: {
+            marginTop: -45,
+            left: 15,
+            position: 'absolute'
+          }}
           calendarHeaderStyle={{
-            color: 'white', 
-            marginBottom: 30, 
-            position: 'absolute', 
-            left: 15, 
-            top: -45, 
+            color: 'white',
             fontSize: 16, 
             fontWeight: '100'
+          }}
+          calendarHeaderClick={() => {
+            setAllCalendarVisible(true)
           }}
           iconContainer={{flex: 0.1}}
           calendarAnimation={{type: 'sequence', duration: 30}}
           daySelectionAnimation={{type: 'background', duration: 200, highlightColor: 'black'}}
           markedDates={markedDatesArray}
+          page={'assignment'}
           markedDatesStyle={{ top: 10, bottom: 0}}
           weekendDateNameStyle={{
             fontSize: 12,
@@ -364,7 +461,7 @@ const AssignmentScreen = () => {
             onBlur={() => setIsFocus(false)}
             onChange={item => {
               console.log(item);
-              handleSortAssignment(item.value, selectedDate);
+              handleSortAssignment(item.value, selectedDate, isShowAll);
               setValue(item.value);
               setIsFocus(false);
             }}
@@ -405,12 +502,17 @@ const AssignmentScreen = () => {
             <ScrollView style={{ }}>
                 <View style={{ marginHorizontal: 13 }}>
                   <View style={{marginTop: 24}}>
-                      <Label text="Title" />
+                      <Label text="Title *" />
                       <DefaultInput 
                           label="Title"
                           // value={title}
                           value={classAssignments.title}
-                          onChangeText={(title) => setClassAssignments({...classAssignments, title: title})}
+                          onChangeText={(title) => {
+                            setClassAssignments({...classAssignments, title: title})
+                            if(title != "")
+                              setTitleHasError(false);
+                          }}
+                          hasError={titleHasError}
                       />
                   </View>
                   <View style={{marginTop: 24}}>
@@ -418,22 +520,22 @@ const AssignmentScreen = () => {
                       <View style={{flexDirection:'row'}}>
                         <AddItem onPress={() => setModalVisible(true)} />
                         {
-                        // classSyllabi.map((item) => {
-                        //         return (
-                        //             <GradientItem 
-                        //                 code={item.code}
-                        //                 name={item.name}
-                        //                 schedule={item.schedule}
-                        //             />
-                        //         );
-                        //     })                
+                          // classSyllabi.map((item) => {
+                          //         return (
+                          //             <GradientItem 
+                          //                 code={item.code}
+                          //                 name={item.name}
+                          //                 schedule={item.schedule}
+                          //             />
+                          //         );
+                          //     })                
                         }
                     </View>
                   </View>
                   <View style={{marginTop: 24, width: '49%'}}>
-                    <Label text="Due date" />
+                    <Label text="Due date *" />
                     <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
-                      <View style={[styles.inputContainer, {borderColor: color.default}]}>
+                      <View style={[styles.inputContainer, {borderColor: !duedateHasError ? color.default : 'red'}]}>
                           <TextInput
                               mode="flat"
                               style={[styles.input]}
@@ -447,10 +549,10 @@ const AssignmentScreen = () => {
                       </View>
                     </TouchableOpacity>
                   </View>
-                  <View style={{marginTop: 24, width: '49%'}}>
+                  {/* <View style={{marginTop: 24, width: '49%'}}>
                   <Label text="Reminder" />
                     <View style={[styles.inputContainer, {borderColor: color.default}]}>
-                      {/* <TextInput
+                      <TextInput
                           mode="flat"
                           style={[styles.input]}
                           onPress={() => { setCalendarVisible(true)}}
@@ -460,23 +562,28 @@ const AssignmentScreen = () => {
                           selectionColor={color.primary}
                           activeUnderlineColor={color.primary}
                           theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                      /> */}
+                      />
                     </View> 
-                  </View>
+                  </View> */}
                   <View style={{marginTop: 24}}>
                       <Label text="Note" />
                       <TextInput 
-                        style={{backgroundColor: '#FAF6EA', height: 180, marginTop: 10}}
+                        multiline
+                        numberOfLines={8}
+                        style={{backgroundColor: '#FAF6EA', marginTop: 10, marginBottom: 24, paddingTop: 10}}
                         value={classAssignments.notes}
                         onChangeText={(notes) =>  setClassAssignments({...classAssignments, notes: notes})}
                       />
                   </View>
-                  <View style={{marginTop: 24}}>
+                  {/* <View style={{marginTop: 24}}>
                       <Label text="Attachments" />
                       <DefaultInput 
                           label="Title"
                           editable={false}
                       />
+                  </View> */}
+                  <View style={{ marginBottom: 24, display: errorMessage? 'flex': 'none' }}>
+                    <Text style={{ fontStyle: 'italic', color: 'red'}}>Please fill in all the required(*) fields.</Text>
                   </View>
         <DefaultButton 
                   title="Save" 
@@ -488,13 +595,85 @@ const AssignmentScreen = () => {
             </ScrollView>
           </View>
         </Modal>
+        <Modal 
+          isVisible={attachmentsVisible} 
+          style={{
+            margin: 0
+          }} 
+          transparent={true} 
+          animationInTiming={500}
+          animationOutTiming={1000}
+          backdropOpacity={0.4}
+          onBackdropPress={() => setAttachmentsVisible(!attachmentsVisible)} 
+          >
+            <View style={{
+            height: 310,
+            backgroundColor:'white',
+            position: 'relative',
+            borderRadius: 16,
+            width: Dimensions.get("window").width - 40,
+            marginHorizontal: 20
+          }}>
+              <View style={{ marginHorizontal: 13, marginTop: 12 }}>
+                  <Text style={{
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    color: '#0036A1'
+                  }}>Attachments</Text>
+                  <TextInput 
+                    multiline
+                    disabled={true}
+                    numberOfLines={8}
+                    style={{
+                      backgroundColor: '#FAF6EA', 
+                      marginTop: 10, 
+                      marginBottom: 24, 
+                      paddingTop: 10,
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10
+                    }}
+                    value={note}
+                  />
+                  <DefaultButton 
+                    title="Close" 
+                    style={{ marginBottom: 10 }}
+                    buttonColor={{ 
+                      backgroundColor: "#E6EAF2", 
+                      borderColor: '#A6BEED',
+                      borderWidth: 1
+                    }}
+                    textStyle={{ 
+                      color: '#494AE2'
+                    }}
+                    onPress={() => setAttachmentsVisible(!attachmentsVisible)}
+                  /> 
+              </View>
+            </View>
+          </Modal>
         <DateTimePicker 
             onClose={() => { setCalendarVisible(!calendarVisible); }}
             modalVisible={calendarVisible} 
             showTimePicker={false}
-            onChangeDate={(startDate) =>  setClassAssignments({...classAssignments, 
-                                                    dueDate: Moment(startDate).format("MM/DD/YYYY")})}
+            onChangeDate={(startDate) =>  {
+              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
+              setDuedateHasError(false);
+              setErrorMessage(false);
+            }}
             onSelectDate={() => setCalendarVisible(!calendarVisible)}
+        />
+
+        <DateTimePicker 
+            onClose={() => { setAllCalendarVisible(!allCalendarVisible); }}
+            modalVisible={allCalendarVisible} 
+            showTimePicker={false}
+            showAllAssignment={true}
+            showAllAssignments={showAllAssignments}
+            onChangeDate={(selectedDate) =>  {
+                setAllCalendarVisible(!allCalendarVisible);
+                setIsShowAll(false);
+                callme(selectedDate)
+            }}
+            onSelectDate={{}}
         />
         {/* <WeekdayTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
@@ -518,6 +697,7 @@ const AssignmentScreen = () => {
           editCardData={editCardData} 
           completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
           onPress={toggleModal} 
+          toggleAttachments={toggleAttachments}
           data={cardData} />
       </View>
     {/* <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
@@ -528,6 +708,7 @@ const AssignmentScreen = () => {
       <SuccessModal 
         successModalVisible={successModalVisible} 
         successMessage={successMessage}
+        headerText={successTitle}
         onClose={() => {
           setSuccessModalVisible(!successModalVisible);
           callme(selectedDate)

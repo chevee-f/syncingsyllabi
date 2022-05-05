@@ -15,6 +15,7 @@ const method = () => {
     const [weekday, setWeekday] = useState([-1]);
     const [hasError, setHasError] = useState(false);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
+    const [allDatesArray, setAllDatesArray] = useState([]);
     const [classAssignments, setClassAssignments] = useState({
         id: '',
         title: '',
@@ -44,6 +45,7 @@ const method = () => {
             Alert.alert("Error", error);
         }else{
             setSuccessMessage('Your assignment has been created!');
+            setSuccessTitle('Congratulations!');
             let newArr = markedDatesArray;
             
             setMarkedDatesArray(newArr);
@@ -63,7 +65,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('Your Assignment has been updated!')
+            setSuccessMessage('Your Assignment has been updated!');
+            setSuccessTitle('Success!');
             date = date.split("T")[0];
             let newArr = markedDatesArray;
             for(let i = 0; i < newArr.length; i++) {
@@ -94,7 +97,8 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('You just removed one of your assignments!')
+            setSuccessMessage('You just removed one of your assignments!');
+            setSuccessTitle('Success');
             setSuccessModalVisible(true);
             setConfirmationVisible(false);
             let newArr = markedDatesArray;
@@ -117,12 +121,12 @@ const method = () => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
         await dispatch(completeAssignment(assignment, userId, token));
-        console.log(assignment);
         let currentDate = assignment.assignmentDateEnd.split("T")[0];
         if(hasError){
             Alert.alert("Error", error);
         }else{
-            setSuccessMessage('You just completed one of your assignments!')
+            setSuccessMessage('You just completed one of your assignments!');
+            setSuccessTitle('Congratulations!');
             setSuccessModalVisible(true);
             setConfirmationVisible(false);
             let newArr = markedDatesArray;
@@ -141,7 +145,7 @@ const method = () => {
         }
     }
 
-    const handleSortAssignment = async(sort, date) => {
+    const handleSortAssignment = async(sort, date, showAll = false) => {
         const SortByName = (a, b) => {
             var aName = a[sort].toString().toLowerCase();
             var bName = b[sort].toString().toLowerCase(); 
@@ -150,11 +154,14 @@ const method = () => {
 
         let currentDate = Moment(selectedDate).format("YYYY-MM-DD");
         let newArr = markedDatesArray;
-        for(let i = 0; i < newArr.length; i++) {
-            if(currentDate === newArr[i].date) {
-                
-                newArr[i].data.sort(SortByName);
+        if(!showAll) {
+            for(let i = 0; i < newArr.length; i++) {
+                if(currentDate === newArr[i].date) {
+                    newArr[i].data.sort(SortByName);
+                }
             }
+        } else {
+            allDatesArray.sort(SortByName);
         }
     }
 
@@ -193,6 +200,7 @@ const method = () => {
     const [selectedDate, setSelectedDate] = React.useState(new Date());
     console.log("current day = " + selectedDate);
     const [successMessage, setSuccessMessage] = useState('');
+    const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
     const [action, setAction] = React.useState('')
     const [confirmationVisible, setConfirmationVisible] = React.useState(false)
@@ -227,7 +235,6 @@ const method = () => {
         }
         let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
         console.log(selectedDateY)
-        setSelectedDate(selectedDateY)
         console.log(markedDatesArray)
         let hasData = false;
         for (let i = 0; i < markedDatesArray.length; i++) {
@@ -243,6 +250,7 @@ const method = () => {
         if(!hasData) {
           setCardData([]);
         } 
+        setSelectedDate(selectedDateY)
       }
 
     return {
@@ -257,6 +265,10 @@ const method = () => {
         confirmationMessage,
         confirmationVisible,
         cardData,
+        successTitle,
+        allDatesArray,
+        setAllDatesArray,
+        setSuccessTitle,
         setCardData,
         setConfirmationVisible,
         setConfirmationMessage,

@@ -112,7 +112,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
         }
   };
 
-  export const getAssignmentsByUser = (userId, token, sort = '') => {
+  export const getAssignmentsByUser = (userId, token, sort = '', showAll = false) => {
     try {
         var d = new Date();
         d.setMonth(d.getMonth() + 3);
@@ -130,8 +130,30 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
             sortValue = 9;
         }
 
+        if(showAll) {
+            b = new Date("2020");
+            d = new Date("2070");
+            
+            let pad = function(num) { return ('00'+num).slice(-2) };
+            let date = new Date("2020");
+            date = date.getUTCFullYear()         + '-' +
+            pad(date.getUTCMonth() + 1)  + '-' +
+            pad(date.getUTCDate())       + 'T' +
+            pad(date.getUTCHours())      + ':' +
+            pad(date.getUTCMinutes())    + ':' +
+            pad(date.getUTCSeconds())    + 'Z';
+            b = date.split("T")[0];
+
+            date = new Date("2070");
+            date = date.getUTCFullYear()         + '-' +
+            pad(date.getUTCMonth() + 1)  + '-' +
+            pad(date.getUTCDate())       + 'T' +
+            pad(date.getUTCHours())      + ':' +
+            pad(date.getUTCMinutes())    + ':' +
+            pad(date.getUTCSeconds())    + 'Z';
+            d = date.split("T")[0];
+        }
         return async dispatch => {
-            console.log("get assignments by yser")
             axios.post(`${getAPIBaseUrl()}Assignment/GetAssignmentDetailsList`,
                 {
                     "UserId": parseInt(userId),

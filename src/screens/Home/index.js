@@ -65,6 +65,7 @@ const HomeScreen = ({ navigation }) => {
                 upperCaseDays={false}
                 dayContainerStyle={styles.dayContainer}
                 startingDate={startingDate}
+                page={'home'}
                 //onDateSelected={(selectedDate) => alert(JSON.stringify(selectedDate))}
                 />
               </View>

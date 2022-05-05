@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import {View, Dimensions, SafeAreaView } from 'react-native';
+import React, { useState, useContext } from 'react';
+import {TouchableOpacity, View, Dimensions, SafeAreaView, Text } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
 import color from '../../styles/colors'
@@ -63,7 +63,15 @@ const DateTimePicker = ({
                         </View>
                     }
 
-                    <View style={styles.buttonContainer}>
+                    {props.showAllAssignment &&
+                        <TouchableOpacity
+                            style={styles.showAllButtonContainer}
+                            onPress={props.showAllAssignments}>
+                            <Text style={styles.showAllButton}>Show All</Text>
+                        </TouchableOpacity>
+                    }
+
+                    <View style={[styles.buttonContainer, props.showAllAssignment ? {display: 'none'}: {}]}>
                         <CancelButton title="Cancel" containerStyle={styles.button} onPress={props.onClose} />
                         <DefaultButton title="Done" containerStyle={styles.button} onPress={props.onSelectDate} />
                     </View>

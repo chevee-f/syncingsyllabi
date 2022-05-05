@@ -41,5 +41,14 @@ export default StyleSheet.create({
     },
     button:{
         width: width * 0.4
-    }
+    },
+    showAllButtonContainer: {
+        alignSelf: 'flex-end',
+        marginTop: 16
+    },
+    showAllButton: {
+        color: color.primary,
+        fontWeight: 'bold',
+        fontSize: 15
+    },
 })
