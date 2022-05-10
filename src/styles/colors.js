@@ -11,6 +11,7 @@ export default {
     brown:'#C8B77A',
     lightBrown:'#FAF6EA',
     textDefault:'#F7F9FA',
-    archive: '#00B4DB'
+    archive: '#00B4DB',
+    darkTheme: '#202123'
   };
   

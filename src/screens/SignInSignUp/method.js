@@ -5,6 +5,9 @@ import { Alert,Platform } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';  
 import { getWebClientId } from "../../config/env";
+import { AccessToken,
+         GraphRequest,
+         GraphRequestManager } from 'react-native-fbsdk';
 
 const method = (navigation) => {
 
@@ -22,6 +25,7 @@ const method = (navigation) => {
     const [isFocused, setIsFocused] = React.useState(false);
     const [isSignUp, setIsSignUp] = React.useState(false);
     const [isGoogleSignIn, isSetGoogleSignIn] = React.useState(false);
+    const [isFacebookSignIn, setFacebookSignIn] = React.useState(false);
     const [userInfo, setuserInfo] = React.useState([]);
 
     const [inputValidation, setInputValidation] = React.useState({
@@ -47,6 +51,48 @@ const method = (navigation) => {
             }
             setIsLoading(false)
         } 
+    }
+
+    getInfoFromToken = token => {
+        const PROFILE_REQUEST_PARAMS = {
+          fields: {
+            string: 'id,name,first_name,last_name,email',
+          },
+        };
+        const profileRequest = new GraphRequest(
+          '/me',
+          {token, parameters: PROFILE_REQUEST_PARAMS},
+          (error, user) => {
+            if (error) {
+              console.log('login info has error: ' + error);
+            } else {
+              var email = user.email
+              var password = null
+              var isGoogleSignIn = true
+
+              if(isSignUp){
+                    signUp({email, password, isGoogleSignIn}) 
+              }else{
+                    signIn({email, password, isGoogleSignIn})
+              }
+            }
+          },
+        );
+        new GraphRequestManager().addRequest(profileRequest).start();
+      };
+      
+
+    const handleFacebookSignIn = (error, result) => {
+        if (error) {
+            alert(error);
+        } else if (result.isCancelled) {
+            alert('Login is cancelled.');
+        } else {
+            AccessToken.getCurrentAccessToken().then(data => {
+                const accessToken = data.accessToken.toString();
+                this.getInfoFromToken(accessToken);
+            });
+        }
     }
 
     const handleGoogleSignIn = async() => {
@@ -103,7 +149,7 @@ const method = (navigation) => {
         });
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; 
-    }, [inputValidation,isGoogleSignIn]);
+    }, [inputValidation,isGoogleSignIn,isFacebookSignIn]);
 
     const validateEmail = (email) => {
         return String(email)
@@ -179,7 +225,8 @@ const method = (navigation) => {
         setIsSignUp,
         setIsFocused,
         setPassword,
-        setEmail
+        setEmail,
+        handleFacebookSignIn
     };
   };
   

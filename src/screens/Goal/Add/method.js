@@ -79,7 +79,9 @@ const method = () => {
         if(hasError){
             Alert.alert("Error", error);
         }else{
+            setSuccessMessage('You just removed one of your goals!')
             resetGoal()
+            setTimeout(function(){setSuccessModalVisible(true)}, 1000)
         }
     }
 

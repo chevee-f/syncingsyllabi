@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {TouchableOpacity, View, Dimensions, SafeAreaView, Text } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import DatePicker from 'react-native-date-picker'
 import DefaultButton from '../../components/DefaultButton'
 import CancelButton from '../../components/SecondaryButton'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
 
@@ -15,6 +16,8 @@ const DateTimePicker = ({
     onPress,
     ...props
   }) => {
+
+    const { state } = useContext(AuthContext);
 
     return (
         <SafeAreaView>
@@ -30,11 +33,11 @@ const DateTimePicker = ({
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
 
-                <View style={styles.modalContainer}>
+                <View style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
                     <CalendarPicker
                         previousComponent={<Icon name="chevron-thin-left" color={color.primary} size={20} />} 
                         nextComponent={<Icon name="chevron-thin-right" color={color.primary} size={20} />} 
-                        textStyle={styles.textStyle}
+                        textStyle={[styles.textStyle,{color: state.isDarkTheme === 'true' ? color.default : color.primary}]}
                         selectedDayColor={color.primary}
                         todayBackgroundColor='#fff'
                         selectedDayTextColor='#fff'
