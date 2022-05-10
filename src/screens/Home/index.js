@@ -43,6 +43,7 @@ const HomeScreen = ({ navigation }) => {
               </View>
               <View>
               <CalendarStrip
+                showWeek={false}
                 currentScreen={"Home"}
                 scrollable
                 selectedDate={moment()}
@@ -50,7 +51,7 @@ const HomeScreen = ({ navigation }) => {
                 style={styles.calendar}
                 calendarHeaderFormat='MMMM'
                 calendarHeaderStyle={[styles.calendarHeader, {color:state.isDarkTheme === 'true' ? color.default : color.primary}]}
-                iconContainer={{flex: 0.1}}
+                iconContainer={{flex: 0, display: 'none'}}
                 calendarAnimation={{type: 'sequence', duration: 30}}
                 dateNumberStyle={styles.dateNumber}
                 dateNameStyle={styles.dateName}

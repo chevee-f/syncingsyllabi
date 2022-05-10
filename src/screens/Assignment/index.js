@@ -334,10 +334,10 @@ const AssignmentScreen = () => {
         }}></View>
         <View style={{
           backgroundColor: '#0036A1',
-          height: 100,
+          height: Platform.OS === 'ios' ? 125 : 100,
           width: Dimensions.get("window").width,
           position: 'absolute',
-          top: 0,
+          top: Platform.OS === 'ios' ? -25 : 0,
           borderBottomLeftRadius: 13,
           borderBottomRightRadius: 13
         }}>
