@@ -89,6 +89,14 @@ const ProfileScreen = ({ navigation }) => {
                           );
                       })                
                     }   
+                    <View>
+                        <Text style={[ label.smallHeading, styles.title, {textAlign:'center'} ]}>
+                            Friends
+                        </Text>
+                        <Text style={[label.boldSmallHeading, styles.count, {marginTop:20 } ]}>
+                            Coming Soon
+                        </Text>
+                    </View>
                 </View>
             </View>
             <Text style={[label.boldMediumHeading, { color: color.primary, marginBottom: 10 }]}>Basic Information</Text>

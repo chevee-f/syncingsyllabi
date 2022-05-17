@@ -32,10 +32,11 @@ const method = () => {
         },{
             title: 'Goals',
             count: goals.length
-        },{
-            title: 'Friends',
-            count: '7'
         },
+        //{
+        //    title: 'Friends',
+        //    count: '7'
+        //},
     ];
 
     useEffect(() => {
