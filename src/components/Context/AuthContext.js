@@ -225,7 +225,6 @@ const signIn = dispatch => {
               Alert.alert('Account','Account does not exist. Enter a different account or get a new one.')
               return
             }
-
             axios.post(`${getAPIBaseUrl()}User/LoginUser`,
             {
                 "email": email,

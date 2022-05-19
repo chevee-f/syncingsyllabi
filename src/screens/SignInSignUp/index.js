@@ -19,7 +19,6 @@ import CarouselCards from '../../components/Carousel/CarouselCards';
 import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
 import method from './method';
-import { LoginButton } from 'react-native-fbsdk';
 
 var {height, width} = Dimensions.get('window');
 
@@ -44,17 +43,6 @@ const SignUpScreen = ({ navigation }) => {
         setEmail,
         handleFacebookSignIn
     } = method(navigation);
-
-    const [userName, setUserName] = useState('');
-    const [token, setToken] = useState('');
-    const [profilePic, setProfilePic] = useState('');
-
-    const onLogout = () => {
-        //Clear the state after logout
-        setUserName(null);
-        setToken(null);
-        setProfilePic(null);
-    };
 
     return (
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
@@ -153,14 +141,13 @@ const SignUpScreen = ({ navigation }) => {
                             style={styles.icon}
                         />
                     </TouchableOpacity>
-                    <View style={{marginVertical:height * 0.016,marginHorizontal:10 }}>
-                        <LoginButton
-                            onLoginFinished={(error, result) => {
-                                handleFacebookSignIn(error, result)
-                            }}
-                            onLogoutFinished={onLogout}
+                    <TouchableOpacity onPress={handleFacebookSignIn}>
+                        <Image 
+                            source={require('../../assets/icons/facebook.png')}
+                            resizeMode='contain'
+                            style={styles.icon}
                         />
-                    </View>
+                    </TouchableOpacity>
                 </View> 
                 <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.01 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
