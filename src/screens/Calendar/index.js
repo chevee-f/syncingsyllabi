@@ -220,25 +220,7 @@ const CalendarScreen = ({ navigation }) => {
     }
   }
     return (
-      <View style={{ flex:1, alignItems:'center',justifyContent:'center', top: 24 }}>
-        <View style={{
-          backgroundColor: 'white',
-          height: 150,
-          width: Dimensions.get("window").width,
-          position: 'absolute',
-          top: 0,
-        }}></View>
-        <View style={{
-          backgroundColor: '#0036A1',
-          height: 60,
-          width: Dimensions.get("window").width,
-          position: 'absolute',
-          top: 0,
-          borderBottomLeftRadius: 13,
-          borderBottomRightRadius: 13
-        }}>
-          <Text style={{ textAlign: 'center', color: 'white', marginTop: 18, fontSize: 18, fontWeight: 'bold'}}>Calendar</Text>
-        </View>
+      <View style={{ flex:1, alignItems:'center',justifyContent:'center' }}>       
       {/* <Modal
         animationType="slide"
         transparent={false}
@@ -440,7 +422,7 @@ const CalendarScreen = ({ navigation }) => {
               </View>
             </View>
           </Modal>
-      <View style={{ marginTop: 60}}>
+      <View>
       
 <Agenda
   // items={{
