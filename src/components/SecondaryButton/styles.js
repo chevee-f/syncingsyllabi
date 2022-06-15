@@ -20,4 +20,9 @@ export default StyleSheet.create({
       fontWeight:'bold',
       fontFamily:'Manrope'
     }, 
+    image: {
+      height: height * 0.02,
+      width: width * 0.05,
+      marginRight: 8
+    }
 })

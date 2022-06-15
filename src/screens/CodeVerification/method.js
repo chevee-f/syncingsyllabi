@@ -8,10 +8,11 @@ const method = (navigation) => {
     const errors = useSelector((state) => state.errors);
     const {state, verifyUserCode, sendVerificationCode} = useContext(AuthContext);
     const [verificationCode, setVerificationCode] = useState('');
-    const [isLoading, setIsLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(false);
      
     useEffect(() => {
-        if(state.isEmailVerified) state.codeType === 1 ? navigation.navigate('SignUpConfirmationScreen') : navigation.navigate('ChangePasswordScreen')
+        if(state.isEmailVerified) state.codeType === 1 ? navigation.navigate('LoadingScreen', {previousScreen: 'CodeVerification'}) : 
+                                                         navigation.navigate('ChangePasswordScreen')
         if(!state.isEmailVerified && state.isEmailVerified !== undefined) Alert.alert('Invalid verification code')
     }, [state.isEmailVerified,state.codeType,errors]); 
 

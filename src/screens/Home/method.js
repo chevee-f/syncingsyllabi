@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../actions/user';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 
-const method = (setModalVisible) => {
+const method = () => {
 
     const { state } = useContext(AuthContext);
     const { user } = useSelector(state => state.userReducer);
