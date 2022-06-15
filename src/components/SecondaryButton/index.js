@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, Image } from 'react-native';
 import styles from './styles'
 
 const DefaultButton = ({
@@ -10,6 +10,12 @@ const DefaultButton = ({
     <TouchableOpacity 
       style={{...styles.btnContainer, ...props.containerStyle}}
       onPress={onPress}>
+        {props.imgSource !== undefined &&
+          <Image 
+              source={props.imgSource}
+              style={styles.image}
+          />
+        }
         <Text style={{...styles.text, ...props.textStyle}}>
             {props.title}
         </Text>

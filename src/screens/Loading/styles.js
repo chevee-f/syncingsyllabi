@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from "react-native"
-import color from './../../styles/colors'
+import color from '../../styles/colors'
 
 var {height, width} = Dimensions.get('window');
 
@@ -15,7 +15,7 @@ export default StyleSheet.create({
     },
     bottomLineContainer:{
         alignSelf:'flex-start',
-        marginTop:height * 0.21,
+        marginTop:height * 0.15,
         marginLeft:width * -0.32
     },
     bottomLineImage:{
@@ -34,6 +34,6 @@ export default StyleSheet.create({
         justifyContent: "center",
         alignItems:'center',
         position:'absolute',
-        marginTop: Platform.OS === 'ios' ? height * 0.63 : height * 0.75
+        marginTop: Platform.OS === 'ios' ? height * 0.68 : height * 0.75
       },
 })
