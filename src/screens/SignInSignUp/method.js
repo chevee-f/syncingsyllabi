@@ -7,7 +7,8 @@ import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import { getWebClientId } from "../../config/env";
 import { AccessToken,
          GraphRequest,
-         GraphRequestManager } from 'react-native-fbsdk';
+         GraphRequestManager,
+         LoginManager } from 'react-native-fbsdk';
 
 const method = (navigation) => {
 
@@ -81,19 +82,24 @@ const method = (navigation) => {
         new GraphRequestManager().addRequest(profileRequest).start();
       };
       
-
-    const handleFacebookSignIn = (error, result) => {
-        if (error) {
-            alert(error);
-        } else if (result.isCancelled) {
-            alert('Login is cancelled.');
-        } else {
+   
+   const handleFacebookSignIn = () => {
+      LoginManager.logInWithPermissions(['public_profile','email']).then(
+        login => {
+          if (login.isCancelled) {
+            console.log('Login cancelled');
+          } else {
             AccessToken.getCurrentAccessToken().then(data => {
-                const accessToken = data.accessToken.toString();
-                this.getInfoFromToken(accessToken);
+              const accessToken = data.accessToken.toString();
+              this.getInfoFromToken(accessToken);
             });
-        }
-    }
+          }
+        },
+        error => {
+          console.log('Login fail with error: ' + error);
+        },
+      );
+   }
 
     const handleGoogleSignIn = async() => {
         try {

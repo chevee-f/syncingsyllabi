@@ -1,15 +1,13 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View, Image } from 'react-native';
 import styles from './styles'
 import color from '../../styles/colors'
-import Moment from 'moment';
 
 const DefaultButton = ({
   onPress,
   ...props
 }) => {
 
-  const tomorrow = Moment().add(1, 'days');
   const onClick = (value) => {
     props.onSelect(value);
   }
@@ -21,6 +19,19 @@ const DefaultButton = ({
         <Text style={[styles.text, {color: props.isActive ? color.primary : color.default}]}>
           {props.title}
         </Text>
+        {props.count !== undefined &&
+            props.isDone !== undefined && props.isDone ?
+              <View style={[styles.countContainer]}>
+                <Image 
+                    source={require('../../assets/icons/Vector.png')}
+                    style={styles.image}
+                />
+              </View>
+            :
+            <View style={[styles.countContainer, {backgroundColor: props.isActive ? '#fff' : '#dee3eb'}]}>
+              <Text style={styles.countText}>{props.count}</Text>
+            </View>
+        }
     </TouchableOpacity>
   );
 };

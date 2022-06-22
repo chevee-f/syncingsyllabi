@@ -369,7 +369,7 @@ const AssignmentScreen = () => {
           <Text style={{ 
             textAlign: 'center', 
             color: 'white', 
-            marginTop: 18, 
+            marginTop:  Platform.OS === 'ios' ? 55 : 18, 
             fontSize: 18, 
             fontFamily:'Manrope',
             fontWeight: 'bold'
@@ -378,7 +378,7 @@ const AssignmentScreen = () => {
           <View
             style={{
               position: 'absolute', 
-              top: 12, 
+              top: Platform.OS === 'ios' ? 23 : 12, 
               right: 15
             }}
           >

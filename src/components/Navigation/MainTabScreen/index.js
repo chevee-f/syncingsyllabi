@@ -1,5 +1,6 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
-import { Text,View,Image,Platform, Dimensions,TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Text,View,Image,Platform,Dimensions } from 'react-native';
+
 import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import Dot from 'react-native-vector-icons/Entypo';
@@ -23,8 +24,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getOCRScanResult } from '../../../actions/syllabus';
 
 const Stack = createStackNavigator();
-
 const Tab = createMaterialBottomTabNavigator();
+var {height, width} = Dimensions.get('window');
 
 const MainTabScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,7 +80,7 @@ const MainTabScreen = () => {
             />
             <Tab.Screen
                 name="Calendar"
-                component={CalendarScreen}
+                component={CalendarStackScreen}
                 options={{
                 tabBarIcon: ({ focused }) => (
                     <View style={styles.iconContainer}>
@@ -109,7 +110,7 @@ const MainTabScreen = () => {
             <Tab.Screen 
                 name="SelectSyllabus" 
                 component={selectedComponent == 'Home' ? HomeStackScreen : 
-                           selectedComponent == 'Calendar' ? CalendarScreen :
+                           selectedComponent == 'Calendar' ? CalendarStackScreen :
                            selectedComponent == 'Goal' ? GoalStackScreen : AssignmentScreen
                           }
                 options={{
@@ -314,6 +315,31 @@ const GoalStackScreen = (props) => {
         <Stack.Screen
           name="Goal" 
           component={GoalScreen} 
+          options={{ headerLeft: null }} />
+    </Stack.Navigator>
+  )
+}
+
+const CalendarStackScreen = ({navigation}) => {
+  return(
+    <Stack.Navigator screenOptions={{
+      headerStyle:{
+        backgroundColor: color.primary
+      },
+      title: '',
+      headerTintColor:'#fff',
+      header: () => <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.11 : height * 0.13}]}>
+                      <View style={styles.titleContainer}>
+                          <Text style={[label.boldMediumHeading, {color: color.textDefault, textAlign:'center'}]}>
+                            Calendar
+                          </Text>
+                      </View>
+                    </View>
+      
+    }}>
+        <Stack.Screen 
+          name="Calendar" 
+          component={CalendarScreen} 
           options={{ headerLeft: null }} />
     </Stack.Navigator>
   )

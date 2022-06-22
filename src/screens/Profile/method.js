@@ -25,10 +25,11 @@ const method = () => {
         },{
             title: 'Goals',
             count: goals.filter((x) => x.isArchived == false && x.isCompleted == false).length
-        },{
-            title: 'Friends',
-            count: '7'
         },
+        //{
+        //    title: 'Friends',
+        //    count: '7'
+        //},
     ];
 
     const [profile, setProfile] = useState({

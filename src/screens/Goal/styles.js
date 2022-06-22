@@ -25,7 +25,7 @@ export default StyleSheet.create({
         borderColor: '#ccc',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 20,
+        paddingHorizontal: 5,
         //backgroundColor: '#fff'
     },
     containerStyle:{

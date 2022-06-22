@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <resources>
   <string name="app_name">SyncingSyllabi</string>
+  <string name="facebook_app_id">1407826812993283</string>
 </resources>

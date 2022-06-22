@@ -1,5 +1,4 @@
 import React from 'react';
-import { Alert, View } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import styles from './styles'
 

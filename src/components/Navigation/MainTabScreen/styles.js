@@ -110,5 +110,17 @@ export default StyleSheet.create({
   dotStyle:{
     top:-13,
     left:1
-  }
+  },
+  headerContainer:{
+    backgroundColor: color.primary,
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25
+  },
+  titleContainer:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: width * 1,
+    height: height * 0.15,
+    paddingHorizontal: 10
+  },
 })

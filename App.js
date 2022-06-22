@@ -11,9 +11,10 @@ import SetUpScreen from './src/screens/SetUp';
 import ChangePasswordScreen from './src/screens/ChangePassword'
 import ProfileScreen from './src/screens/Profile'
 import CodeVerificationScreen from './src/screens/CodeVerification';
-import SignUpConfirmationScreen from './src/screens/SignUpConfirmation';
+import LoadingScreen from './src/screens/Loading';
 import SoundsVibrationScreen from './src/screens/SoundsVibration';
 import SupportScreen from './src/screens/Support';
+import ConfidenceScoreScreen from './src/screens/ConfidenceScore'
 
 import {Provider} from 'react-redux';
 import {store} from './src/reducers/index';
@@ -41,9 +42,10 @@ function MainDrawerContent(props) {
       <MainDrawer.Screen name="SetUpScreen" component={SetUpScreen} />
       <MainDrawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       <MainDrawer.Screen name="ProfileScreen" component={ProfileScreen} />
-      <MainDrawer.Screen name="SignUpConfirmationScreen" component={SignUpConfirmationScreen} />
+      <MainDrawer.Screen name="LoadingScreen" component={LoadingScreen} />
       <MainDrawer.Screen name="CodeVerificationScreen" component={CodeVerificationScreen} />
       <MainDrawer.Screen name="SupportScreen" component={SupportScreen} />
+      <MainDrawer.Screen name="ConfidenceScoreScreen" component={ConfidenceScoreScreen} />
     </MainDrawer.Navigator>
   );
 }

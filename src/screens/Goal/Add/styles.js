@@ -13,7 +13,7 @@ export default StyleSheet.create({
         borderRadius: 16,
         width: width * 1,
         height: height * 0.66,
-        padding:20
+        padding:19
     },
     close:{
         alignSelf:'flex-end'
