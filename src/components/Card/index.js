@@ -1,13 +1,29 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Text, View, StyleSheet, Animated, I18nManager, Image, TouchableOpacity } from 'react-native';
 import { Swipeable, RectButton, FlatList } from 'react-native-gesture-handler';
 import Moment from 'moment';
+import MenuIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import label from '../../styles/label'
+import color from '../../styles/colors'
+import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { Dimensions } from "react-native"
+import { Dropdown } from 'react-native-element-dropdown';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 const tomorrow = Moment().add(1, 'days');
 const Card = ({data, ...props}) => {
+  const { state } = useContext(AuthContext);
+  const [sortValue, setSortValue] = React.useState('id');
+  const [isFocus, setIsFocus] = React.useState(false);
+
+  const sortData = [
+    { label: 'Class', value: 'id' },
+    { label: 'Due Date', value: 'assignmentDateEnd' },
+    { label: 'Title', value: 'assignmentTitle' },
+  ];
+  
   const renderLeftActions = (progress, item) => {
     return (
       <View style={{ width: 96, height: 106, marginTop: 10, }}>
@@ -21,6 +37,14 @@ const Card = ({data, ...props}) => {
             Remove
           </Animated.Text>
         </RectButton>
+      </View>
+    );
+  };
+
+  const renderSortItems = (item) => {
+    return (
+      <View style={{ padding: 15}}>
+        <Text style={{ color: '#0036A1', fontWeight: 'bold'}}>{item.label}</Text>
       </View>
     );
   };
@@ -113,6 +137,26 @@ const Card = ({data, ...props}) => {
       
     </RectButton>;
   };
+
+  const handleSortAssignment = async(sort, showAll = false) => {
+      const SortByName = (a, b) => {
+          var aName = a[sort].toString().toLowerCase();
+          var bName = b[sort].toString().toLowerCase(); 
+          return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
+      }
+
+      let currentDate = Moment(props.selectedDate).format("YYYY-MM-DD");
+      let newArr = props.markedDatesArray;
+      if(!showAll) {
+          for(let i = 0; i < newArr.length; i++) {
+              if(currentDate === newArr[i].date) {
+                  newArr[i].data.sort(SortByName);
+              }
+          }
+      } else {
+          props.allDatesArray.sort(SortByName);
+      }
+  }
   
   const SwipeableRow = ({ props, item, index }) => {
     // console.log(item)
@@ -128,15 +172,56 @@ const Card = ({data, ...props}) => {
         </Swipeable>
     );
   };
+
+  const renderSort = () => {
+    if(props.page != 'calendar') {
+      return <View style={styles.sortContainer}>
+        <Text style={{position: 'absolute', top: 18, left: 20, color: '#A6BEED', fontWeight: 'bold'}}>Sort by</Text>
+        <Dropdown
+          renderItem={renderSortItems}
+          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          containerStyle={{marginTop: -40, marginLeft: 100, borderWidth: 1, borderRadius: 13}}
+          data={sortData}
+          labelField="label"
+          valueField="value"
+          value={sortValue}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={item => {
+            handleSortAssignment(item.value, props.isShowAll);
+            setSortValue(item.value);
+            setIsFocus(false);
+          }}
+          maxHeight={150}
+        />
+      </View>;
+    } else {
+      return null;
+    }
+  }
   
-  // console.log(data.length);
   if(data.length > 0) {
     return (
       <View style={{ 
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center', 
         width: '100%' }}>
+        {
+          props.page === 'home' ?
+          <View style={styles.header}>
+            <Text style={[label.boldSmallHeading2,{color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Assignments</Text>
+            <MenuIcon 
+                name="dots-vertical"
+                color={state.isDarkTheme === 'true' ? color.default : color.primary}
+                size={28}
+            />
+          </View>
+          : 
+          renderSort()
+        }
         <FlatList
             style={{width: '100%'}}
             data={data}
@@ -162,7 +247,41 @@ const Card = ({data, ...props}) => {
   } 
 }
 
+var {height, width} = Dimensions.get('window');
 const styles = StyleSheet.create({
+  sortContainer: {
+  },
+  dropdown: {
+    height: 50,
+    paddingHorizontal: 20,
+    width: 150,
+    marginTop: 20
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0036A1'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  header:{
+    flexDirection:'row',
+    width:width * 0.89,
+    justifyContent:'space-between',
+    alignSelf:'center',
+    alignItems:'center',
+    marginTop:15,
+    marginBottom:5
+  },
   leftAction: {
     flex: 1,
     backgroundColor: '#E54C29',

@@ -10,6 +10,10 @@ const method = () => {
     const { user } = useSelector(state => state.userReducer);
     const { error } = useSelector(state => state.errorReducer);
 
+    const [cardData, setCardData] = React.useState([]);
+    const [markedDatesArray, setMarkedDatesArray] = useState([]);
+    const [selectedDate, setSelectedDate] = React.useState(new Date());
+
     const dispatch = useDispatch();
     const fetchUser = () => {
         let userId = state.userId
@@ -51,9 +55,40 @@ const method = () => {
          return unsubscribe;
          */
     }, [state]);
-   
+
+    const callme = (date) => {
+        const d = new Date(date);
+        let m = (d.getMonth()+1);
+        if(m.toString().length === 1) {
+          m = "0" + m;
+        }
+        let dt = d.getDate();
+        if(dt.toString().length === 1) {
+          dt = "0" + dt;
+        }
+        let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
+        let hasData = false;
+        for (let i = 0; i < markedDatesArray.length; i++) {
+          if(selectedDateY === markedDatesArray[i].date && !hasData) {
+            hasData = true;
+            setCardData(markedDatesArray[i].data);
+          }
+        }
+
+        if(!hasData) {
+          setCardData([]);
+        } 
+        setSelectedDate(selectedDateY)
+    }
 
     return {
+        cardData,
+        selectedDate,
+        markedDatesArray,
+        setCardData,
+        setSelectedDate,
+        setMarkedDatesArray,
+        callme
     };
   };
   

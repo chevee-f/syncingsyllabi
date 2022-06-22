@@ -4,6 +4,7 @@ import styles from './styles'
 import Modal from "react-native-modal";
 import Triangle from '../../../components/Triangle'
 import Icon from 'react-native-vector-icons/Ionicons';
+import Icon2 from 'react-native-vector-icons/AntDesign';
 import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import { useNavigation } from '@react-navigation/native';
@@ -44,14 +45,21 @@ const SelectSyllabus = ({
                         <Icon 
                             name="camera-outline"
                             color={color.textDefault}
-                            size={50}
+                            size={45}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.source} onPress={() => ScanSyllabi()}>
                         <Icon 
                             name="image-outline"
                             color={color.textDefault}
-                            size={50}
+                            size={40}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.source} onPress={onPress}>
+                        <Icon2 
+                            name="pdffile1"
+                            color={color.textDefault}
+                            size={30}
                         />
                     </TouchableOpacity>
                 </View>

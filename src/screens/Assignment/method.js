@@ -77,6 +77,7 @@ const method = () => {
                             newArr[i].data[j].assignmentDateStart = classAssignments.dueDate;
                             newArr[i].data[j].assignmentDateEnd = classAssignments.dueDate;
                             newArr[i].data[j].notes = classAssignments.notes;
+                            newArr[i].data[j].syllabusId = classAssignments.syllabusId;
                         }
                     }
                 }

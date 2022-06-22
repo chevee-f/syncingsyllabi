@@ -7,6 +7,15 @@ export default StyleSheet.create({
       container:{
         //height: height * 0.64
       },
+      header:{
+        flexDirection:'row',
+        width:width * 0.89,
+        justifyContent:'space-between',
+        alignSelf:'center',
+        alignItems:'center',
+        marginTop:15,
+        marginBottom:5
+      },
       progressContainer:{
         flexDirection:'row',
         justifyContent:'space-between',

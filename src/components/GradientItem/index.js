@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
-import { Text } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
 import label from '../../styles/label'
 import styles from './styles'
@@ -38,7 +37,6 @@ const GradientItem = props => {
     useEffect(() => {
       //getRandomColor(props.selectedColor)
     });
- 
     return (
       <TouchableOpacity onPress={() => onTrigger(props.id)} style={{...styles.itemContainer, ...props.containerStyle}}>
         {props.selectedBgColor !== undefined && props.selectedBgColor !== null &&
