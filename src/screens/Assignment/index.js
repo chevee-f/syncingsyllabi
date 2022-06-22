@@ -15,6 +15,7 @@ import color from '../../styles/colors';
 import { TextInput } from 'react-native-paper';
 import DateTimePicker from '../../components/DateTimePicker';
 import { getAssignmentsByUser } from '../../actions/assignments';
+import { getSyllabusByUser } from '../../actions/syllabus';
 
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { useSelector, useDispatch } from 'react-redux';
@@ -45,17 +46,37 @@ const AssignmentScreen = () => {
 
   const { state } = useContext(AuthContext);
   const { assignments } = useSelector(state => state.assignmentsReducer);
+  const { syllabus } = useSelector(state => state.syllabusReducer);
   const [confirmationStatus, setConfirmationStatus] = useState("");
   const [titleHasError, setTitleHasError] = useState(false);
   const [duedateHasError, setDuedateHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
+  const [syllabusId, setSyllabusId] = useState(null);
 
+  const [bgColor, setBgColor] = React.useState(
+    [
+      ['#FF9966', '#FF5E62'],
+      ['#56CCF2', '#2F80ED'],
+      ['#4776E6', '#8E54E9'],
+      ['#00B09B', '#96C93D'],
+      ['#A8C0FF', '#3F2B96'],
+      ['#ED213A', '#93291E'],
+      ['#FDC830', '#F37335'],
+      ['#00B4DB', '#0083B0'],
+      ['#AD5389', '#3C1053'],
+      ['#EC008C', '#FC6767'],
+      ['#DA4453', '#89216B'],
+      ['#654EA3', '#EAAFC8']
+    ]
+  );
   const dispatch = useDispatch();
   let fetchedDates = [];
   useEffect(() => {
       let userId = state.userId
       let token = state.token
       dispatch(getAssignmentsByUser(userId, token));
+      dispatch(getSyllabusByUser(userId, token));
+      console.log(syllabus)
       fetchedDates = [];
       if(assignments.length > 0) {
         let dates = [];
@@ -113,8 +134,7 @@ const AssignmentScreen = () => {
           setCardData([]);
         } 
       }
-  }, [assignments.length]);
-
+  }, [syllabus.length, assignments.length]);
 
   const {
     classAssignments,
@@ -217,6 +237,10 @@ const AssignmentScreen = () => {
   //   return <Card cardD={getCardData} onPress={toggleModal} data={cardData} />;
   // }
 
+  const handleCallback = async(id) => {
+    setClassAssignments({...classAssignments, syllabusId: id})
+  }
+
   const sortData = [
     { label: 'Class', value: 'id' },
     { label: 'Due Date', value: 'assignmentDateEnd' },
@@ -229,7 +253,8 @@ const AssignmentScreen = () => {
       id: res.id, 
       title: res.assignmentTitle, 
       dueDate: res.assignmentDateEnd, 
-      notes: res.notes 
+      notes: res.notes,
+      syllabusId: res.syllabusId
     });
   }
 
@@ -443,31 +468,6 @@ const AssignmentScreen = () => {
             backgroundColor: '#0036A1' //blue
           }}
         />
-        <View style={styles.sortContainer}>
-          <Text style={{position: 'absolute', top: 18, left: 20, color: '#A6BEED', fontWeight: 'bold'}}>Sort by</Text>
-          <Dropdown
-            renderItem={renderItem}
-            style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            inputSearchStyle={styles.inputSearchStyle}
-            iconStyle={styles.iconStyle}
-            containerStyle={{marginTop: -40, marginLeft: 100, borderWidth: 1, borderRadius: 13}}
-            data={sortData}
-            labelField="label"
-            valueField="value"
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={item => {
-              console.log(item);
-              handleSortAssignment(item.value, selectedDate, isShowAll);
-              setValue(item.value);
-              setIsFocus(false);
-            }}
-            maxHeight={150}
-          />
-        </View>
         {/* <Button title="Show modal" onPress={toggleModal} /> */}
 
         <Modal 
@@ -519,17 +519,22 @@ const AssignmentScreen = () => {
                       <Label text="Select Class" />
                       <View style={{flexDirection:'row'}}>
                         <AddItem onPress={() => setModalVisible(true)} />
-                        {
-                          // classSyllabi.map((item) => {
-                          //         return (
-                          //             <GradientItem 
-                          //                 code={item.code}
-                          //                 name={item.name}
-                          //                 schedule={item.schedule}
-                          //             />
-                          //         );
-                          //     })                
-                        }
+                        <ScrollView horizontal>
+                          {syllabus.length > 0 &&
+                            syllabus.map((item) => {
+                              console.log(item)
+                              return (
+                                <GradientItem 
+                                  parentCallback = {handleCallback}
+                                  code={item.className}
+                                  name={item.teacherName}
+                                  schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
+                                  selectedBgColor={bgColor[parseInt(item.colorInHex)]}
+                                  id={item.id}
+                                />
+                              );
+                          })}
+                        </ScrollView>
                     </View>
                   </View>
                   <View style={{marginTop: 24, width: '49%'}}>
@@ -698,6 +703,11 @@ const AssignmentScreen = () => {
           completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
           onPress={toggleModal} 
           toggleAttachments={toggleAttachments}
+          page={'assignments'}
+          selectedDate={selectedDate}
+          markedDatesArray={markedDatesArray}
+          allDatesArray={allDatesArray}
+          isShowAll={isShowAll}
           data={cardData} />
       </View>
     {/* <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>

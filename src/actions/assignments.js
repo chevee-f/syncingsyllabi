@@ -27,7 +27,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                         "endDate": "2022-12-12T02:31:43.387Z"
                     },
                     "userId": parseInt(userId),
-                    "syllabusId": 0,
+                    "syllabusId": assignment.syllabusId,
                     "assignmentTitle": assignment.title,
                     "notes": assignment.notes,
                     "assignmentDateStart": date,
@@ -60,6 +60,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 {
                     "assignmentId": assignment.id,
                     "userId": parseInt(userId),
+                    "syllabusId": parseInt(assignment.syllabusId),
                     "assignmentTitle": assignment.title,
                     "notes": assignment.notes,
                     "assignmentDateStart": date,

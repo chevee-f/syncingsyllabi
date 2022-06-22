@@ -23,10 +23,14 @@ import java.util.List;
 
 import co.apptailor.googlesignin.RNGoogleSigninPackage;  
 
+import com.filepicker.FilePickerPackage;
+import com.rnfs.RNFSPackage;
+
 public class MainApplication extends Application implements ReactApplication {
   private final ReactNativeHost mReactNativeHost = new ReactNativeHostWrapper(
     this,
     new ReactNativeHost(this) {
+
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -39,6 +43,8 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());
          //packages.add(new RNGoogleSigninPackage());
+      // packages.add(new FilePickerPackage());
+      new RNFSPackage();
       return packages;
     }
 
@@ -47,6 +53,13 @@ public class MainApplication extends Application implements ReactApplication {
       return "index";
     }
   });
+  // @Override
+  // protected List<ReactPackage> getPackages() {
+  //     return Arrays.<ReactPackage>asList(
+  //         new MainReactPackage(),
+  //         new FilePickerPackage() // Add package
+  //     );
+  // }
 
   @Override
   public ReactNativeHost getReactNativeHost() {

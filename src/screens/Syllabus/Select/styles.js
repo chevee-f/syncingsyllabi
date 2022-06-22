@@ -16,21 +16,22 @@ export default StyleSheet.create({
         backgroundColor: '#fff', 
         alignItems: 'center',
         borderRadius: 16,
-        width: 260,
-        height: 180,
+        width: 250,
+        height: 160,
         padding:20
     },
     sourceContainer:{
         flexDirection:'row',
-        width: 190,
+        width: 225,
         justifyContent:'space-between'
     },
     source:{
         backgroundColor: color.primary,
-        width: 85,
-        height: 85,
+        width: 65,
+        height: 65,
         borderRadius: 16,
         marginTop:10,
+        marginHorizontal: 5,
         alignItems: 'center',
         justifyContent:'center'
     }

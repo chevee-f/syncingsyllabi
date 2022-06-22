@@ -239,17 +239,23 @@ const method = () => {
         let dates = [];
         let ds = {};
         for (const key in markedDatesArray) {
-            // console.log(`${key}`);
-            dates.push(key);
-            let ddata = [];
-            let data = markedDatesArray[key].data;
-            const assignmentTitle = "assignmentTitle";
-            const assignmentDateEnd = "assignmentDateEnd";
-            const notes = "notes";
-            for(let i = 0; i < data.length; i++) {
-                ddata.push({ [assignmentTitle]: data[i].assignmentTitle, [assignmentDateEnd]: data[i].assignmentDateEnd, [notes]: data[i].notes });
-            }
-            ds[key] = ddata;
+                // console.log(`${key}`);
+                dates.push(key);
+                let ddata = [];
+                let data = markedDatesArray[key].data;
+                const assignmentTitle = "assignmentTitle";
+                const assignmentDateEnd = "assignmentDateEnd";
+                const notes = "notes";
+                if( (selectedDateY == data[0].assignmentDateEnd.split("T")[0])) {
+                    for(let i = 0; i < data.length; i++) {
+                        ddata.push({ 
+                            [assignmentTitle]: data[i].assignmentTitle, 
+                            [assignmentDateEnd]: data[i].assignmentDateEnd, 
+                            [notes]: data[i].notes 
+                        });
+                    }
+                    ds[key] = ddata;
+                }
         }
         setCardData(ds);
         console.log(ds)

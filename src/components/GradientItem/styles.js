@@ -13,14 +13,15 @@ export default StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         borderRadius:16,
-        height: Platform.OS == 'ios' ? height * 0.1 : height * 0.127,
+        height: Platform.OS == 'ios' ? height * 0.1 : 80,
     },
     text:{
       color:color.textDefault
     },
     textSchedule:{
-      color:color.textDefault,
       marginHorizontal:5,
-      textAlign: 'center'
+      textAlign: 'center',
+      color:color.textDefault,
+      fontWeight: 'bold'
     }
 })

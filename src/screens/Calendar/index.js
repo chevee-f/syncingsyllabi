@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getAssignmentsByUser } from '../../actions/assignments';
 import method from './method';
 import Moment from 'moment';
+import { Dropdown } from 'react-native-element-dropdown';
 import { TextInput } from 'react-native-paper';
 import DefaultInput from '../../components/DefaultInput';
 import DefaultButton from '../../components/DefaultButton';
@@ -34,6 +35,8 @@ const CalendarScreen = ({ navigation }) => {
   const [duedateHasError, setDuedateHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
   const [item, setItem] = useState();
+  const [isFocus, setIsFocus] = React.useState(false);
+  const [value, setValue] = React.useState('id');
 
   const {
     classAssignments,
@@ -219,6 +222,20 @@ const CalendarScreen = ({ navigation }) => {
         setDuedateHasError(true);
     }
   }
+  const renderItem = (item) => {
+    return (
+      <View style={{ padding: 15}}>
+        <Text style={{ color: '#0036A1', fontWeight: 'bold'}}>{item.label}</Text>
+      </View>
+    );
+  };
+
+  const sortData = [
+    { label: 'Class', value: 'id' },
+    { label: 'Due Date', value: 'assignmentDateEnd' },
+    { label: 'Title', value: 'assignmentTitle' },
+  ];
+
     return (
       <View style={{ flex:1, alignItems:'center',justifyContent:'center', top: 24 }}>
         <View style={{
@@ -441,7 +458,31 @@ const CalendarScreen = ({ navigation }) => {
             </View>
           </Modal>
       <View style={{ marginTop: 60}}>
-      
+      <View style={styles.sortContainer}>
+        <Text style={{position: 'absolute', top: 18, left: 20, color: '#A6BEED', fontWeight: 'bold'}}>Sort by</Text>
+        <Dropdown
+          renderItem={renderItem}
+          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          containerStyle={{marginTop: -40, marginLeft: 100, borderWidth: 1, borderRadius: 13}}
+          data={sortData}
+          labelField="label"
+          valueField="value"
+          value={value}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={item => {
+            console.log(item);
+            handleSortAssignment(item.value, selectedDate, isShowAll);
+            setValue(item.value);
+            setIsFocus(false);
+          }}
+          maxHeight={150}
+        />
+      </View>
 <Agenda
   // items={{
   //   '2012-05-22': [{name: 'item 1 - any js object'}],
@@ -459,7 +500,8 @@ const CalendarScreen = ({ navigation }) => {
   // }}
   // Callback that gets called when items for a certain month should be loaded (month became visible)
   loadItemsForMonth={month => {
-    console.log('trigger items loading ' + month);
+    console.log('trigger month items loading ' + month);
+    console.log(month);
   }}
   // Callback that fires when the calendar is opened or closed
   onCalendarToggled={calendarOpened => {
@@ -488,7 +530,9 @@ const CalendarScreen = ({ navigation }) => {
   futureScrollRange={50}
   // Specify how each item should be rendered in agenda
   renderItem={(item, firstItemInDay) => {
-    return <View><Text>Hello</Text></View>;
+    console.log('rendering item')
+    console.log(item)
+    return <View style={{ width: '100%' }}><Text>Hello</Text></View>;
   }}
 
   displayLoadingIndicator
@@ -515,6 +559,16 @@ const CalendarScreen = ({ navigation }) => {
     //   date = day;
     // console.log(item)
 
+    // <View style={{ width: '100%' }}>
+    //   <Card 
+    //       showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
+    //       editCardData={editCardData} 
+    //       completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
+    //       onPress={toggleModal} 
+    //       toggleAttachments={toggleAttachments}
+    //       page={'calendar'}
+    //       data={data} />
+    // </View>
     return <View style={{ width: '100%' }}>
       <Card 
           showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
@@ -522,6 +576,7 @@ const CalendarScreen = ({ navigation }) => {
           completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
           onPress={toggleModal} 
           toggleAttachments={toggleAttachments}
+          page={'calendar'}
           data={data} />
     </View>;
   }}
@@ -612,6 +667,7 @@ const CalendarScreen = ({ navigation }) => {
   // Agenda container style
   style={{  }}
 />
+<View style={{ height: 130}}></View>
 <SuccessModal 
         successModalVisible={successModalVisible} 
         successMessage={successMessage}
@@ -640,6 +696,35 @@ const CalendarScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
+  sortContainer: {
+    position: 'absolute',
+    zIndex: 1,
+    top: 270,
+    backgroundColor: 'red',
+    left: 0
+  },
+  dropdown: {
+    height: 50,
+    paddingHorizontal: 20,
+    width: 150,
+    marginTop: 20,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#0036A1'
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
   centeredView: {
     flex: 1,
     justifyContent: "center",
