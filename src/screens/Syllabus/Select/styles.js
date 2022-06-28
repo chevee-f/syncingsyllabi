@@ -17,7 +17,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         borderRadius: 16,
         width: 250,
-        height: 160,
+        height: 180,
         padding:20
     },
     sourceContainer:{

@@ -1,138 +1,72 @@
-import React, { useState,useContext, useEffect } from 'react';
+import React, { useState } from 'react';
 
-const method = (navigation) => {
+const method = (props) => {
     const syllabus = [
         {
-            item:{
-                title: `What's the name of your teacher?`,
-                scoreItems:[
-                    {
-                        key: 'JorgeCruz',
-                        text: 'Jorge Cruz',
-                        score: 71
-                    },
-                    {
-                        key: 'ProfJorgeCruz',
-                        text: 'Prof. Jorge Cruz',
-                        score: 98
-                    },
-                    {
-                        key: null,
-                        text: '',
-                        score: 0
-                    }
-                ]
-            }
+            title: `What's the name of your teacher?`,
+            field: 'teacherName'
         },
         {
-            item:{
-                title: 'Input the Class Name or Class Code',
-                scoreItems:[
-                    {
-                        key: 'IS130-02',
-                        text: 'IS130-02',
-                        score: 96
-                    },
-                    {
-                        key: 'ENTR 153-01',
-                        text: 'ENTR 153-01 (32161)',
-                        score: 93
-                    },
-                    {
-                        key: null,
-                        text: null,
-                        score: 0
-                    }
-                ]
-            }
+            title: 'Input the Class Code',
+            field: 'classCode'
         },
         {
-            item:{
-                title: `What's your schedule?`,
-                scoreItems:[
-                    {
-                        key: '3:00-5:50pm',
-                        text: '3:00pm-5:50pm',
-                        score: 96
-                    },
-                    {
-                        key: null,
-                        text: '',
-                        score: 0
-                    }
-                ]
-            }
+            title: 'Input the Class Name',
+            field: 'className'
+        },
+        {
+            title: `What's your schedule?`,
+            field: 'classSchedule'
         },
     ];
 
-    const assignments = [
+    const assignment = [
         {
-            item:{
-                title: 'Assignment Title or Subject',
-                scoreItems:[
-                    {
-                        key: 'ComputerEssentials',
-                        text: 'Computer Essentials Summary',
-                        score: 79
-                    },
-                    {
-                        key: 'ComputerProgramming',
-                        text: 'Computer Programming Essentials Summary',
-                        score: 91
-                    },
-                    {
-                        key: null,
-                        text: '',
-                        score: 0
-                    }
-                ]
-            }
+            title: `Assignment Title or Subject`,
+            field: 'subjectTitle'
         },
         {
-            item:{
-                title: 'Assignment Due Date',
-                scoreItems:[
-                    {
-                        key: 'May26',
-                        text: 'May 26. 2022 5:00PM',
-                        score: 95
-                    },
-                    {
-                        key: '5pm-6pm',
-                        text: '5:00pm - 6:00pm',
-                        score: 72
-                    },
-                    {
-                        key: null,
-                        text: '',
-                        score: 0
-                    }
-                ]
-            }
+            title: 'Assignment Due Date',
+            field: 'dueDate'
         },
         {
-            item:{
-                title: 'Class Assigned',
-                scoreItems:[
-                    {
-                        key: 'IS1320',
-                        text: 'IS130-02',
-                        score: 96
-                    },
-                    {
-                        key: 'ENTR15301',
-                        text: 'ENTR153-01',
-                        score: 96
-                    },
-                    {
-                        key: null,
-                        text: '',
-                        score: 0
-                    }
-                ]
-            }
-        },
+            title: 'Class Assigned',
+            field: 'classAssigned'
+        }
     ];
+
+    const assignments = {
+        subjectTitle: [
+            {
+                subjectTitle: "Computer Essentials Summary",
+                confidenceScore: 79
+            },
+            {
+                subjectTitle: "Computer Programming Essentials Summary",
+                confidenceScore: 91
+            }
+        ],
+        dueDate: [
+            {
+                dueDate: "May 26. 2022 5:00PM",
+                confidenceScore: 95
+            },
+            {
+                dueDate: "5:00pm - 6:00pm",
+                confidenceScore: 72
+            }
+        ],
+        classAssigned: [
+            {
+                classAssigned: "IS130-02",
+                confidenceScore: 95
+            },
+            {
+                classAssigned: "ENTR153-01",
+                confidenceScore: 72
+            }
+        ],
+    }
 
     const [activeTab, setActiveTab] = useState(0);
     const onSelect = (value) => {
@@ -141,6 +75,7 @@ const method = (navigation) => {
 
     return {
        syllabus,
+       assignment,
        assignments,
        onSelect,
        activeTab,

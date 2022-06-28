@@ -14,15 +14,16 @@ import Assignments from './Assignments'
 
 var {height, width} = Dimensions.get('window');
 
-const ConfidenceScoreScreen = (navigation) => {
+const ConfidenceScoreScreen = (props) => {
     
     const {
         syllabus,
+        assignment,
         assignments,
         onSelect,
         activeTab,
         setActiveTab
-    } = method(navigation);
+    } = method(props);
 
     return (
       <View style={{flex:1}}>
@@ -40,7 +41,7 @@ const ConfidenceScoreScreen = (navigation) => {
                     />
                 </View>
         </View>
-        <View style={[styles.tab]}>
+        <View style={styles.tab}>
             <TabButton title='Syllabus'
                        isActive={0 === activeTab}
                        isDone={1 === activeTab}
@@ -51,13 +52,13 @@ const ConfidenceScoreScreen = (navigation) => {
                        isActive={1 === activeTab}
                        onSelect={onSelect}
                        value={1}
-                       count={assignments.length} />
+                       count={assignment.length} />
             
         </View>
 
         {activeTab === 0 ?
-            <Syllabus syllabus={syllabus} setActiveTab={setActiveTab} /> :
-            <Assignments assignments={assignments} />
+            <Syllabus items={syllabus} syllabus={props.route.params.syllabusOcrResult.ocrSyllabusModel} setActiveTab={setActiveTab} /> :
+            <Assignments items={assignment} assignments={assignments} />
         }
 
       </View>

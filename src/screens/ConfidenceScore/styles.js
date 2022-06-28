@@ -28,13 +28,11 @@ export default StyleSheet.create({
         width:'70%'
     },
     tab:{
-        //marginTop: 150,
         borderBottomWidth: 2,
         height: 65,
         borderColor: '#ccc',
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 5,
-        //backgroundColor: '#fff'
     },
 })

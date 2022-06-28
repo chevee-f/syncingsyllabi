@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
 import com.reactnativecommunity.slider.ReactSliderPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -44,7 +45,7 @@ public class MainApplication extends Application implements ReactApplication {
       // packages.add(new MyReactNativePackage());
          //packages.add(new RNGoogleSigninPackage());
       // packages.add(new FilePickerPackage());
-      new RNFSPackage();
+      //new RNFSPackage();
       return packages;
     }
 
@@ -57,6 +58,7 @@ public class MainApplication extends Application implements ReactApplication {
   // protected List<ReactPackage> getPackages() {
   //     return Arrays.<ReactPackage>asList(
   //         new MainReactPackage(),
+  //          new RNFSPackage(),
   //         new FilePickerPackage() // Add package
   //     );
   // }

@@ -8,25 +8,15 @@ import color from '../../styles/colors'
 import label from '../../styles/label'
 import { ActivityIndicator } from 'react-native-paper';
 import styles from './styles'
-import { useNavigation } from '@react-navigation/native';
+import method from './method';
 
 var {height, width} = Dimensions.get('window');
 
 const LoadingScreen = (props) => {
-    const navigation = useNavigation();
-    const [isLoading, setIsLoading] = React.useState(true);
+    const {
+        isLoading
+    } = method(props);
 
-    const startLoading = () => {
-        setTimeout(() => {
-            setIsLoading(false);
-            navigation.navigate("ConfidenceScoreScreen")
-            //navigation.navigate("SetUpScreen")
-        }, 3000);
-    };
-
-    useEffect(() => {
-        startLoading()
-    });
 
     return (
       <View style={{ flex:1,backgroundColor:color.primary }}>
@@ -43,12 +33,12 @@ const LoadingScreen = (props) => {
                     resizeMode='contain'
                 />
                 <Text style={[label.boldLargeHeading,{color:color.textDefault,marginVertical:15}]}>
-                    {props.route.params.previousScreen === 'Syllabus' ? 'Scanning Syllabi' : 'Yee-ha!'}
+                    {props.route.params.previousScreen === 'Syllabus' ? 'Syncing Score' : 'Yee-ha!'}
                 </Text>
                 {props.route.params.previousScreen === 'Syllabus' ?
                     <Text style={[label.smallHeading,styles.successMessage]}>
-                        <Text>Your awesome Syllabi is being scanned. </Text>
-                        <Text>This may take a while.</Text>
+                        <Text>The accuracy of what our AI scanned. If it's</Text>
+                        <Text>not 100%, we check with you to verify.</Text>
                     </Text> :
                     <Text style={[label.smallHeading,styles.successMessage]}>
                         <Text>You have successfully created your account. </Text>

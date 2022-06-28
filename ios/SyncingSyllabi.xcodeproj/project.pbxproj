@@ -106,6 +106,7 @@
 			children = (
 				0340016B28056695000B83C8 /* libPods-SyncingSyllabi.a */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
+				83CBBA001A601CBA00E9B192 /* Products */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -122,7 +123,6 @@
 			children = (
 				13B07FAE1A68108700A75B9A /* SyncingSyllabi */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				D65327D7A22EEC0BE12398D9 /* Pods */,
 				D7E4C46ADA2E9064B798F356 /* ExpoModulesProviders */,
