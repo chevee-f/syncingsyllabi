@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, 
          View, 
-         ScrollView, TouchableOpacity } from 'react-native';
+         ScrollView } from 'react-native';
+import { CheckBox } from 'react-native-elements'
 import Label from '../../../components/Label'
 import RadioButtonGroup from '../../../components/RadioButtonGroup'
 import Colors from '../../../components/GradientColor'
@@ -28,23 +29,33 @@ const Syllabus = ({
     return (
         <ScrollView>
             <View style={{flex:1, marginBottom: 30}}>
-                {props.syllabus.map(res => {
-                return (
-                        <View>
-                            <View style={styles.container}>
-                                <View style={styles.labelContainer}>
-                                    <Label text={res.item.title} />
-                                </View>
-                                <View style={styles.scoreContainer}>
-                                    <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>Syncing Score</Text>
-                                </View>
-                            </View>
+           
+                {props.items.map(res => {
+                    return (
                             <View>
-                                <RadioButtonGroup items={res.item.scoreItems} />
+                                <View style={styles.container}>
+                                    <View style={styles.labelContainer}>
+                                        <Label text={res.title} />
+                                    </View>
+                                    <View style={styles.scoreContainer}>
+                                        <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>Syncing Score</Text>
+                                    </View>
+                                </View>
+                                <View>
+                                    {res.field === 'teacherName' ?
+                                        <RadioButtonGroup fieldName={res.field} items={props.syllabus.teacherName} />
+                                    : res.field === 'classCode' ?
+                                        <RadioButtonGroup fieldName={res.field} items={props.syllabus.classCode} />
+                                    : res.field === 'className' ?
+                                        <RadioButtonGroup fieldName={res.field} items={props.syllabus.className} />
+                                    : <RadioButtonGroup fieldName={res.field} items={props.syllabus.classSchedule} />
+                                    }
+                                </View>
                             </View>
-                        </View>
-                    );
-                })}
+                        );
+                    })
+                }
+
                 <View style={styles.fieldContainer}>
                     <Label text="Pick a color" />
                     <View style={{flexDirection:'row'}}>

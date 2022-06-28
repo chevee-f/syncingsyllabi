@@ -21,19 +21,25 @@ const Assignments = ({
     return (
         <ScrollView>
             <View style={{flex:1, marginBottom: 30}}>
-                {props.assignments.map(res => {
+                {props.items.map(res => {
                 return (
                         <View>
                             <View style={styles.container}>
                                 <View style={styles.labelContainer}>
-                                    <Label text={res.item.title} />
+                                    <Label text={res.title} />
                                 </View>
                                 <View style={styles.scoreContainer}>
                                     <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>Syncing Score</Text>
                                 </View>
                             </View>
                             <View>
-                                <RadioButtonGroup items={res.item.scoreItems} />
+                                {res.field === 'subjectTitle' ?
+                                    <RadioButtonGroup fieldName={res.field} items={props.assignments.subjectTitle} />
+                                : res.field === 'dueDate' ?
+                                    <RadioButtonGroup fieldName={res.field} items={props.assignments.dueDate} />
+                                : <RadioButtonGroup fieldName={res.field} items={props.assignments.classAssigned} />
+                                }
+                                
                             </View>
                         </View>
                     );

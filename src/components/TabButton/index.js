@@ -19,7 +19,7 @@ const DefaultButton = ({
         <Text style={[styles.text, {color: props.isActive ? color.primary : color.default}]}>
           {props.title}
         </Text>
-        {props.count !== undefined &&
+        {props.count !== undefined ?
             props.isDone !== undefined && props.isDone ?
               <View style={[styles.countContainer]}>
                 <Image 
@@ -31,6 +31,7 @@ const DefaultButton = ({
             <View style={[styles.countContainer, {backgroundColor: props.isActive ? '#fff' : '#dee3eb'}]}>
               <Text style={styles.countText}>{props.count}</Text>
             </View>
+          : null
         }
     </TouchableOpacity>
   );
