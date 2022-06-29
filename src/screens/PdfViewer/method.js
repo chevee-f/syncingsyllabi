@@ -29,13 +29,22 @@ const method = (props) => {
             let pages = includedPagesInSyllabi;
             pages.sort();
             pages.reverse();
+            let base64Array = [];
             for(let i = totalPages-1; i >= 0; i--) {
               if(includedPagesInSyllabi.indexOf(i+1) < 0) {
                 pdfDoc.removePage(i);
               }
             }
-            const base64String = await pdfDoc.saveAsBase64(); 
-            navigation.navigate('LoadingScreen', {previousScreen: 'Syllabus', base64String: base64String})
+
+            for(let i = 0; i < includedPagesInSyllabi.length; i++) {
+                let page = await PDFDocument.create();
+                const copiedPages = await page.copyPages(pdfDoc, [includedPagesInSyllabi[i]])
+                page.addPage(copiedPages[0])
+                const base64 = await page.saveAsBase64(); 
+                base64Array.push(base64);
+            }
+
+            navigation.navigate('LoadingScreen', {previousScreen: 'Syllabus', base64String: base64Array})
         }catch(e){
             alert(JSON.stringify(e.message))
         }
