@@ -38,7 +38,7 @@ const LoadingScreen = (props) => {
                 {props.route.params.previousScreen === 'Syllabus' ?
                     <Text style={[label.smallHeading,styles.successMessage]}>
                         <Text>The accuracy of what our AI scanned. If it's</Text>
-                        <Text>not 100%, we check with you to verify.</Text>
+                        <Text> not 100%, we check with you to verify.</Text>
                     </Text> :
                     <Text style={[label.smallHeading,styles.successMessage]}>
                         <Text>You have successfully created your account. </Text>

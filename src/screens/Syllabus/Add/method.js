@@ -21,11 +21,13 @@ const method = () => {
     const [classSyllabus, setClassSyllabus] = useState({
         id: '',
         className: '',
+        classCode: '',
         teacherName: '',
         schedule: '',
         scheduleStartTime: new Date(),
         scheduleEndTime: new Date(),
-        scheduleList: []
+        scheduleList: [],
+        colorInHex: 0
     });
 
     const [inputValidation, setInputValidation] = useState({
@@ -40,9 +42,7 @@ const method = () => {
     const days = ['SU', 'M', 'T', 'W', 'TH', 'F', 'S'];
     const [action, setAction] = useState('')
     const [confirmationVisible, setConfirmationVisible] = useState('')
-    //const [weekday, setWeekday] = React.useState(-1)
     const [weekday, setWeekday] = useState([-1])
-    const [selectedColor, setSelectedColor] = useState(0);
     const [hasValue, setHasValue] = useState(false);
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
@@ -69,7 +69,7 @@ const method = () => {
         let token = state.token
         let isValidSchedule = await handleValidSchedule(classSyllabus.schedule)
         if(isValidSchedule){
-            await dispatch(addSyllabus(classSyllabus, userId, token, selectedColor))
+            await dispatch(addSyllabus(classSyllabus, userId, token))
             if(hasError){
                 Alert.alert("Error", error);
             }else{
@@ -85,7 +85,7 @@ const method = () => {
         let token = state.token
         let isValidSchedule = await handleValidSchedule(classSyllabus.schedule)
         if(isValidSchedule){
-            await dispatch(updateSyllabus(classSyllabus, userId, token, selectedColor))
+            await dispatch(updateSyllabus(classSyllabus, userId, token))
             if(hasError){
                 Alert.alert("Error", error);
             }else{
@@ -113,9 +113,10 @@ const method = () => {
                             schedule: '',
                             scheduleStartTime: new Date(),
                             scheduleEndTime: new Date(),
-                            scheduleList: []})
+                            scheduleList: [],
+                            colorInHex: 0
+                        })
         setWeekday([-1])
-        setSelectedColor(0)
         setHasValue(false)
     }
 
@@ -239,7 +240,6 @@ const method = () => {
       
     return {
         bgColor,
-        selectedColor,
         classSyllabus,
         weekday,
         inputValidation,
@@ -255,7 +255,6 @@ const method = () => {
         setConfirmationMessage,
         setWeekday,
         setClassSyllabus,
-        setSelectedColor,
         addSchedule,
         handleCallback,
         handleValidClassName,

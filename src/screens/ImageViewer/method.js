@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import * as RNFS from 'react-native-fs'
-import { PDFDocument } from 'pdf-lib';
 import { useNavigation } from '@react-navigation/native';
 
 const method = (props) => {
@@ -10,12 +9,9 @@ const method = (props) => {
     const [syllabiPagesCount, setSyllabiPagesCount] = useState(0);
     const [assignmentPagesCount, setAssignmentPagesCount] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pdfPage, setPdfPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
     const [includedPagesInSyllabi, setIncludedPagesInSyllabi] = useState([]);
     const [includedPagesInAssignment, setIncludedPagesInAssignment] = useState([]);
-    const [pdfData, setPdfData] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     const onSelect = (value) => {
         setActiveTab(value)
@@ -35,53 +31,20 @@ const method = (props) => {
     }
 
     useEffect(() => {
-        setIsLoading(true)
-        readPdf()
+        setTotalPages(props.route.params.file.length)
     }, [props.route.params.file]);
 
-    const readPdf = async() => {
-        const pdfData = await RNFS.readFile(decodeURI(props.route.params.file.uri), 'base64');
-        setPdfData(pdfData)
-        setIsLoading(false)
-    }
-
-    const scanPdf = async() => {
+    const scanImage = async() => {
         try{
-
-            const pdfDocSyllabi = await PDFDocument.load(pdfData);
-            const pdfDocAssignment = await PDFDocument.load(pdfData);
 
             let base64ArraySyllabi = [];
             let base64ArrayAssignment = [];
 
-            for(let i = totalPages-1; i >= 0; i--) {
-              if(includedPagesInSyllabi.indexOf(i+1) < 0) {
-                pdfDocSyllabi.removePage(i);
-              }
-
-              if(includedPagesInAssignment.indexOf(i+1) < 0) {
-                pdfDocAssignment.removePage(i);
-              }
-            }
-
             for(let i = 0; i < includedPagesInSyllabi.length; i++) {
-                let newPdfDoc = await PDFDocument.create();
-                const [copiedPages] = await newPdfDoc.copyPages(pdfDocSyllabi, [i])
-                newPdfDoc.addPage(copiedPages)
-
-                const base64 = await newPdfDoc.saveAsBase64(); 
-                base64ArraySyllabi.push(base64);
+                let imgBase64 = await RNFS.readFile(decodeURI(props.route.params.file[includedPagesInSyllabi[i] - 1].uri), 'base64');
+                base64ArraySyllabi.push(imgBase64);
             }
 
-            for(let i = 0; i < includedPagesInAssignment.length; i++) {
-                let newPdfDoc = await PDFDocument.create();
-                const [copiedPages] = await newPdfDoc.copyPages(pdfDocAssignment, [i])
-                newPdfDoc.addPage(copiedPages)
-
-                const base64 = await newPdfDoc.saveAsBase64(); 
-                base64ArrayAssignment.push(base64);
-            }
-            
             setIncludedPagesInSyllabi([])
             setIncludedPagesInAssignment([])
             setSyllabiPagesCount(0)
@@ -98,7 +61,6 @@ const method = (props) => {
     }
 
     return {
-       pdfPage,
        currentPage,
        totalPages,
        includedPagesInSyllabi,
@@ -106,11 +68,8 @@ const method = (props) => {
        includedPagesInAssignment,
        onSelect,
        activeTab,
-       isLoading,
-       setPdfPage,
-       setTotalPages,
        setCurrentPage,
-       scanPdf
+       scanImage
     };
   };
   

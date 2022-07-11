@@ -4,18 +4,18 @@ import DefaultInput from '../../components/DefaultInput';
 import styles from './styles'
 import color from '../../styles/colors'
 
-const RadioButton = props => {
-    const [value, setValue] = useState(0);
+//const RadioButton = props => {
+const RadioButton = ({
+    setValue,
+    value,
+    ...props
+    }) => {
+    //const [value, setValue] = useState(0);
 
     return (
         <View>
             {props.items.map(res => {
-                var name = props.fieldName === 'teacherName' ? res.teacherName : 
-                            props.fieldName === 'classCode' ? res.classCode :
-                            props.fieldName === 'className' ? res.className : 
-                            props.fieldName === 'classSchedule' ? res.classSchedule :
-                            props.fieldName === 'subjectTitle' ? res.subjectTitle :
-                            props.fieldName === 'dueDate' ? res.dueDate : res.classAssigned
+                var name = res.name 
                 return (
                     <View style={styles.container}>
                         <View style={styles.subContainer}>
@@ -26,14 +26,7 @@ const RadioButton = props => {
                                 }}>
                                     {value === name && <View style={styles.selectedRb} />}
                             </TouchableOpacity>
-                            {name !== null ?
-                                <Text style={styles.radioText}>{name}</Text> :
-                                <View style={styles.inputContainer}>
-                                    <DefaultInput 
-                                        label="Other"
-                                    /> 
-                                </View>
-                            }
+                                <Text style={styles.radioText}>{name}</Text>
                         </View>
                         {name !== null &&
                             <View style={styles.scoreContainer}>
@@ -49,21 +42,17 @@ const RadioButton = props => {
                 <View style={styles.subContainer}>
                     <TouchableOpacity
                         style={styles.radioCircle}
-                        onPress={() => {
-                            setValue('other')
-                        }}>
-                            {value === 'other' && <View style={styles.selectedRb} />}
+                        onPress={() => setValue('other')}>
+                            {!props.items.find(x => x.name === value) && value !== '' && <View style={styles.selectedRb} />}
                     </TouchableOpacity>
                     <View style={styles.inputContainer}>
                         <DefaultInput 
                             label="Other"
+                            onChangeText={(otherValue) =>  setValue(otherValue)}
                         /> 
                     </View>
                 </View>
             </View>
-            {/*
-                <Text> Selected: {value} </Text>
-            */}
         </View>
     );
 };

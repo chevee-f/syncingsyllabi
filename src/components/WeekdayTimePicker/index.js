@@ -105,7 +105,6 @@ const WeekdayTimePicker = ({
                     <View>
                         <Text style={[label.boldExtraSmallHeading, styles.time]}>TIME</Text>
                         <View style={styles.timeContainer}>
-                           
                            <View>
                                 <View style={styles.timeSubContainer}>
                                     <Text style={[label.boldSmallHeading,styles.timeLabel]}>From</Text>
@@ -116,26 +115,25 @@ const WeekdayTimePicker = ({
                                     </TouchableOpacity>
                                 </View>
                                 {showStartTime &&
-                                        <View>
-                                            <View style={styles.dateTimePickerHeader}>
-                                                <TouchableOpacity onPress={() => { setShowStartTime(false)
-                                                                                   setShowEndTime(false) }} >
-                                                <Text style={{ color:'#218bf7',fontWeight:'bold'}}>
-                                                    Done
-                                                </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                            <View style={{alignItems:'center'}}>
-                                                <View style={styles.horizontalLine} />
-                
-                                            <DatePicker 
-                                                    mode="time"
-                                                    textColor={color.primary}
-                                                    date={props.startTime} 
-                                                    onDateChange={props.onChangeStartTime}
-                                                />
-                                            </View>
+                                    <View>
+                                        <View style={styles.dateTimePickerHeader}>
+                                            <TouchableOpacity onPress={() => { setShowStartTime(false)
+                                                                                setShowEndTime(false) }} >
+                                            <Text style={{ color:'#218bf7',fontWeight:'bold'}}>
+                                                Done
+                                            </Text>
+                                            </TouchableOpacity>
                                         </View>
+                                        <View style={{alignItems:'center'}}>
+                                            <View style={styles.horizontalLine} />
+                                        <DatePicker 
+                                                mode="time"
+                                                textColor={color.primary}
+                                                date={props.startTime} 
+                                                onDateChange={props.onChangeStartTime}
+                                            />
+                                        </View>
+                                    </View>
                                 }
                            </View>
                             
@@ -172,7 +170,6 @@ const WeekdayTimePicker = ({
                                     </View>
                                 }
                             </View>
-                            
                         </View>
                         <View style={styles.addContainer}>
                             <DefaultButton title="Add Schedule" onPress={props.add} containerStyle={styles.addButton}/>

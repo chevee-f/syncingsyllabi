@@ -60,8 +60,8 @@ export default StyleSheet.create({
     height:20, 
     marginLeft:10
   },
-  pdf: {
-    flex:1,
-    height: height
+  scannedImage:{
+    height: height * 0.58,
+    width: width * 1,
   }
 })

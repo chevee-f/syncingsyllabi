@@ -17,11 +17,14 @@ var {height, width} = Dimensions.get('window');
 const ConfidenceScoreScreen = (props) => {
     
     const {
-        syllabus,
+        ocrResults,
+        syllabusItems,
         assignment,
         assignments,
         onSelect,
         activeTab,
+        classSyllabi,
+        setClassSyllabi,
         setActiveTab
     } = method(props);
 
@@ -47,7 +50,7 @@ const ConfidenceScoreScreen = (props) => {
                        isDone={1 === activeTab}
                        onSelect={onSelect}
                        value={0} 
-                       count={syllabus.length} />
+                       count={syllabusItems.length} />
             <TabButton title='Assignments'
                        isActive={1 === activeTab}
                        onSelect={onSelect}
@@ -57,8 +60,16 @@ const ConfidenceScoreScreen = (props) => {
         </View>
 
         {activeTab === 0 ?
-            <Syllabus items={syllabus} syllabus={props.route.params.syllabusOcrResult.ocrSyllabusModel} setActiveTab={setActiveTab} /> :
-            <Assignments items={assignment} assignments={assignments} />
+            <Syllabus items={syllabusItems} 
+                      syllabus={ocrResults.ocrSyllabusModel} 
+                      classSyllabi={classSyllabi}
+                      setClassSyllabi={setClassSyllabi}
+                      setActiveTab={setActiveTab} /> :
+            <Assignments items={assignment} 
+                         assignments={assignments}
+                         //assignments={props.route.params.ocrResult.ocrAssignmentModel} 
+                         classSyllabi={classSyllabi}
+                         setClassSyllabi={setClassSyllabi} />
         }
 
       </View>
