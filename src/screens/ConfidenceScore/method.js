@@ -1,7 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 
 const method = (props) => {
-    const syllabus = [
+   
+    const { ocrResults } = useSelector(state => state.ocrReducer);
+    const [classSyllabi, setClassSyllabi] = useState({
+        id:'',
+        className: '',
+        classCode: '',
+        teacherName: '',
+        schedule: '',
+        scheduleList: [],
+        scheduleStartTime: new Date(),
+        scheduleEndTime: new Date(),
+        colorInHex: 0
+    });
+
+    useEffect(() => {
+    }, [classSyllabi,ocrResults]);
+
+    const syllabusItems = [
         {
             title: `What's the name of your teacher?`,
             field: 'teacherName'
@@ -38,31 +56,31 @@ const method = (props) => {
     const assignments = {
         subjectTitle: [
             {
-                subjectTitle: "Computer Essentials Summary",
+                name: "Computer Essentials Summary",
                 confidenceScore: 79
             },
             {
-                subjectTitle: "Computer Programming Essentials Summary",
+                name: "Computer Programming Essentials Summary",
                 confidenceScore: 91
             }
         ],
         dueDate: [
             {
-                dueDate: "May 26. 2022 5:00PM",
+                name: "May 26. 2022 5:00PM",
                 confidenceScore: 95
             },
             {
-                dueDate: "5:00pm - 6:00pm",
+                name: "5:00pm - 6:00pm",
                 confidenceScore: 72
             }
         ],
         classAssigned: [
             {
-                classAssigned: "IS130-02",
+                name: "IS130-02",
                 confidenceScore: 95
             },
             {
-                classAssigned: "ENTR153-01",
+                name: "ENTR153-01",
                 confidenceScore: 72
             }
         ],
@@ -74,11 +92,14 @@ const method = (props) => {
     }
 
     return {
-       syllabus,
+       ocrResults,
+       syllabusItems,
        assignment,
        assignments,
        onSelect,
        activeTab,
+       classSyllabi,
+       setClassSyllabi,
        setActiveTab
     };
   };

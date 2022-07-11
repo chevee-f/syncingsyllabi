@@ -16,6 +16,7 @@ import SoundsVibrationScreen from './src/screens/SoundsVibration';
 import SupportScreen from './src/screens/Support';
 import ConfidenceScoreScreen from './src/screens/ConfidenceScore'
 import PdfViewerScreen from './src/screens/PdfViewer'
+import ImageViewerScreen from './src/screens/ImageViewer'
 
 import {Provider} from 'react-redux';
 import {store} from './src/reducers/index';
@@ -48,6 +49,7 @@ function MainDrawerContent(props) {
       <MainDrawer.Screen name="SupportScreen" component={SupportScreen} />
       <MainDrawer.Screen name="ConfidenceScoreScreen" component={ConfidenceScoreScreen} />
       <MainDrawer.Screen name="PdfViewerScreen" component={PdfViewerScreen} options={{ headerLeft: null }} />
+      <MainDrawer.Screen name="ImageViewerScreen" component={ImageViewerScreen} options={{ headerLeft: null }} />
     </MainDrawer.Navigator>
   );
 }

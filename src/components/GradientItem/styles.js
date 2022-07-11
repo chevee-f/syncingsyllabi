@@ -5,7 +5,7 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
     itemContainer:{
-        width: width * 0.21,
+        width: width * 0.23,
         marginTop: height * 0.012,
         marginHorizontal: 2
     },

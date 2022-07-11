@@ -37,7 +37,6 @@ const AddSyllabus = ({
 
     const {
         bgColor,
-        selectedColor,
         classSyllabus,
         weekday,
         inputValidation,
@@ -53,7 +52,6 @@ const AddSyllabus = ({
         setConfirmationMessage,
         setWeekday,
         setClassSyllabus,
-        setSelectedColor,
         addSchedule,
         handleCallback,
         handleValidClassName,
@@ -71,24 +69,24 @@ const AddSyllabus = ({
     useEffect(() => {
         if(modalVisible){
             if(syllabusId !== null && !hasValue){
-                    let data = syllabus.filter((item) => item.id == syllabusId)
-                    let dataArray = [];  
-                    data[0].classSchedule.map(
-                        function(data){
-                            dataArray.push({schedule: data});
-                        }
-                    )
-                    setClassSyllabus({...classSyllabus, 
-                                        id: syllabusId,
-                                        className: data[0].className,
-                                        teacherName: data[0].teacherName,
-                                        schedule: !data[0].classSchedule ? '' : data[0].classSchedule.map(function(data){return data;}).join("|"),
-                                        scheduleStartTime: new Date(),
-                                        scheduleEndTime: new Date(),
-                                        scheduleList: dataArray
-                                    })
-                    setSelectedColor(parseInt(data[0].colorInHex))             
-                    setHasValue(true)
+                let data = syllabus.filter((item) => item.id == syllabusId)
+                let dataArray = [];  
+                data[0].classSchedule.map(
+                    function(data){
+                        dataArray.push({schedule: data});
+                    }
+                )
+                setClassSyllabus({...classSyllabus, 
+                                    id: syllabusId,
+                                    className: data[0].className,
+                                    teacherName: data[0].teacherName,
+                                    schedule: !data[0].classSchedule ? '' : data[0].classSchedule.map(function(data){return data;}).join("|"),
+                                    scheduleStartTime: new Date(),
+                                    scheduleEndTime: new Date(),
+                                    scheduleList: dataArray,
+                                    colorInHex: parseInt(data[0].colorInHex)
+                                })
+                setHasValue(true)
             }
         }
     }, [modalVisible,classSyllabus,syllabusId,syllabus,hasValue]);
@@ -131,7 +129,7 @@ const AddSyllabus = ({
                         <DefaultInput 
                             label="Class Name"
                             value={classSyllabus.className}
-                            onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className})}
+                            onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className, classCode: className})}
                             hasValue={classSyllabus.className.length}
                             hasError={!inputValidation.isValidClassName}
                             errorMsg={inputValidation.classNameErrMsg}
@@ -175,7 +173,6 @@ const AddSyllabus = ({
                                     errorMsg={inputValidation.scheduleErrMsg}
                                 /> 
                             }
-                          
                     </View>
                     <View style={styles.fieldContainer}>
                         <Label text="Pick a color" isDarkTheme={state.isDarkTheme === 'true'}/>
@@ -184,7 +181,7 @@ const AddSyllabus = ({
                                 {
                                     colors.map((item) => {
                                         return (
-                                            <Colors selectedColor={item} onPress={() => setSelectedColor(item)} />
+                                            <Colors selectedColor={item} onPress={() => setClassSyllabus({...classSyllabus, colorInHex: item})}/>
                                         );
                                     })                
                                 }              
@@ -198,7 +195,7 @@ const AddSyllabus = ({
                             code={classSyllabus.className}
                             name={classSyllabus.teacherName}
                             schedule={classSyllabus.schedule}
-                            selectedBgColor={bgColor[selectedColor]}
+                            selectedBgColor={bgColor[classSyllabus.colorInHex]}
                         />
                     </View>
                     {syllabusId !== null ?

@@ -10,13 +10,20 @@ import SecondaryButton from '../../../components/SecondaryButton';
 import styles from './styles'
 import label from '../../../styles/label'
 import color from '../../../styles/colors'
-
+import method from './method';
+import { useNavigation } from '@react-navigation/native';
 
 const Assignments = ({
+    classSyllabi,
+    setClassSyllabi,
     ...props
   }) => {
     
+    const navigation = useNavigation();
     const [notes, setNotes] = useState('');
+    const [value, setValue] = useState(0);
+    const {
+    } = method(classSyllabi,setClassSyllabi);
 
     return (
         <ScrollView>
@@ -34,19 +41,18 @@ const Assignments = ({
                             </View>
                             <View>
                                 {res.field === 'subjectTitle' ?
-                                    <RadioButtonGroup fieldName={res.field} items={props.assignments.subjectTitle} />
-                                : res.field === 'dueDate' ?
-                                    <RadioButtonGroup fieldName={res.field} items={props.assignments.dueDate} />
-                                : <RadioButtonGroup fieldName={res.field} items={props.assignments.classAssigned} />
+                                    <RadioButtonGroup items={props.assignments.subjectTitle} setValue={(value) => setValue(value)} value={value} />
+                                    : res.field === 'dueDate' ?
+                                    <RadioButtonGroup items={props.assignments.dueDate} setValue={(value) => setValue(value)} value={value} />
+                                    :<RadioButtonGroup items={props.assignments.classAssigned} setValue={(value) => setValue(value)} value={value} />
                                 }
-                                
                             </View>
                         </View>
                     );
                 })}
                 <View style={styles.fieldContainer}>
-                      <Label text="Note" />
-                      <TextInput 
+                    <Label text="Note" />
+                    <TextInput 
                         multiline
                         numberOfLines={8}
                         placeholder="Write a note..."
@@ -54,7 +60,7 @@ const Assignments = ({
                         style={styles.note}
                         value={notes}
                         onChangeText={(notes) =>  setNotes(notes)}
-                      />
+                    />
                 </View>
                 <View style={styles.fieldContainer}>
                     <Label text="Attachments" />
@@ -70,7 +76,7 @@ const Assignments = ({
                     />       
                 </View>
                 <View style={styles.fieldContainer}>
-                    <DefaultButton title="Save Assignment" />       
+                    <DefaultButton title="Save Assignment" onPress={() => navigation.navigate("MainTabScreen")} />       
                 </View>
             </View>
         </ScrollView>

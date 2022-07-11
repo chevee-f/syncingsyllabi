@@ -1,5 +1,4 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
 import { getAPIBaseUrl } from "../config/env";
 import { Alert } from 'react-native';
 
@@ -7,17 +6,17 @@ export const GET_SYLLABUS_BY_USER = 'GET_SYLLABUS_BY_USER';
 export const ADD_SYLLABUS = 'ADD_SYLLABUS';
 export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
 
-  export const addSyllabus = (syllabus, userId, token, selectedColor) => {
+  export const addSyllabus = (syllabus, userId, token) => {
     try {
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Syllabus/CreateSyllabus`,
         {
             "userId": parseInt(userId),
             "classCode": syllabus.className,
-            "className": syllabus.className,
+            "className": syllabus.classCode,
             "teacherName": syllabus.teacherName,
             "classSchedule": syllabus.schedule,
-            "colorInHex": JSON.stringify(selectedColor)
+            "colorInHex": JSON.stringify(syllabus.colorInHex)
         },
         { headers: {"Authorization" : `Bearer ${token}`} })
         .then((res) => {
@@ -31,7 +30,7 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
     }
   };
 
-  export const updateSyllabus = (syllabus, userId, token, selectedColor) => {
+  export const updateSyllabus = (syllabus, userId, token) => {
     try {
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Syllabus/UpdateSyllabus`,
@@ -42,7 +41,7 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
                 "className": syllabus.className,
                 "teacherName": syllabus.teacherName,
                 "classSchedule": syllabus.schedule,
-                "colorInHex": JSON.stringify(selectedColor)
+                "colorInHex": JSON.stringify(syllabus.colorInHex)
             },
             { headers: {"Authorization" : `Bearer ${token}`} })
             .then((res) => {

@@ -5,17 +5,14 @@ import label from '../../styles/label'
 import color from '../../styles/colors'
 import method from './method';
 import TabButton from './../../components/TabButton'
-import Pdf from 'react-native-pdf';
 import CheckBox from '@react-native-community/checkbox';
-import Loader from '../../components/Loader'
 import { useNavigation } from '@react-navigation/native'
 
 var {height, width} = Dimensions.get('window');
 
-const PdfViewerScreen = props => {
+const ImageViewerScreen = props => {
   const navigation = useNavigation()
   const {
-    pdfPage,
     currentPage,
     totalPages,
     includedPagesInSyllabi,
@@ -23,11 +20,8 @@ const PdfViewerScreen = props => {
     includedPagesInAssignment,
     onSelect,
     activeTab,
-    isLoading,
-    setPdfPage,
-    setTotalPages,
     setCurrentPage,
-    scanPdf
+    scanImage
   } = method(props);
 
     return (
@@ -43,7 +37,7 @@ const PdfViewerScreen = props => {
             <Text style={[label.boldLargeHeading, {color: color.textDefault,textAlign:'right', width:'15%'}]}>
               OCR
             </Text>
-            <TouchableOpacity onPress={() => scanPdf()}>
+            <TouchableOpacity onPress={() => scanImage()}>
                 <Text style={[label.boldMediumHeading, {color: color.textDefault}]}>Scan</Text>
             </TouchableOpacity>
           </View>
@@ -62,30 +56,17 @@ const PdfViewerScreen = props => {
                        count={includedPagesInAssignment.length} />
         </View>
         <View style={styles.filenameContainer}>
-          <Text numberOfLines={1} style={[label.boldMediumHeading, {color: color.primary}]}>
-            {props.route.params.file.name}
-          </Text>
+            <Text numberOfLines={1} style={[label.boldMediumHeading, {color: color.primary}]}>
+                {props.route.params.file[currentPage - 1].name}
+            </Text>
         </View>
-          <Pdf
-            source={{uri:`${props.route.params.source}`}}
-            trustAllCerts={false}
-            onLoadComplete={(numberOfPages, filePath) => {
-              setTotalPages(numberOfPages);
-            }}
-            onPageChanged={(page, numberOfPages) => {
-              setCurrentPage(page);
-            }}
-            onError={(error) => {
-              console.log(error);
-            }}
-            horizontal={true}
-            enablePaging={true}
-            page={pdfPage}
-            style={styles.pdf}
-          />
+        <Image source={{uri: props.route.params.file[currentPage - 1].uri}}
+            resizeMode='contain'
+            style={styles.scannedImage}
+        />
         <View style={styles.checkboxContainer}>
           <Text style={[label.smallHeading2, {color: color.primary,textAlign:'right'}]}>
-            Include Page as {activeTab === 0 ? 'Syllabi' : 'Assignment'}
+            Include Image as {activeTab === 0 ? 'Syllabi' : 'Assignment'}
           </Text>
           <CheckBox
               style={styles.checkbox}
@@ -97,7 +78,7 @@ const PdfViewerScreen = props => {
           />
         </View>
         <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => setPdfPage(currentPage - 1)}>
+          <TouchableOpacity onPress={() => {if(currentPage > 1 )setCurrentPage(currentPage - 1)}}>
             <Image source={require('../../assets/icons/CaretCircle.png')}
                     resizeMode='contain'
                     style={styles.prevNextImage}/>
@@ -105,15 +86,14 @@ const PdfViewerScreen = props => {
               <Text style={[label.smallHeading2, {color: color.primary}]}>
                   {currentPage}/{totalPages}
               </Text>
-          <TouchableOpacity onPress={() => setPdfPage(currentPage + 1)}>
+          <TouchableOpacity onPress={() => {if(currentPage < totalPages )setCurrentPage(currentPage + 1)}}>
             <Image source={require('../../assets/icons/CaretCircle.png')}
                     resizeMode='contain'
                     style={[styles.prevNextImage, {transform: [{ rotate: "180deg" }]}]}/>
           </TouchableOpacity>
         </View>
-        <Loader loading={isLoading} />
       </View>
     )
 }
 
-export default PdfViewerScreen;
+export default ImageViewerScreen;
