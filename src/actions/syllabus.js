@@ -9,11 +9,13 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
   export const addSyllabus = (syllabus, userId, token) => {
     try {
       return async dispatch => {
+        let classCode = syllabus.classCode.replace(/[ )(]/g,'');
+        let className = syllabus.className.replace(/[ )(]/g,'');
         axios.post(`${getAPIBaseUrl()}Syllabus/CreateSyllabus`,
         {
             "userId": parseInt(userId),
-            "classCode": syllabus.className,
-            "className": syllabus.classCode,
+            "classCode": classCode,
+            "className": className,
             "teacherName": syllabus.teacherName,
             "classSchedule": syllabus.schedule,
             "colorInHex": JSON.stringify(syllabus.colorInHex)

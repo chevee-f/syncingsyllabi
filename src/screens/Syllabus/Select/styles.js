@@ -17,7 +17,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         borderRadius: 16,
         width: 250,
-        height: 180,
+        height: Platform.OS === 'ios' ? 180 : 155,
         padding:20
     },
     sourceContainer:{

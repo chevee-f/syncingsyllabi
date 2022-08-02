@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, 
          View, 
          Image,
@@ -27,7 +27,6 @@ const ConfidenceScoreScreen = (props) => {
         setClassSyllabi,
         setActiveTab
     } = method(props);
-
     return (
       <View style={{flex:1}}>
         <View style={styles.headerContainer}>
@@ -69,7 +68,8 @@ const ConfidenceScoreScreen = (props) => {
                          assignments={assignments}
                          //assignments={props.route.params.ocrResult.ocrAssignmentModel} 
                          classSyllabi={classSyllabi}
-                         setClassSyllabi={setClassSyllabi} />
+                         setClassSyllabi={setClassSyllabi}
+                         setActiveTab={setActiveTab} />
         }
 
       </View>

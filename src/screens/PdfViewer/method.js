@@ -86,7 +86,6 @@ const method = (props) => {
             setIncludedPagesInAssignment([])
             setSyllabiPagesCount(0)
             setAssignmentPagesCount(0)
-
             navigation.navigate('LoadingScreen', 
                 {previousScreen: 'Syllabus', 
                  base64StringSyllabi: base64ArraySyllabi,

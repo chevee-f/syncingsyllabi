@@ -35,7 +35,8 @@ export default StyleSheet.create({
   },
   filenameContainer: {
     paddingHorizontal: 50,
-    paddingVertical: 15
+    paddingVertical: 15,
+    alignItems: 'center'
   },
   checkboxContainer:{
     paddingHorizontal: 50,

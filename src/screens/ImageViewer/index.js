@@ -6,6 +6,7 @@ import color from '../../styles/colors'
 import method from './method';
 import TabButton from './../../components/TabButton'
 import CheckBox from '@react-native-community/checkbox';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native'
 
 var {height, width} = Dimensions.get('window');
@@ -20,6 +21,8 @@ const ImageViewerScreen = props => {
     includedPagesInAssignment,
     onSelect,
     activeTab,
+    imageFiles,
+    openCamera,
     setCurrentPage,
     scanImage
   } = method(props);
@@ -57,13 +60,28 @@ const ImageViewerScreen = props => {
         </View>
         <View style={styles.filenameContainer}>
             <Text numberOfLines={1} style={[label.boldMediumHeading, {color: color.primary}]}>
-                {props.route.params.file[currentPage - 1].name}
+                {imageFiles.length > 0 ? 
+                  props.route.params.source === 'camera' ? imageFiles[currentPage - 1].fileName : imageFiles[currentPage - 1].name : null}
             </Text>
         </View>
-        <Image source={{uri: props.route.params.file[currentPage - 1].uri}}
-            resizeMode='contain'
-            style={styles.scannedImage}
-        />
+        {imageFiles.length > 0 && 
+          <Image source={{uri: imageFiles[currentPage - 1].uri}}
+              resizeMode='contain'
+              style={[styles.scannedImage, {height: props.route.params.source === 'camera' ? height * 0.5 : height * 0.58}]}
+          />
+        }
+        {props.route.params.source === 'camera' &&
+          <View style={styles.addImageButtonContainer}>
+            <TouchableOpacity style={styles.source} onPress={() => openCamera()}>
+              <Icon 
+                  name="camera-outline"
+                  color={color.textDefault}
+                  size={30}
+              />
+              <Text style={[label.smallHeading2, {color: color.textDefault, marginLeft: 5}]}>Take more photos</Text>
+            </TouchableOpacity>
+          </View>
+        }
         <View style={styles.checkboxContainer}>
           <Text style={[label.smallHeading2, {color: color.primary,textAlign:'right'}]}>
             Include Image as {activeTab === 0 ? 'Syllabi' : 'Assignment'}
