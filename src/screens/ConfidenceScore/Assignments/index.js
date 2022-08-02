@@ -14,6 +14,7 @@ import method from './method';
 import { useNavigation } from '@react-navigation/native';
 
 const Assignments = ({
+    setActiveTab,
     classSyllabi,
     setClassSyllabi,
     ...props
@@ -76,7 +77,8 @@ const Assignments = ({
                     />       
                 </View>
                 <View style={styles.fieldContainer}>
-                    <DefaultButton title="Save Assignment" onPress={() => navigation.navigate("MainTabScreen")} />       
+                    <DefaultButton title="Save Assignment" onPress={() => {navigation.navigate("MainTabScreen")
+                                                                            setActiveTab(0)}} />       
                 </View>
             </View>
         </ScrollView>

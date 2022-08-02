@@ -73,7 +73,7 @@ const PdfViewerScreen = props => {
               setTotalPages(numberOfPages);
             }}
             onPageChanged={(page, numberOfPages) => {
-              setCurrentPage(page);
+              setCurrentPage(page); 
             }}
             onError={(error) => {
               console.log(error);

@@ -46,9 +46,9 @@ const GradientItem = props => {
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
             >
-              <Text style={{...styles.text, ...label.boldExtraSmallHeading, ...props.textStyle}}>{props.code}</Text>
-              <Text style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
-              <Text style={{...styles.textSchedule, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
+              <Text numberOfLines={1} style={{...styles.text, ...label.boldExtraSmallHeading, ...props.textStyle}}>{props.code}</Text>
+              <Text numberOfLines={1} style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
+              <Text numberOfLines={1} style={{...styles.textSchedule, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
             </LinearGradient>
         }
       </TouchableOpacity>

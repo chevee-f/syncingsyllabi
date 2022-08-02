@@ -5,7 +5,8 @@ const method = (classSyllabi,setClassSyllabi) => {
     const { syllabus } = useSelector(state => state.syllabusReducer);
     useEffect(() => {
         if(classSyllabi.classCode !== ''){
-            let syllabi = syllabus.find(x => x.classCode === classSyllabi.classCode)
+            let classCode = classSyllabi.classCode.replace(/[ )(]/g,'');
+            let syllabi = syllabus.find(x => x.classCode === classCode)
             if(syllabi !== undefined) setClassSyllabi({...classSyllabi, id: syllabi.id})
         }
     }, [syllabus]);

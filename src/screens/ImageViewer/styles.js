@@ -6,8 +6,9 @@ var {height, width} = Dimensions.get('window');
 export default StyleSheet.create({
   headerContainer:{
     backgroundColor: color.primary,
-    height: Platform.OS === 'ios' ? height * 0.12 : height * 0.13,
-    borderRadius: 25,
+    height: height * 0.12,
+    borderBottomRightRadius: 25,
+    borderBottomLeftRadius: 25,
     alignItems:'center',
     flexDirection:'row',
     paddingHorizontal:20
@@ -26,7 +27,7 @@ export default StyleSheet.create({
   },
   tab:{
     borderBottomWidth: 0,
-    height: 60,
+    height: Platform.OS === 'ios' ? 60 : 45,
     borderColor: '#ccc',
     flexDirection: 'row',
     alignItems: 'center',
@@ -35,10 +36,10 @@ export default StyleSheet.create({
   },
   filenameContainer: {
     paddingHorizontal: 50,
-    paddingVertical: 15
+    paddingVertical: Platform.OS === 'ios' ? 15 : 8
   },
   checkboxContainer:{
-    paddingHorizontal: 50,
+    paddingHorizontal: 10,
     paddingVertical: 15,
     flexDirection: 'row',
     justifyContent:'flex-end'
@@ -56,12 +57,29 @@ export default StyleSheet.create({
     width: width * 0.14,
   },
   checkbox:{
-    width:20, 
+    width:30, 
     height:20, 
     marginLeft:10
   },
   scannedImage:{
-    height: height * 0.58,
     width: width * 1,
+  },
+  addImageButtonContainer:{
+    paddingHorizontal: 25,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: width,
+    justifyContent: 'center'
+  },
+  source:{
+    backgroundColor: color.primary,
+    width: width * 0.47,
+    height: 45,
+    borderRadius: 10,
+    marginHorizontal: 5,
+    alignItems: 'center',
+    justifyContent:'center',
+    flexDirection: 'row',
+    marginVertical: 5
   }
 })

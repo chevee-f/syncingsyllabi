@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import * as RNFS from 'react-native-fs'
 import { useNavigation } from '@react-navigation/native';
+import * as ImagePicker from 'react-native-image-picker';
+import {PermissionsAndroid} from 'react-native';
+import { Platform } from 'react-native';
 
 const method = (props) => {
     const navigation = useNavigation();
@@ -12,6 +15,7 @@ const method = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [includedPagesInSyllabi, setIncludedPagesInSyllabi] = useState([]);
     const [includedPagesInAssignment, setIncludedPagesInAssignment] = useState([]);
+    const [imageFiles, setImageFiles] = useState([]);
 
     const onSelect = (value) => {
         setActiveTab(value)
@@ -32,11 +36,11 @@ const method = (props) => {
 
     useEffect(() => {
         setTotalPages(props.route.params.file.length)
+        setImageFiles(props.route.params.file)
     }, [props.route.params.file]);
 
     const scanImage = async() => {
         try{
-
             let base64ArraySyllabi = [];
             let base64ArrayAssignment = [];
 
@@ -60,6 +64,44 @@ const method = (props) => {
         }
     }
 
+    const openCamera = async () => {  
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                  title: 'Camera Permission',
+                  message: 'Syncing Syllabi needs access to your camera ',
+                  buttonNegative: 'Cancel',
+                  buttonPositive: 'OK',
+                },
+            );
+          
+          if ((granted === PermissionsAndroid.RESULTS.GRANTED && Platform.OS === 'android') || (Platform.OS === 'ios')) {
+              let options = {
+                mediaType: 'photo', 
+                cameraType: 'back',
+                //includeBase64: true,
+                //saveToPhotos: true
+              };
+              ImagePicker.launchCamera(options, (response) => {
+          
+                if (response.error) {
+                    alert('ImagePicker Error: ', response.error);
+                } else {
+                    let images = imageFiles
+                    images.push(response.assets[0])
+                    setImageFiles(images)
+                    setTotalPages(images.length) 
+                }
+              });
+          } else {
+            console.log('Camera permission denied');
+          }
+        } catch (err) {
+            alert(err.message);
+        } 
+    };
+
     return {
        currentPage,
        totalPages,
@@ -68,6 +110,8 @@ const method = (props) => {
        includedPagesInAssignment,
        onSelect,
        activeTab,
+       imageFiles,
+       openCamera,
        setCurrentPage,
        scanImage
     };
