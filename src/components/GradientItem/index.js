@@ -37,11 +37,18 @@ const GradientItem = props => {
     useEffect(() => {
       //getRandomColor(props.selectedColor)
     });
+    let color = props.selectedBgColor;
+    if (props.selectedBgColor == null)
+      color = ["#000", "#000"]
+    let borderColor = null;
+    // console.log(props.isSelected)
+    if(props.isSelected)
+      borderColor = { borderColor: '#0036A1' }
     return (
-      <TouchableOpacity onPress={() => onTrigger(props.id)} style={{...styles.itemContainer, ...props.containerStyle}}>
-        {props.selectedBgColor !== undefined && props.selectedBgColor !== null &&
+      <TouchableOpacity onPress={() => onTrigger(props.id)} style={[{...styles.itemContainer, ...props.containerStyle}, borderColor]}>
+        {/* {props.selectedBgColor !== undefined && props.selectedBgColor !== null && */}
             <LinearGradient
-              colors={props.selectedBgColor}
+              colors={color}
               style={[styles.linearGradient, {paddingVertical: props.schedule ? 15 : 21}]}
               start={{ x: 0, y: 0.5 }}
               end={{ x: 1, y: 0.5 }}
@@ -50,7 +57,7 @@ const GradientItem = props => {
               <Text numberOfLines={1} style={{...styles.text, ...label.extraSmallHeading, ...props.textStyle}}>{props.name}</Text>
               <Text numberOfLines={1} style={{...styles.textSchedule, ...label.extraSmallHeading, ...props.textStyle}}>{props.schedule}</Text>
             </LinearGradient>
-        }
+        {/* } */}
       </TouchableOpacity>
     );
 };

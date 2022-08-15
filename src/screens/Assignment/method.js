@@ -12,20 +12,44 @@ const method = () => {
     const { error } = useSelector(state => state.errorReducer);
     const dispatch = useDispatch();
       
+    let fetchedDates = [];
     const [weekday, setWeekday] = useState([-1]);
     const [hasError, setHasError] = useState(false);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
     const [allDatesArray, setAllDatesArray] = useState([]);
+    const [syllabusId, setSyllabusId] = useState(null);
     const [classAssignments, setClassAssignments] = useState({
         id: '',
         title: '',
         notes: '',
         dueDate: new Date(),
+        attachments: []
     });
+    const [attachments, setAttachments] = useState([]);
+    const { assignments } = useSelector(state => state.assignmentsReducer);
+    const { syllabus } = useSelector(state => state.syllabusReducer);
+
+    const [bgColor, setBgColor] = React.useState(
+      [
+        ['#FF9966', '#FF5E62'],
+        ['#56CCF2', '#2F80ED'],
+        ['#4776E6', '#8E54E9'],
+        ['#00B09B', '#96C93D'],
+        ['#A8C0FF', '#3F2B96'],
+        ['#ED213A', '#93291E'],
+        ['#FDC830', '#F37335'],
+        ['#00B4DB', '#0083B0'],
+        ['#AD5389', '#3C1053'],
+        ['#EC008C', '#FC6767'],
+        ['#DA4453', '#89216B'],
+        ['#654EA3', '#EAAFC8']
+      ]
+    );
 
     useEffect(() => {
+        console.log("calling useeffect error")
         if(error.length !== 0) setHasError(true)
-    }, [error]);
+    }, []);
 
     const handleAddAssignments = async() => {
         let userId = state.userId;
@@ -199,7 +223,7 @@ const method = () => {
     }
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = React.useState(new Date());
-    console.log("current day = " + selectedDate);
+    // console.log("current day = " + selectedDate);
     const [successMessage, setSuccessMessage] = useState('');
     const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
@@ -209,52 +233,122 @@ const method = () => {
     const [cardData, setCardData] = React.useState([]);
 
     const toggleModal = () => {
+        console.log("toggleModal")
       setModalVisible(!isModalVisible);
       if(!isModalVisible) {
+        setSyllabusId(null);
         setClassAssignments({...classAssignments, 
           id: '', 
           title: '', 
           dueDate: '', 
-          notes: ''
+          notes: '',
+          attachments: []
         });
+        setAttachments([]);
       }
     };
 
-    const callme = (date) => {
-        // let userId = state.userId;
-        // let token = state.token;
-        // await dispatch(getAssignmentsByUser(userId, token));
-        const d = new Date(date);
+    const callme = (date, ds = null) => {
         console.log("calling call me " + d);
+        const d = new Date(date);
         let m = (d.getMonth()+1);
         if(m.toString().length === 1) {
-          m = "0" + m;
+            m = "0" + m;
         }
         let dt = d.getDate();
         if(dt.toString().length === 1) {
-          dt = "0" + dt;
+            dt = "0" + dt;
         }
         let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
-        console.log(selectedDateY)
-        console.log(markedDatesArray)
         let hasData = false;
-        for (let i = 0; i < markedDatesArray.length; i++) {
-          if(selectedDateY === markedDatesArray[i].date && !hasData) {
-            console.log("setting card data for " + selectedDateY);
-            console.log(markedDatesArray[i].data);
-            hasData = true;
-            setCardData(markedDatesArray[i].data);
-          }
+        let markedDates = markedDatesArray;
+        if(ds != null)
+            markedDates = ds;
+        for (let i = 0; i < markedDates.length; i++) {
+            if(selectedDateY === markedDates[i].date && !hasData) {
+                hasData = true;
+                setCardData(markedDates[i].data);
+            }
         }
-        
-        console.log("has data " + hasData);
         if(!hasData) {
-          setCardData([]);
+            setCardData([]);
         } 
         setSelectedDate(selectedDateY)
-      }
+    }
 
+    const useEffectFunction = (status = "") => {
+        fetchedDates = [];
+        if(assignments.length > 0) {
+          let dates = [];
+          for(let i = 0; i < assignments.length; i++) {
+            let thedate = assignments[i]["assignmentDateEnd"].split("T")[0];
+            if(dates.indexOf(thedate) < 0) {
+              dates.push(thedate);
+            }
+          }
+          dates = dates.sort();
+          for(let i = 0; i < dates.length; i++) {
+            let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
+            let dots = [];
+            let newArrCount = newArr.length;
+            let j = 0;
+            for (let assignment of newArr) {
+              let color = '#000';
+              for (let syllabi of syllabus) {
+                if (syllabi.id == assignment.syllabusId) {
+                  color = bgColor[syllabi.colorInHex][1]
+                }
+              }
+              dots.push({
+                id: 'item' + i + j,
+                color: color
+              })
+              j++;
+            }
+            fetchedDates.push({date: dates[i], dots: dots, data: newArr});
+          }
+          let ds = [];
+          for (let i = 0; i < fetchedDates.length; i++) {
+            ds.push({
+              date: fetchedDates[i].date,
+              dots: fetchedDates[i].dots,
+              data: fetchedDates[i].data
+            });
+          }
+          setMarkedDatesArray(ds);
+    
+          const d = new Date();
+          let m = (d.getMonth()+1);
+          if(m.toString().length === 1) {
+            m = "0" + m;
+          }
+          let dt = d.getDate();
+          if(dt.toString().length === 1) {
+            dt = "0" + dt;
+          }
+          let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
+          let hasData = false;
+          for (let i = 0; i < fetchedDates.length; i++) {
+            console.log(fetchedDates[i].date)
+            if(selectedDateY === fetchedDates[i].date && !hasData) {
+              hasData = true;
+              setCardData(fetchedDates[i].data);
+            }
+          }
+    
+          if(!hasData) {
+            setCardData([]);
+          } 
+          if(status === "success") {
+            callme(selectedDate, ds)
+          }
+        }
+    }
+    
     return {
+        assignments,
+        syllabus,
+        fetchedDates,
         classAssignments,
         weekday,
         markedDatesArray,
@@ -268,6 +362,12 @@ const method = () => {
         cardData,
         successTitle,
         allDatesArray,
+        syllabusId,
+        attachments,
+        bgColor,
+        setBgColor,
+        setAttachments,
+        setSyllabusId,
         setAllDatesArray,
         setSuccessTitle,
         setCardData,
@@ -288,7 +388,8 @@ const method = () => {
         handleDeleteAssignment,
         handleCompleteAssignment,   
         handleSortAssignment,
-        callme
+        callme,
+        useEffectFunction
     };
 };
   

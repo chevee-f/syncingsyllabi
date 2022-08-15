@@ -15,6 +15,7 @@ const method = () => {
     const [weekday, setWeekday] = useState([-1]);
     const [hasError, setHasError] = useState(false);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
+    const [stripMarkedDatesArray, setStripMarkedDatesArray] = useState([]);
     const [allDatesArray, setAllDatesArray] = useState([]);
     const [classAssignments, setClassAssignments] = useState({
         id: '',
@@ -198,7 +199,7 @@ const method = () => {
     }
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = React.useState(new Date());
-    console.log("current day = " + selectedDate);
+    console.log("current day c = " + selectedDate);
     const [successMessage, setSuccessMessage] = useState('');
     const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
@@ -236,6 +237,7 @@ const method = () => {
         let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
         // console.log(selectedDateY)
         // console.log(markedDatesArray)
+        // console.log("markedDatesArray")
         let dates = [];
         let ds = {};
         for (const key in markedDatesArray) {
@@ -246,18 +248,21 @@ const method = () => {
                 const assignmentTitle = "assignmentTitle";
                 const assignmentDateEnd = "assignmentDateEnd";
                 const notes = "notes";
+                const syllabusId = "syllabusId";
                 if( (selectedDateY == data[0].assignmentDateEnd.split("T")[0])) {
                     for(let i = 0; i < data.length; i++) {
                         ddata.push({ 
                             [assignmentTitle]: data[i].assignmentTitle, 
                             [assignmentDateEnd]: data[i].assignmentDateEnd, 
-                            [notes]: data[i].notes 
+                            [notes]: data[i].notes,
+                            [syllabusId]: data[i].syllabusId 
                         });
                     }
                     ds[key] = ddata;
                 }
         }
         setCardData(ds);
+        console.log("ds")
         console.log(ds)
         /*
         {
@@ -292,6 +297,7 @@ const method = () => {
         classAssignments,
         weekday,
         markedDatesArray,
+        stripMarkedDatesArray,
         isModalVisible,
         selectedDate,
         successMessage,
@@ -314,6 +320,7 @@ const method = () => {
         setModalVisible,
         toggleModal,
         setMarkedDatesArray,
+        setStripMarkedDatesArray,
         setClassAssignments,
         setWeekday,
         addSchedule,

@@ -8,44 +8,33 @@ export const GET_ASSIGNMENTS_BY_USER = 'GET_ASSIGNMENTS_BY_USER';
 export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
     export const addAssignments = (assignment, userId, token, date) => {
         try {
+            // console.log(assignment)
             return async dispatch => {
-            axios.post(`${getAPIBaseUrl()}Assignment/CreateAssignment`,
-                {
-                    "pagination": {
-                        "includeTotal": true,
-                        "skip": 0,
-                        "take": 0
+                const formData = new FormData();
+                formData.append('SyllabusId', assignment.syllabusId);
+                formData.append('UserId', parseInt(userId));
+                formData.append('AssignmentTitle', assignment.title);
+                formData.append('Notes', assignment.notes);
+                formData.append('AssignmentDateEnd', date);
+                formData.append('ColorInHex', '');
+                // formData.append('AttachmentFile', '');
+                // console.log(formData)
+                let res = await fetch(`${getAPIBaseUrl()}Assignment/CreateAssignment`,{
+                    method: 'post',
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                      "Authorization" : `Bearer ${token}`
                     },
-                    "sort": [
-                        {
-                            "fieldCode": 1,
-                            "direction": "asc"
-                        }
-                    ],
-                    "dateRange": {
-                        "startDate": "2022-01-01T02:31:43.387Z",
-                        "endDate": "2022-12-12T02:31:43.387Z"
-                    },
-                    "userId": parseInt(userId),
-                    "syllabusId": assignment.syllabusId,
-                    "assignmentTitle": assignment.title,
-                    "notes": assignment.notes,
-                    "assignmentDateStart": date,
-                    "assignmentDateEnd": date,
-                    "colorInHex": "",
-                    "isCompleted": false,
-                    "isActive": true
-                },
-                { headers: {"Authorization" : `Bearer ${token}`} })
-                .then((res) => {
-                    console.log(res);
-                    dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                    dispatch(getAssignmentsByUser(userId, token));
-                    dispatch({
-                       type: ADD_ASSIGNMENTS,
-                       payload: res.data.data.item
-                    });
-                })
+                    body: formData
+                });
+
+                let responseJson = await res.json();
+                // console.log(responseJson)
+                dispatch(getAssignmentsByUser(userId, token));
+                dispatch({
+                    type: ADD_ASSIGNMENTS,
+                    payload: responseJson.data
+                });
             };
         } catch (error) {
             Alert.alert(error.message)
@@ -56,21 +45,31 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
   export const updateAssignment = (assignment, userId, token, date) => {
         try {
             return async dispatch => {
-            axios.post(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,
-                {
-                    "assignmentId": assignment.id,
-                    "userId": parseInt(userId),
-                    "syllabusId": parseInt(assignment.syllabusId),
-                    "assignmentTitle": assignment.title,
-                    "notes": assignment.notes,
-                    "assignmentDateStart": date,
-                    "assignmentDateEnd": date,
-                },
-                { headers: {"Authorization" : `Bearer ${token}`} })
-                .then((res) => {
-                    dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                    dispatch(getAssignmentsByUser(userId, token));
-                })
+                const formData = new FormData();
+                formData.append('AssignmentId', assignment.id);
+                formData.append('SyllabusId', assignment.syllabusId);
+                formData.append('UserId', parseInt(userId));
+                formData.append('AssignmentTitle', assignment.title);
+                formData.append('Notes', assignment.notes);
+                formData.append('AssignmentDateEnd', date);
+                // formData.append('AttachmentFile', '');
+                // console.log(formData)
+                let res = await fetch(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,{
+                    method: 'post',
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                      "Authorization" : `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                let responseJson = await res.json();
+                // console.log(responseJson)
+                dispatch(getAssignmentsByUser(userId, token));
+                dispatch({
+                    type: ADD_ASSIGNMENTS,
+                    payload: responseJson.data
+                });
             };
         } catch (error) {
             Alert.alert(error.message)
@@ -84,6 +83,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 const res = await axios.get(`${getAPIBaseUrl()}Assignment/DeleteAssignment/${removeId}/${userId}`,
                 { headers: {"Authorization" : `Bearer ${token}`} })
                 dispatch({ type: 'CLEAR_ERROR', payload: [] });
+                console.log("CALLING delete assignments")
                 dispatch(getAssignmentsByUser(userId, token));
             };
         } catch (error) {
@@ -95,17 +95,40 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
   export const completeAssignment = (assignment, userId, token) => {
         try {
             return async dispatch => {
-                axios.post(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,
-                    {
-                        "assignmentId": assignment.id,
-                        "userId": parseInt(userId),
-                        "isCompleted": true
+                const formData = new FormData();
+                formData.append('AssignmentId', assignment.id);
+                formData.append('UserId', parseInt(userId));
+                formData.append('isCompleted', true);
+
+                let res = await fetch(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,{
+                    method: 'post',
+                    headers: {
+                      'Content-Type': 'multipart/form-data',
+                      "Authorization" : `Bearer ${token}`
                     },
-                { headers: {"Authorization" : `Bearer ${token}`} })
-                .then((res) => {
-                    dispatch({ type: 'CLEAR_ERROR', payload: [] });
-                    dispatch(getAssignmentsByUser(userId, token));
-                })
+                    body: formData
+                });
+
+                let responseJson = await res.json();
+                // console.log(responseJson)
+                dispatch(getAssignmentsByUser(userId, token));
+                dispatch({
+                    type: ADD_ASSIGNMENTS,
+                    payload: responseJson.data
+                });
+
+                // axios.post(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,
+                //     {
+                //         "assignmentId": assignment.id,
+                //         "userId": parseInt(userId),
+                //         "isCompleted": true
+                //     },
+                // { headers: {"Authorization" : `Bearer ${token}`} })
+                // .then((res) => {
+                //     dispatch({ type: 'CLEAR_ERROR', payload: [] });
+                //     console.log("CALLING complete assignments")
+                //     dispatch(getAssignmentsByUser(userId, token));
+                // })
             };
         } catch (error) {
             Alert.alert(error.message)
@@ -114,6 +137,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
   };
 
   export const getAssignmentsByUser = (userId, token, sort = '', showAll = false) => {
+    console.log("calling get assignments by user")
     try {
         var d = new Date();
         d.setMonth(d.getMonth() + 3);
@@ -180,7 +204,6 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 },
                 { headers: {"Authorization" : `Bearer ${token}`} })
                 .then((res) => {
-                    console.log("asd")
                     console.log(res.data.data.items)
                     dispatch({ type: 'CLEAR_ERROR', payload: [] });
                     dispatch({

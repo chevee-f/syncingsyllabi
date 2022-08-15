@@ -7,7 +7,10 @@ export default StyleSheet.create({
     itemContainer:{
         width: width * 0.23,
         marginTop: height * 0.012,
-        marginHorizontal: 2
+        marginHorizontal: 2,
+        borderWidth: 2, 
+        borderRadius: 18, 
+        borderColor: 'white'
     },
     linearGradient:{
         alignItems:'center',

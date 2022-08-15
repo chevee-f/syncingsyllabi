@@ -7,6 +7,7 @@ import { ActivityIndicator } from 'react-native-paper';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAssignmentsByUser } from '../../actions/assignments';
+import { getSyllabusByUser } from '../../actions/syllabus';
 import method from './method';
 import Moment from 'moment';
 import { Dropdown } from 'react-native-element-dropdown';
@@ -18,6 +19,7 @@ import AddItem from '../../components/AddItem';
 import color from '../../styles/colors';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import SuccessModal from '../../components/SuccessModal';
+import CalendarStrip from 'react-native-calendar-strip';
 
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 
@@ -28,6 +30,7 @@ const CalendarScreen = ({ navigation }) => {
 
   const { state } = useContext(AuthContext);
   const { assignments } = useSelector(state => state.assignmentsReducer);
+  const { syllabus } = useSelector(state => state.syllabusReducer);
   const [note, setNote] = useState('');
   const [attachmentsVisible, setAttachmentsVisible] = useState(false);
   const [confirmationStatus, setConfirmationStatus] = useState("");
@@ -37,11 +40,30 @@ const CalendarScreen = ({ navigation }) => {
   const [item, setItem] = useState();
   const [isFocus, setIsFocus] = React.useState(false);
   const [value, setValue] = React.useState('id');
-
+  const [isShowAll, setIsShowAll] = useState(false);
+  const [calendarOpened, setCalendarOpened] = useState(false);
+  const [showSort, setShowSort] = useState(false);
+  const [bgColor, setBgColor] = React.useState(
+    [
+      ['#FF9966', '#FF5E62'],
+      ['#56CCF2', '#2F80ED'],
+      ['#4776E6', '#8E54E9'],
+      ['#00B09B', '#96C93D'],
+      ['#A8C0FF', '#3F2B96'],
+      ['#ED213A', '#93291E'],
+      ['#FDC830', '#F37335'],
+      ['#00B4DB', '#0083B0'],
+      ['#AD5389', '#3C1053'],
+      ['#EC008C', '#FC6767'],
+      ['#DA4453', '#89216B'],
+      ['#654EA3', '#EAAFC8']
+    ]
+  );
   const {
     classAssignments,
     weekday,
     markedDatesArray,
+    stripMarkedDatesArray,
     isModalVisible,
     selectedDate,
     successMessage,
@@ -64,6 +86,7 @@ const CalendarScreen = ({ navigation }) => {
     setModalVisible,
     toggleModal,
     setMarkedDatesArray,
+    setStripMarkedDatesArray,
     setClassAssignments,
     setWeekday,
     addSchedule,
@@ -81,6 +104,11 @@ const CalendarScreen = ({ navigation }) => {
     let userId = state.userId
     let token = state.token
     dispatch(getAssignmentsByUser(userId, token));
+    dispatch(getSyllabusByUser(userId, token));
+    useEffectFunction();
+  }, []);
+
+  const useEffectFunction = (status = "") => {
     fetchedDates = [];
     if(assignments.length > 0) {
       let dates = [];
@@ -96,11 +124,21 @@ const CalendarScreen = ({ navigation }) => {
         let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
         let dots = [];
         let newArrCount = newArr.length;// > 3 ? 3 : newArr.length;
-        for(let j = 0; j < newArrCount; j++) {
+        
+        // for(let j = 0; j < newArrCount; j++) {
+        let j = 0;
+        for (let assignment of newArr) {
+          let color = '#000';
+          for (let syllabi of syllabus) {
+            if (syllabi.id == assignment.syllabusId) {
+              color = bgColor[syllabi.colorInHex][1]
+            }
+          }
           dots.push({
             key: 'item' + i + j,
-            color: '#70C862'
-          })
+            color: color
+          });
+          j++;
         }
 
         tmpds[dates[i]] = {
@@ -121,15 +159,15 @@ const CalendarScreen = ({ navigation }) => {
       }
       console.log(tmpds);
       setMarkedDatesArray(tmpds);
-      // let ds = [];
-      // for (let i = 0; i < fetchedDates.length; i++) {
-      //   ds.push({
-      //     date: fetchedDates[i].date,
-      //     dots: fetchedDates[i].dots,
-      //     data: fetchedDates[i].data
-      //   });
-      // }
-      // setMarkedDatesArray(ds);
+      let ds = [];
+      for (let i = 0; i < fetchedDates.length; i++) {
+        ds.push({
+          date: fetchedDates[i].date,
+          dots: fetchedDates[i].dots,
+          data: fetchedDates[i].data
+        });
+      }
+      setStripMarkedDatesArray(ds);
       const d = new Date();
       let m = (d.getMonth()+1);
       if(m.toString().length === 1) {
@@ -141,8 +179,13 @@ const CalendarScreen = ({ navigation }) => {
       }
       let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
       let hasData = false;
+      console.log("fetchedDates")
+      console.log(fetchedDates)
+      console.log("selectedDateY")
+      console.log(selectedDateY)
       for (let i = 0; i < fetchedDates.length; i++) {
         if(selectedDateY === fetchedDates[i].date && !hasData) {
+          // console.log("fetchedDates[i].data")
           // console.log(fetchedDates[i].data)
           hasData = true;
           setCardData(fetchedDates[i].data);
@@ -152,8 +195,11 @@ const CalendarScreen = ({ navigation }) => {
       if(!hasData) {
         setCardData([]);
       } 
+      if(status === "success") {
+        callme(selectedDate, ds)
+      }
     }
-  }, [assignments.length]);
+  }
   /*
     '2012-05-22': {
       dots: [vacation, massage, workout], 
@@ -197,7 +243,8 @@ const CalendarScreen = ({ navigation }) => {
       id: res.id, 
       title: res.assignmentTitle, 
       dueDate: res.assignmentDateEnd, 
-      notes: res.notes 
+      notes: res.notes, 
+      syllabusId: res.syllabusId 
     });
   }
 
@@ -440,118 +487,77 @@ const CalendarScreen = ({ navigation }) => {
             </View>
           </Modal>
 
-      <View style={{ marginTop: 60}}>
-      <View style={styles.sortContainer}>
-        <Text style={{position: 'absolute', top: 18, left: 20, color: '#A6BEED', fontWeight: 'bold'}}>Sort by</Text>
-        <Dropdown
-          renderItem={renderItem}
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          containerStyle={{marginTop: -40, marginLeft: 100, borderWidth: 1, borderRadius: 13}}
-          data={sortData}
-          labelField="label"
-          valueField="value"
-          value={value}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-            console.log(item);
-            handleSortAssignment(item.value, selectedDate, isShowAll);
-            setValue(item.value);
-            setIsFocus(false);
-          }}
-          maxHeight={150}
-        />
-      </View>
+      <View style={{ marginTop: 0}}>
+      { showSort && 
+        <View style={styles.sortContainer}>
+          <Text style={{position: 'absolute', top: 18, left: 20, color: '#A6BEED', fontWeight: 'bold'}}>Sort by</Text>
+          <Dropdown
+            renderItem={renderItem}
+            style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            iconStyle={styles.iconStyle}
+            containerStyle={{marginTop: -40, marginLeft: 100, borderWidth: 1, borderRadius: 13}}
+            data={sortData}
+            labelField="label"
+            valueField="value"
+            value={value}
+            onFocus={() => setIsFocus(true)}
+            onBlur={() => setIsFocus(false)}
+            onChange={item => {
+              console.log("item");
+              console.log(item);
+              handleSortAssignment(item.value, selectedDate, isShowAll);
+              setValue(item.value);
+              setIsFocus(false);
+            }}
+            maxHeight={150}
+          />
+        </View>
+      }
 <Agenda
-  // items={{
-  //   '2012-05-22': [{name: 'item 1 - any js object'}],
-  //   '2012-05-23': [{name: 'item 2 - any js object', height: 80}],
-  //   '2012-05-24': [],
-  //   '2012-05-25': [{name: 'item 3 - any js object'}, {name: 'any js object'}]
-  // }}
-  // items={{
-  //   "2022-05-22": [{name: 'item 1 - any js object'}],
-  // }}
   items={cardData}
-  // items={{
-  //   "2022-04-29": [{"assignmentDateEnd": "2022-04-29T00:00:00", "assignmentTitle": "New Assignment 1", "notes": "My Note 29th"}, {"assignmentDateEnd": "2022-04-29T00:00:00", "assignmentTitle": "CSS 1", "notes": ""}, {"assignmentDateEnd": "2022-04-29T00:00:00", "assignmentTitle": "123", "notes": ""}, {"assignmentDateEnd": "2022-04-29T00:00:00", "assignmentTitle": "zxc", "notes": ""}], 
-  //   "2022-05-25": [{"assignmentDateEnd": "2022-05-25T00:00:00", "assignmentTitle": "Moin", "notes": "My Noteasd"}]
-  // }}
-  // Callback that gets called when items for a certain month should be loaded (month became visible)
   loadItemsForMonth={month => {
     console.log('trigger month items loading ' + month);
     console.log(month);
   }}
-  // Callback that fires when the calendar is opened or closed
   onCalendarToggled={calendarOpened => {
-    console.log(calendarOpened);
+    setCalendarOpened(calendarOpened);
+    setShowSort(!calendarOpened);
   }}
-  // Callback that gets called on day press
   onDayPress={day => {
     console.log(day.dateString);
     
     console.log("=============calendar=============1");
     callme(day.dateString)
   }}
-  // Callback that gets called when day changes while scrolling agenda list
   onDayChange={day => {
     console.log('day changed');
   }}
-  // Initially selected day
   selected={selectedDate}
-  // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
   minDate={'2001-01-01'}
-  // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
   maxDate={'2050-12-32'}
-  // Max amount of months allowed to scroll to the past. Default = 50
   pastScrollRange={50}
-  // Max amount of months allowed to scroll to the future. Default = 50
   futureScrollRange={50}
-  // Specify how each item should be rendered in agenda
-  renderItem={(item, firstItemInDay) => {
-    console.log('rendering item')
-    console.log(item)
-    return <View style={{ width: '100%' }}><Text>Hello</Text></View>;
-  }}
-
+  // renderItem={(item, firstItemInDay) => {
+  //   console.log('rendering item')
+  //   console.log(item)
+  //   return <View style={{ width: '100%', height: 20, backgroundColor: 'red' }}><Text>Hello</Text></View>;
+  // }}
   displayLoadingIndicator
-  // Specify how each date should be rendered. day can be undefined if the item is not first in that day
   renderDay={(day, item) => {
-    let name = '';
-    let date = '';
-    console.log("***************renderday")
-    
-    console.log(item)
-    console.log(day)
+    console.log("renderDay")
+    // console.log(item)
     const data = [
       {
         assignmentTitle: item.assignmentTitle,
         assignmentDateEnd: item.assignmentDateEnd,
-        notes: item.notes
+        notes: item.notes,
+        syllabusId: item.syllabusId
       },
     ];
-
-    // if(item !== undefined)
-    //   name = item.name;
-
-    // if(day !== undefined)
-    //   date = day;
-    // console.log(item)
-
-    // <View style={{ width: '100%' }}>
-    //   <Card 
-    //       showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
-    //       editCardData={editCardData} 
-    //       completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
-    //       onPress={toggleModal} 
-    //       toggleAttachments={toggleAttachments}
-    //       page={'calendar'}
-    //       data={data} />
-    // </View>
+    setShowSort(true);
     return <View style={{ width: '100%' }}>
       <Card 
           showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
@@ -560,7 +566,11 @@ const CalendarScreen = ({ navigation }) => {
           onPress={toggleModal} 
           toggleAttachments={toggleAttachments}
           page={'calendar'}
-          data={data} />
+          data={data}
+          syllabus={syllabus}
+          bgColor={bgColor}
+          />
+          
     </View>;
   }}
   // Specify how empty date content with no items should be rendered
@@ -583,6 +593,7 @@ const CalendarScreen = ({ navigation }) => {
   }}
   // Specify what should be rendered instead of ActivityIndicator
   renderEmptyData={() => {
+    setShowSort(false)
     return <View style={{flex: 1, width: Dimensions.get("window").width }}><View style={{ 
       flex: 1,
       alignItems: 'center', 
@@ -631,8 +642,8 @@ const CalendarScreen = ({ navigation }) => {
         flex: 1,
         position: 'absolute',
         left: 0,
-        right: 0,
-        height: 15,
+        right: 5,
+        height: 20,
         bottom: 0,
         alignItems: 'center',
         backgroundColor: 'white'
@@ -648,16 +659,116 @@ const CalendarScreen = ({ navigation }) => {
     }
   }}
   // Agenda container style
-  style={{  }}
+  style={{ }}
 />
-<View style={{ height: 130}}></View>
+{ !calendarOpened && 
+  <View style={{ 
+    position: 'absolute',
+    top: 5,
+    width: '100%',
+    height: 80,
+    zIndex: 1,
+    backgroundColor: 'white'
+    }}>
+    <CalendarStrip
+      onDateSelected={callme}
+      scrollable
+      showWeek={isShowAll}
+      // scrollerPaging={true}
+      selectedDate={selectedDate}
+      style={isShowAll ? {
+        height: 0, 
+        marginTop: 100, 
+        paddingBottom: 0, 
+        overflow: 'visible'
+      } : {
+        height: 80, 
+        paddingBottom: 10, 
+        overflow: 'visible',
+        marginTop: 10
+      }}
+      calendarHeaderFormat={"MMMM YYYY"}
+      calendarHeaderContainerStyle={isShowAll ? {
+        marginTop: -35,
+        left: 15,
+        position: 'absolute'
+      }: {
+        marginTop: -45,
+        left: 15,
+        position: 'absolute'
+      }}
+      calendarHeaderStyle={{
+        color: 'white',
+        fontSize: 16, 
+        fontWeight: '100'
+      }}
+      calendarHeaderClick={() => {
+        setAllCalendarVisible(true)
+      }}
+      iconContainer={{flex: 0.1}}
+      calendarAnimation={{type: 'sequence', duration: 30}}
+      daySelectionAnimation={{type: 'background', duration: 200, highlightColor: 'black'}}
+      markedDates={stripMarkedDatesArray}
+      page={'assignment'}
+      markedDatesStyle={{ top: 10, bottom: 0}}
+      weekendDateNameStyle={{
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#0036A1',
+        top: -5
+      }}
+      weekendDateNumberStyle={{
+        color: 'black',
+        top: 9,
+        marginBottom: -10
+      }}
+      dateNumberStyle={{ // day number
+        color: 'black',
+        top: 9,
+        marginBottom: -10
+      }}
+      dateNameStyle={{ // day name
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: '#0036A1',
+        top: -5
+      }}
+      dayContainerStyle={{
+        backgroundColor: 'white'
+      }}
+      highlightDateNumberStyle={{  // selected day
+        top: 19,
+        color: 'white'
+      }}
+      highlightDateNameStyle={{ // day name
+        fontSize: 12,
+        fontWeight: 'bold',
+        height: 20,
+        width: 100,
+        flex: 1,
+        position: 'absolute',
+        top: -25,
+        color: '#0036A1'
+      }}
+      highlightDateContainerStyle={{ // selected circle
+        position: 'absolute', 
+        top: 15,
+        justifyContent: 'flex-end', 
+        height: 30, 
+        width: 30,
+        backgroundColor: '#0036A1' //blue
+      }}
+    />
+  </View>
+}
+<View style={{ height: 100}}></View>
 <SuccessModal 
         successModalVisible={successModalVisible} 
         successMessage={successMessage}
         headerText={successTitle}
         onClose={() => {
           setSuccessModalVisible(!successModalVisible);
-          callme(selectedDate)
+          useEffectFunction("success");
         }}
       />
 
@@ -682,8 +793,7 @@ const styles = StyleSheet.create({
   sortContainer: {
     position: 'absolute',
     zIndex: 1,
-    top: 270,
-    backgroundColor: 'red',
+    top: 105,
     left: 0
   },
   dropdown: {

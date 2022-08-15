@@ -94,7 +94,7 @@ const method = (setClassSyllabi,classSyllabi) => {
             if(hasError){
                 Alert.alert("Error", error);
             }else{
-                setSuccessMessage('You class has been added!')
+                setSuccessMessage('Your class has been added!')
                 setIsLoading(false)
                 setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }

@@ -44,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
       dispatch(getAssignmentsByUser(userId, token));
       dispatch(getGoalByUser(userId, token));
       populateAssignment(assignments);
-  }, [goals.length, assignments.length]);
+  }, [goals.length]);
 
   let fetchedDates = [];
   const populateAssignment = (assignments) => {

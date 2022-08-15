@@ -7,6 +7,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DefaultInput from '../../components/DefaultInput';
 import DefaultButton from '../../components/DefaultButton';
+import SecondaryButton from '../../components/SecondaryButton'
 import Label from '../../components/Label';
 import AddItem from '../../components/AddItem';
 import GradientItem from '../../components/GradientItem';
@@ -24,9 +25,10 @@ import WeekdayTimePicker from '../../components/WeekdayTimePicker';
 import Moment from 'moment';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import SuccessModal from '../../components/SuccessModal';
+import DocumentPicker, { types } from 'react-native-document-picker'
 
 var {height, width} = Dimensions.get('window');
-const AssignmentScreen = () => {
+const AssignmentScreen = (navigation) => {
   const [selectedValue, setSelectedValue] = React.useState(false);
 
   const [value, setValue] = React.useState('id');
@@ -45,98 +47,29 @@ const AssignmentScreen = () => {
   const [item, setItem] = useState();
 
   const { state } = useContext(AuthContext);
-  const { assignments } = useSelector(state => state.assignmentsReducer);
-  const { syllabus } = useSelector(state => state.syllabusReducer);
   const [confirmationStatus, setConfirmationStatus] = useState("");
   const [titleHasError, setTitleHasError] = useState(false);
   const [duedateHasError, setDuedateHasError] = useState(false);
+  const [classHasError, setClassHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  const [syllabusId, setSyllabusId] = useState(null);
-
-  const [bgColor, setBgColor] = React.useState(
-    [
-      ['#FF9966', '#FF5E62'],
-      ['#56CCF2', '#2F80ED'],
-      ['#4776E6', '#8E54E9'],
-      ['#00B09B', '#96C93D'],
-      ['#A8C0FF', '#3F2B96'],
-      ['#ED213A', '#93291E'],
-      ['#FDC830', '#F37335'],
-      ['#00B4DB', '#0083B0'],
-      ['#AD5389', '#3C1053'],
-      ['#EC008C', '#FC6767'],
-      ['#DA4453', '#89216B'],
-      ['#654EA3', '#EAAFC8']
-    ]
-  );
+  const [isAwait, setIsAwait] = useState(0)
   const dispatch = useDispatch();
-  let fetchedDates = [];
   useEffect(() => {
-      let userId = state.userId
-      let token = state.token
-      dispatch(getAssignmentsByUser(userId, token));
-      dispatch(getSyllabusByUser(userId, token));
-      console.log(syllabus)
-      fetchedDates = [];
-      if(assignments.length > 0) {
-        let dates = [];
-        for(let i = 0; i < assignments.length; i++) {
-          let thedate = assignments[i]["assignmentDateEnd"].split("T")[0];
-          if(dates.indexOf(thedate) < 0) {
-            dates.push(thedate);
-          }
-        }
-        dates = dates.sort();
+    let userId = state.userId
+    let token = state.token
+    dispatch(getAssignmentsByUser(userId, token));
+    dispatch(getSyllabusByUser(userId, token));
+    useEffectFunction();
+  }, []);
 
-        for(let i = 0; i < dates.length; i++) {
-          let newArr = assignments.filter(x => x.assignmentDateEnd.split("T")[0] === dates[i]);
-          let dots = [];
-          let newArrCount = newArr.length;// > 3 ? 3 : newArr.length;
-          for(let j = 0; j < newArrCount; j++) {
-            dots.push({
-              id: 'item' + i + j,
-              color: '#70C862'
-            })
-          }
-          fetchedDates.push({date: dates[i], dots: dots, data: newArr});
-        }
-
-        let ds = [];
-        for (let i = 0; i < fetchedDates.length; i++) {
-          ds.push({
-            date: fetchedDates[i].date,
-            dots: fetchedDates[i].dots,
-            data: fetchedDates[i].data
-          });
-        }
-        setMarkedDatesArray(ds);
-
-        const d = new Date();
-        let m = (d.getMonth()+1);
-        if(m.toString().length === 1) {
-          m = "0" + m;
-        }
-        let dt = d.getDate();
-        if(dt.toString().length === 1) {
-          dt = "0" + dt;
-        }
-        let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
-        let hasData = false;
-        for (let i = 0; i < fetchedDates.length; i++) {
-          if(selectedDateY === fetchedDates[i].date && !hasData) {
-            // console.log(fetchedDates[i].data)
-            hasData = true;
-            setCardData(fetchedDates[i].data);
-          }
-        }
-
-        if(!hasData) {
-          setCardData([]);
-        } 
-      }
-  }, [syllabus.length, assignments.length]);
+  useEffect(() => {
+    
+  }, [isAwait]);
 
   const {
+    assignments,
+    syllabus,
+    fetchedDates,
     classAssignments,
     weekday,
     markedDatesArray,
@@ -150,6 +83,12 @@ const AssignmentScreen = () => {
     cardData,
     successTitle,
     allDatesArray,
+    syllabusId,
+    attachments,
+    bgColor,
+    setBgColor,
+    setAttachments,
+    setSyllabusId,
     setAllDatesArray,
     setSuccessTitle,
     setCardData,
@@ -170,7 +109,8 @@ const AssignmentScreen = () => {
     handleDeleteAssignment,
     handleCompleteAssignment,
     handleSortAssignment,
-    callme
+    callme,
+    useEffectFunction
   } = method();
 
   let fetchedDates1 = [
@@ -238,6 +178,8 @@ const AssignmentScreen = () => {
   // }
 
   const handleCallback = async(id) => {
+    setClassHasError(false)
+    setSyllabusId(id);
     setClassAssignments({...classAssignments, syllabusId: id})
   }
 
@@ -249,17 +191,20 @@ const AssignmentScreen = () => {
   
   const editCardData = (res) => {
     toggleModal();
+    setSyllabusId(res.syllabusId)
+    console.log(res)
     setClassAssignments({...classAssignments, 
       id: res.id, 
       title: res.assignmentTitle, 
       dueDate: res.assignmentDateEnd, 
       notes: res.notes,
-      syllabusId: res.syllabusId
+      syllabusId: res.syllabusId,
+      attachments: res.attachment
     });
   }
 
   const saveAssignment = () => {
-    if(classAssignments.dueDate !== "" && classAssignments.title !== "") {
+    if(classAssignments.dueDate !== "" && classAssignments.title !== "" && classAssignments.syllabusId !== "") {
       if(classAssignments.id !== '')
         handleUpdateAssignment();
       else
@@ -270,6 +215,8 @@ const AssignmentScreen = () => {
         setTitleHasError(true);
       if(!classAssignments.dueDate)
         setDuedateHasError(true);
+      if(!classAssignments.syllabusId)
+        setClassHasError(true);
     }
   }
 
@@ -281,6 +228,7 @@ const AssignmentScreen = () => {
   }
 
   const showAllAssignments = async () => {
+    console.log("showAllAssignments")
     let userId = state.userId
     let token = state.token
     await dispatch(getAssignmentsByUser(userId, token, '', true));
@@ -342,11 +290,12 @@ const AssignmentScreen = () => {
     setAllCalendarVisible(!allCalendarVisible);
   }
 
-  const toggleAttachments = (notes) => {
-    setNote(notes);
+  const toggleAttachments = (item) => {
+    setNote(item.notes);
     setAttachmentsVisible(!attachmentsVisible);
   }
-
+  console.log("#$%^&*(")
+  console.log(classAssignments.attachments)
   return (
     <>
       <View style={styles.container}>
@@ -478,8 +427,10 @@ const AssignmentScreen = () => {
           }} 
           onBackdropPress={toggleModal} 
           transparent={true} 
-          animationInTiming={500}
-          animationOutTiming={1000}
+          animationInTiming={300}
+          animationOutTiming={300}
+          backdropTransitionInTiming={0}
+          backdropTransitionOutTiming={0}
           backdropOpacity={0.4}
           // propagateSwipe={true}
           >
@@ -516,26 +467,30 @@ const AssignmentScreen = () => {
                       />
                   </View>
                   <View style={{marginTop: 24}}>
-                      <Label text="Select Class" />
-                      <View style={{flexDirection:'row'}}>
-                        <AddItem onPress={() => setModalVisible(true)} />
-                        <ScrollView horizontal>
-                          {syllabus.length > 0 &&
-                            syllabus.map((item) => {
-                              console.log(item)
-                              return (
-                                <GradientItem 
-                                  parentCallback = {handleCallback}
-                                  code={item.className}
-                                  name={item.teacherName}
-                                  schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
-                                  selectedBgColor={bgColor[parseInt(item.colorInHex)]}
-                                  id={item.id}
-                                />
-                              );
-                          })}
-                        </ScrollView>
+                    <Label text="Select Class *" />
+                    <View style={{flexDirection:'row'}}>
+                      <AddItem onPress={() => setModalVisible(true)} />
+                      <ScrollView horizontal>
+                        {syllabus.length > 0 &&
+                          syllabus.map((item) => {
+                            let isSelected = false;
+                            if(item.id == syllabusId)
+                              isSelected = true;
+                            return (
+                              <GradientItem 
+                                parentCallback = {handleCallback}
+                                code={item.className}
+                                name={item.teacherName}
+                                schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
+                                selectedBgColor={bgColor[parseInt(item.colorInHex)]}
+                                id={item.id}
+                                isSelected={isSelected}
+                              />
+                            );
+                        })}
+                      </ScrollView>
                     </View>
+                    {classHasError ? <Text style={{marginLeft: 7, marginTop: 5, color: 'red'}}>Please select a Class</Text> : null }
                   </View>
                   <View style={{marginTop: 24, width: '49%'}}>
                     <Label text="Due date *" />
@@ -580,6 +535,28 @@ const AssignmentScreen = () => {
                         onChangeText={(notes) =>  setClassAssignments({...classAssignments, notes: notes})}
                       />
                   </View>
+                  <View style={{marginTop: 14, marginBottom: 24}}>
+                      <Label text="Attachments" />
+                      { classAssignments.attachments ?
+                        // classAssignments.attachments.map((item) => {
+                          // return 
+                          <View style={{ marginVertical: 5, paddingHorizontal: 16, paddingVertical: 5, borderWidth: 1, borderStyle: "dashed", borderRadius: 16 }}><Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{classAssignments.attachments}</Text></View>
+                          : <View><Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
+                      
+                          <SecondaryButton onPress={async() => {
+                            const attachment = await DocumentPicker.pickSingle({
+                                type: [types.pdf, types.images]
+                            });
+                            
+                            let attachmentsArray = attachments;
+                            attachmentsArray.push(attachment);
+                            setAttachments(attachmentsArray);
+                            setClassAssignments({...classAssignments, attachments: attachmentsArray})
+                            setIsAwait(isAwait+1);
+                          }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
+                          </View>
+                      }
+                  </View>
                   {/* <View style={{marginTop: 24}}>
                       <Label text="Attachments" />
                       <DefaultInput 
@@ -612,7 +589,7 @@ const AssignmentScreen = () => {
           onBackdropPress={() => setAttachmentsVisible(!attachmentsVisible)} 
           >
             <View style={{
-            height: 310,
+            height: 250,
             backgroundColor:'white',
             position: 'relative',
             borderRadius: 16,
@@ -628,7 +605,7 @@ const AssignmentScreen = () => {
                   <TextInput 
                     multiline
                     disabled={true}
-                    numberOfLines={8}
+                    numberOfLines={5}
                     style={{
                       backgroundColor: '#FAF6EA', 
                       marginTop: 10, 
@@ -639,6 +616,7 @@ const AssignmentScreen = () => {
                     }}
                     value={note}
                   />
+                  {/* {attachments.map((item) => {})} */}
                   <DefaultButton 
                     title="Close" 
                     style={{ marginBottom: 10 }}
@@ -677,6 +655,7 @@ const AssignmentScreen = () => {
                 setAllCalendarVisible(!allCalendarVisible);
                 setIsShowAll(false);
                 callme(selectedDate)
+                useEffectFunction();
             }}
             onSelectDate={{}}
         />
@@ -708,7 +687,9 @@ const AssignmentScreen = () => {
           markedDatesArray={markedDatesArray}
           allDatesArray={allDatesArray}
           isShowAll={isShowAll}
-          data={cardData} />
+          data={cardData}
+          syllabus={syllabus}
+          bgColor={bgColor} />
       </View>
     {/* <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
       <Text>Assignment Screen</Text>
@@ -721,7 +702,8 @@ const AssignmentScreen = () => {
         headerText={successTitle}
         onClose={() => {
           setSuccessModalVisible(!successModalVisible);
-          callme(selectedDate)
+          useEffectFunction("success");
+          
         }}
       />
 

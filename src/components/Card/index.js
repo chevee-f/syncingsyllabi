@@ -26,8 +26,8 @@ const Card = ({data, ...props}) => {
   
   const renderLeftActions = (progress, item) => {
     return (
-      <View style={{ width: 96, height: 106, marginTop: 10, }}>
-        <RectButton style={styles.leftAction}
+      <View style={{ width: 96, height: 106, marginTop: 10 }}>
+        <TouchableOpacity style={styles.leftAction}
           onPress={() => removePressHandler(item)}>
           <Animated.Text
             style={[
@@ -36,7 +36,7 @@ const Card = ({data, ...props}) => {
             >
             Remove
           </Animated.Text>
-        </RectButton>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -64,11 +64,11 @@ const Card = ({data, ...props}) => {
   const renderRightAction = (item, text, color, progress) => {
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
-        <RectButton
+        <TouchableOpacity
           style={[styles.rightAction, { backgroundColor: color }]}
           onPress={() => editCardData(item)}>
           <Text style={styles.actionText}>{text}</Text>
-        </RectButton>
+        </TouchableOpacity>
       </Animated.View>
     );
   };
@@ -76,11 +76,11 @@ const Card = ({data, ...props}) => {
   const renderCompleteRightAction = (item, text, color, progress) => {
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
-        <RectButton
+        <TouchableOpacity
           style={[styles.rightAction, { backgroundColor: color }]}
           onPress={() => completeCardData(item)}>
           <Text style={styles.actionText}>{text}</Text>
-        </RectButton>
+        </TouchableOpacity>
       </Animated.View>
     );
   };
@@ -93,10 +93,10 @@ const Card = ({data, ...props}) => {
   );
   
   const showNoteIcon = (item) => {
-    if(item.notes === '') {
+    if(item.notes === '' && item.attachment === '') {
       return <></>;
     } 
-    return <TouchableOpacity onPress={() => props.toggleAttachments(item.notes)} style={{ position: 'absolute', right: 15, top: 18, height: 20, width: 20}}>
+    return <TouchableOpacity onPress={() => props.toggleAttachments(item)} style={{ position: 'absolute', right: 15, top: 18, height: 20, width: 20}}>
       <Image 
               source={require('../../assets/icons/NoteBlank.png')}
               resizeMode='contain'
@@ -110,13 +110,19 @@ const Card = ({data, ...props}) => {
     if(new Date(item.assignmentDateEnd) <= new Date()) {
       dueColor = "#E54C29";
     }
+    let color = '#000';
+    for (let syllabi of props.syllabus) {
+      if (syllabi.id == item.syllabusId) {
+        color = props.bgColor[syllabi.colorInHex][1]
+      }
+    }
 
     return <RectButton style={styles.rectButton} onPress={() => {
       // props.cardD(item);
     }}>
       <View style={{
         width: 8,
-        backgroundColor: 'red',
+        backgroundColor: color,
         position: 'absolute',
         top: 0,
         bottom: 0
