@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>974860535646-b0a3m3q99jks7vnkooljnir4mqcs9aam.apps.googleusercontent.com</string>
+	<string>824174854315-j6mc0r92fg09mur2ct10aq34ogblhjof.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.974860535646-b0a3m3q99jks7vnkooljnir4mqcs9aam</string>
+	<string>com.googleusercontent.apps.824174854315-j6mc0r92fg09mur2ct10aq34ogblhjof</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCAl7zSM60Sx8s5cyOpz1aTzmuYdaCuC7U</string>
+	<string>AIzaSyAoBNREUDgINr_cYv6AUEtsP0pXSPFstMA</string>
 	<key>GCM_SENDER_ID</key>
-	<string>974860535646</string>
+	<string>824174854315</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.creativeinterlace.SyncingSyllabi</string>
 	<key>PROJECT_ID</key>
-	<string>syncing-syllabi-802a9</string>
+	<string>syncing-syllabi-96f70</string>
 	<key>STORAGE_BUCKET</key>
-	<string>syncing-syllabi-802a9.appspot.com</string>
+	<string>syncing-syllabi-96f70.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:974860535646:ios:87cdd755b92b5130ce31cf</string>
+	<string>1:824174854315:ios:a035f42f0bf002bc4fb7ee</string>
 </dict>
 </plist>

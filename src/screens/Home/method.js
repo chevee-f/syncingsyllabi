@@ -2,17 +2,18 @@ import React, { useState,useContext, useEffect } from 'react';
 import messaging from '@react-native-firebase/messaging';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../actions/user';
+import { addNotificationToken } from '../../actions/notification';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { Alert } from 'react-native';
 
 const method = () => {
 
     const { state } = useContext(AuthContext);
-    const { user } = useSelector(state => state.userReducer);
     const { error } = useSelector(state => state.errorReducer);
 
-    const [cardData, setCardData] = React.useState([]);
+    const [cardData, setCardData] = useState([]);
     const [markedDatesArray, setMarkedDatesArray] = useState([]);
-    const [selectedDate, setSelectedDate] = React.useState(new Date());
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const dispatch = useDispatch();
     const fetchUser = () => {
@@ -28,33 +29,34 @@ const method = () => {
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
   
       if (enabled) {
-        getFcmToken()
+        const fcmToken = await messaging().getToken();
+        handleFcmToken(fcmToken)
         console.log('Authorization status:', authStatus);
       }
   }
 
-  const getFcmToken = async () => {
-      const fcmToken = await messaging().getToken();
+  const handleFcmToken = (fcmToken) => {
       if (fcmToken) {
-       console.log(fcmToken);
-       console.log("Your Firebase Token is:", fcmToken);
+        let userId = state.userId
+        let token = state.token
+        dispatch(addNotificationToken(userId, token, fcmToken));
+       //console.log(fcmToken);
       } else {
-       console.log("Failed", "No token received");
+       //console.log("Failed", "No token received");
       }
   }
 
-    useEffect(() => {
-        fetchUser();
-        requestUserPermission();
-        /**
-         * Uncomment this to listen to notifications in the foreground
-        
-         const unsubscribe = messaging().onMessage(async remoteMessage => {
-            Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-         });
-         return unsubscribe;
-         */
-    }, [state]);
+  const createNotificationListeners = () => {
+    messaging().onTokenRefresh(fcmToken => {
+      handleFcmToken(fcmToken)
+    });  
+  }
+
+  useEffect(() => {
+      fetchUser();
+      requestUserPermission();
+      createNotificationListeners();
+  }, [state]);
 
     const callme = (date) => {
         const d = new Date(date);

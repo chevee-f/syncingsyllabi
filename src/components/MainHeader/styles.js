@@ -53,11 +53,6 @@ export default StyleSheet.create({
         marginLeft:10,
         width: width * 0.42
       },
-      notificationContainer:{
-        justifyContent:'center',
-        alignItems:'flex-end', 
-        width: width * 0.32
-      },
       menuContainer:{
         height:200,
         justifyContent:'center',
@@ -67,6 +62,27 @@ export default StyleSheet.create({
         flexDirection:'row',
         marginTop:15,
         width: width * 0.3,
-        marginLeft: width * -0.09
+        marginLeft: width * -0.13
       },
+      badgeCount:{
+        fontFamily: "Manrope",
+        fontSize: 12,
+        color: '#fff',
+        fontWeight:'bold',
+        textAlign: 'center'
+      },
+      notificationContainer:{
+        justifyContent:'center',
+        alignItems:'flex-end', 
+        width: width * 0.32,
+      },
+      badgeContainer:{
+        backgroundColor: '#FF3333',
+        width: 18,
+        height: 17,
+        borderRadius: 20,
+        position: 'absolute',
+        marginTop: height * 0.098,
+        marginLeft: width * 0.28
+      }
 })

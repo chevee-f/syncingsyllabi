@@ -149,7 +149,7 @@ const SignUpScreen = ({ navigation }) => {
                         />
                     </TouchableOpacity>
                 </View> 
-                <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.01 : Platform.OS === 'ios' ? height * 0.055 : height * 0.018}]}>
+                <View style={[styles.signInContainer, {marginTop: !inputValidation.isValidEmail || !inputValidation.isValidPassword ? height * 0.01 : Platform.OS === 'ios' ? height * 0.045 : height * 0.018}]}>
                     <Text style={[label.smallHeading2,{color:color.default}]}>{!isSignUp ? `Don't have an account? ` : 'Already have an account? '}</Text>
                     <TouchableOpacity onPress={() => {setIsSignUp(!isSignUp)}}>
                         <Text style={[label.boldSmallHeading,{color:color.primary}]}>

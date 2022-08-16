@@ -85,9 +85,12 @@ const method = (props) => {
               };
               ImagePicker.launchCamera(options, (response) => {
           
-                if (response.error) {
+                if (response.errorCode) {
                     alert('ImagePicker Error: ', response.error);
-                } else {
+                }else if (response.didCancel) {
+                       
+                }
+                 else {
                     let images = imageFiles
                     images.push(response.assets[0])
                     setImageFiles(images)
