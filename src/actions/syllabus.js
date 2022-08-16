@@ -22,8 +22,12 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
         },
         { headers: {"Authorization" : `Bearer ${token}`} })
         .then((res) => {
-          dispatch({ type: 'CLEAR_ERROR', payload: [] });
-          dispatch(getSyllabusByUser(userId, token));
+          if(res.data.data.success){
+            dispatch({ type: 'CLEAR_ERROR', payload: [] });
+            dispatch(getSyllabusByUser(userId, token));
+          }else{
+            dispatch({ type: 'HAS_ERROR', payload: 'Class name or class code must be unique' });
+          }
         })
       };
     } catch (error) {

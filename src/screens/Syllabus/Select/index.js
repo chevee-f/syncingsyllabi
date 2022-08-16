@@ -63,8 +63,6 @@ const SelectSyllabus = ({
             <TriangleDown />
             </Modal>
       </SafeAreaView>
-            
-        
     )
 }
 

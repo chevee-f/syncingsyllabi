@@ -4,6 +4,7 @@ import { NavigationContainer,
          DarkTheme} from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { DrawerContent } from './src/components/Navigation/DrawerContent';
+import { useNavigation } from '@react-navigation/native'
 
 import RootStackScreen from './src/components/Navigation/RootStackScreen';
 import MainTabScreen from './src/components/Navigation/MainTabScreen';
@@ -25,6 +26,7 @@ import {Context as AuthContext} from './src/components/Context/AuthContext';
 import { SettingsDrawerContent } from './src/components/Navigation/SettingsDrawerContent'
 import { setNavigationDrawerHome } from './src/components/Navigation/RootNavigation';
 import color from './src/styles/colors'
+import messaging from '@react-native-firebase/messaging';
 
 const SettingsDrawer = createDrawerNavigator();
 const MainDrawer = createDrawerNavigator();
@@ -68,6 +70,13 @@ function App() {
 
   useEffect(() => {
     retrieveToken()
+
+    const navigation = useNavigation()
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      let res = remoteMessage.notification.title.search("Assignment");
+      res === -1 ? navigation.navigate('Goal') : navigation.navigate('Assignment')   
+    });
+
   }, [])
   
   return (

@@ -31,7 +31,10 @@ const method = (navigation,props) => {
                     props.onClose()
                     if (response.errorCode) {
                         Alert.alert(response.errorMessage);
-                    } else {
+                    }else if (response.didCancel) {
+                       
+                    }
+                     else {
                        if(response.assets !== undefined)  navigation.navigate('ImageViewerScreen', { file: response.assets, source: 'camera' })
                     }
                 });
