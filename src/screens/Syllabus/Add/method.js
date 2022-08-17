@@ -13,10 +13,19 @@ const method = () => {
 
     const dispatch = useDispatch();
     const [hasError, setHasError] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     useEffect(() => {
-        if(error.length !== 0) setHasError(true)
-    }, [syllabus, error]);
+        if(isSubmitted){
+            if(error.length !== 0){
+                Alert.alert(error);
+            }else{
+                resetClassSyllabus()
+                setSuccessMessage('Your class has been added!')
+                setTimeout(function(){setSuccessModalVisible(true)}, 1000)
+            }
+        }
+    }, [isSubmitted, syllabus.length, error.length]);
 
     const [classSyllabus, setClassSyllabus] = useState({
         id: '',
@@ -70,13 +79,7 @@ const method = () => {
         let isValidSchedule = await handleValidSchedule(classSyllabus.schedule)
         if(isValidSchedule){
             await dispatch(addSyllabus(classSyllabus, userId, token))
-            if(hasError){
-                Alert.alert("Error", error);
-            }else{
-                resetClassSyllabus()
-                setSuccessMessage('Your class has been added!')
-                setTimeout(function(){setSuccessModalVisible(true)}, 1000)
-            }
+            setTimeout(function(){setIsSubmitted(true)}, 1000)
         } 
     }
 

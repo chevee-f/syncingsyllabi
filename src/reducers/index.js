@@ -6,6 +6,7 @@ import syllabusReducer from './syllabus'
 import goalReducer from './goal'
 import assignmentsReducer from './assignments'
 import ocrReducer from './ocr'
+import notificationReducer from './notification'
 
 const rootReducer = combineReducers({
     userReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     syllabusReducer,
     goalReducer,
     assignmentsReducer,
-    ocrReducer
+    ocrReducer,
+    notificationReducer
 });
 export const store = createStore(rootReducer, applyMiddleware(thunk));

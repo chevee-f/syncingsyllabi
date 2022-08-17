@@ -80,7 +80,7 @@ export function DrawerContent (props) {
                                 })                
                             }  
                             <View style={[styles.section, {width: 50}]}>
-                                <Text style={[label.boldExtraSmallHeading2, { color: color.textDefault, textAlign:'center' }]}>Coming Soon</Text>
+                                <Text style={[label.boldLargeHeading, { color: color.textDefault, textAlign:'center' }]}>0</Text>
                                 <Caption style={[label.extraSmallHeading2, styles.text ]}>Friends</Caption>
                             </View> 
                         </View>
