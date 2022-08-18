@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import FastImage from 'react-native-fast-image'
 import ForeGroundNotification from '../ForeGroundNotification'
 import messaging from '@react-native-firebase/messaging';
-import { getUserNotification, readUserNotification } from '../../actions/notification';
+import { getUserNotification, readUserNotification, removeUserNotification } from '../../actions/notification';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 var {height, width} = Dimensions.get('window');
@@ -56,7 +56,6 @@ const MainHeader = props => {
     }
 
     const navigateNotification = (notificationId, notificationTitle) => {
-       
         let userId = state.userId
         let token = state.token
         dispatch(readUserNotification(notificationId, userId, token));
@@ -64,6 +63,12 @@ const MainHeader = props => {
 
         let res = notificationTitle.search("Assignment");
         res === -1 ? navigation.navigate('Goal') : navigation.navigate('Assignment')    
+    }
+
+    const removeNotification = (notificationId) => {
+        let userId = state.userId
+        let token = state.token
+        dispatch(removeUserNotification(notificationId, userId, token));
     }
 
     return (
@@ -125,10 +130,11 @@ const MainHeader = props => {
             </View>
             <ForeGroundNotification onClose={() => readNotifications()} 
                                     navigate={navigateNotification}
+                                    remove={removeNotification}
                                     isVisible={modalForegroundVisible} 
                                     notifications={notification}
-                                    foregroundDueDateMessage={foregroundDueDateMessage}
-                                    message={foregroundMessage}/>
+                                    setModalForegroundVisible={setModalForegroundVisible}
+                                    />
         </View>
     );
 };

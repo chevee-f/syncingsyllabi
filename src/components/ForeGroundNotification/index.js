@@ -6,10 +6,14 @@ import Modal from "react-native-modal";
 import Triangle from '../Triangle'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import color from '../../styles/colors'
+import { useNavigation } from '@react-navigation/native'
 
 const ForeGroundNotification = ({
+    //setModalForegroundVisible,
     ...props
 }) => {
+
+    const navigation = useNavigation()
     const TriangleUp = () => {
         return <Triangle style={styles.triangleUp} />;
     };
@@ -17,6 +21,19 @@ const ForeGroundNotification = ({
     const onTrigger = (id, title) => {
         props.navigate(id, title);
     }
+
+    const onRemove = (id) => {
+        props.remove(id);
+    }
+
+    const seeAll = () => {
+        setModalForegroundVisible(false)
+        navigation.navigate('Assignment')
+    }
+   
+    let notificationList = props.notifications.sort(function(a,b){
+        return new Date(b.dateCreated) - new Date(a.dateCreated);
+    });
 
     return (
         <SafeAreaView>
@@ -36,11 +53,13 @@ const ForeGroundNotification = ({
                         <Text style={styles.title}>Notifications</Text>
                     </View>
                     <ScrollView>
-                    {props.notifications.map((item) => {
+                    {notificationList.map((item) => {
                         return (
                             <TouchableOpacity style={[styles.messageContainer, {borderBottomColor: item.isRead ? color.default : color.primary}]} 
                                               onPress={() => onTrigger(item.id, item.title)}>
-                                <View style={styles.newIndicator} />
+                                {!item.isRead &&
+                                    <View style={styles.newIndicator} />
+                                }
                                 <View style={styles.content}>
                                     <Text style={[styles.message, {color: item.isRead ? color.default : color.primary }]}>
                                         {item.title}
@@ -52,16 +71,16 @@ const ForeGroundNotification = ({
                                         </Text>
                                     </View>
                                 </View>
-                                <TouchableOpacity onPress={props.onClose}>
+                                <TouchableOpacity onPress={() => onRemove(item.id)}>
                                     <Icon name="close" size={22} color={'#FF3333'} />
                                 </TouchableOpacity>
                             </TouchableOpacity>
                         );
                     })}    
                     </ScrollView>
-                    <View>
+                    <TouchableOpacity onPress={seeAll}>
                         <Text style={styles.seeAll}>SEE ALL</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>                                             
             </Modal>
         </SafeAreaView>
