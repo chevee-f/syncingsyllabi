@@ -25,9 +25,6 @@ const MainHeader = props => {
     
     const [badgeCount, setBadgeCount] = useState(0);
     const [modalForegroundVisible, setModalForegroundVisible] = useState(false);
-    const [foregroundNotificationId, setForegroundNotificationId] = useState(0);
-    const [foregroundMessage, setForegroundMessage] = useState('Assignment MKTG 100S is due tomorrow');
-    const [foregroundDueDateMessage, setForegroundDueDateMessage] = useState('Due Date: 10/28/2022 | 2:00 PM');
 
     const dispatch = useDispatch();
     
@@ -39,8 +36,6 @@ const MainHeader = props => {
         const unsubscribe = messaging().onMessage(async remoteMessage => {
             let unreadNotification = notification.filter(x => x.isRead === false).length
             setBadgeCount(unreadNotification + 1)
-            setForegroundMessage(remoteMessage.notification.title)
-            setForegroundDueDateMessage(remoteMessage.notification.body)
         });
         return unsubscribe;
     }, [notification]);
@@ -101,7 +96,7 @@ const MainHeader = props => {
                                                 borderRadius: 10
                                             }} 
                                         source={{uri: user.imageUrl === null ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdOWn7eZASWXAYDIRpb9DnYkjzIQsdc02_KUi5zIzQ6AhoFNYj5iFnUuKbJ9BhJdWEuw&usqp=CAU' :
-                                                    user.imageUrl,
+                                                      user.imageUrl,
                                                 priority: FastImage.priority.high}} 
                                         onLoadStart={() => setImageLoading(true)}
                                         onLoadEnd={() => setImageLoading(false)}
