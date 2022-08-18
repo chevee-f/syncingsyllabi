@@ -134,7 +134,7 @@ export function SettingsDrawerContent (props) {
                             icon={() => (<Image source={require('../../../assets/icons/BellSimpleRinging.png')}/>)}
                             label="Notifications"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                            //onPress={() => {props.navigation.navigate('ChangePasswordScreen')}}
+                            onPress={() => {props.navigation.navigate('NotificationListScreen')}}
                         />
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/Info.png')}/>)}

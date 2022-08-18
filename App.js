@@ -18,6 +18,7 @@ import SupportScreen from './src/screens/Support';
 import ConfidenceScoreScreen from './src/screens/ConfidenceScore'
 import PdfViewerScreen from './src/screens/PdfViewer'
 import ImageViewerScreen from './src/screens/ImageViewer'
+import NotificationListScreen from './src/screens/NotificationList'
 
 import {Provider} from 'react-redux';
 import {store} from './src/reducers/index';
@@ -27,6 +28,7 @@ import { SettingsDrawerContent } from './src/components/Navigation/SettingsDrawe
 import { setNavigationDrawerHome } from './src/components/Navigation/RootNavigation';
 import color from './src/styles/colors'
 import messaging from '@react-native-firebase/messaging';
+import { Settings } from 'react-native';
 
 const SettingsDrawer = createDrawerNavigator();
 const MainDrawer = createDrawerNavigator();
@@ -71,8 +73,8 @@ function App() {
   useEffect(() => {
     retrieveToken()
 
-    const navigation = useNavigation()
     messaging().onNotificationOpenedApp(remoteMessage => {
+      const navigation = useNavigation()
       let res = remoteMessage.notification.title.search("Assignment");
       res === -1 ? navigation.navigate('Goal') : navigation.navigate('Assignment')   
     });
@@ -96,6 +98,7 @@ function App() {
               <SettingsDrawer.Screen name="SoundsVibrationScreen" component={SoundsVibrationScreen} />
               <SettingsDrawer.Screen name="MainDrawerContent" component={MainDrawerContent} />
               <SettingsDrawer.Screen name="SupportScreen" component={SupportScreen} />
+              <SettingsDrawer.Screen name="NotificationListScreen" component={NotificationListScreen} />
             </SettingsDrawer.Navigator>
             ) :
             <RootStackScreen />

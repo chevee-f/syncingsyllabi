@@ -79,21 +79,9 @@ const SupportScreen = ({ navigation }) => {
                         <DefaultButton title='Send'/>
                     </View>
                     <View style={{marginVertical:10}}>
-                        <Text style={[label.boldSmallHeading, {color:color.primary}]}>Address</Text>
-                        <Text style={[label.smallHeading, {color:color.primary}]}>
-                            Block 123 Apple Street California
-                        </Text>
-                    </View>
-                    <View style={{marginVertical:10}}>
-                        <Text style={[label.boldSmallHeading, {color:color.primary}]}>Contact Number</Text>
-                        <Text style={[label.smallHeading, {color:color.primary}]}>
-                            +123 456 7890
-                        </Text>
-                    </View>
-                    <View style={{marginVertical:10}}>
                         <Text style={[label.boldSmallHeading, {color:color.primary}]}>Email Address</Text>
                         <Text style={[label.smallHeading, {color:color.primary}]}>
-                            my@mail.com
+                        support@syncingsyllabi.org
                         </Text>
                     </View>
                 </ScrollView>

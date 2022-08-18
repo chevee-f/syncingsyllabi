@@ -67,3 +67,22 @@ export const readUserNotification = (notificationId, userId, token) => {
         dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
 };
+
+export const removeUserNotification = (notificationId, userId, token) => {
+    try {
+        return async dispatch => {
+            axios.post(`${getAPIBaseUrl()}notification/RemoveNotification`,
+            {
+                "NotificationId": parseInt(notificationId)
+            },
+            { headers: {"Authorization" : `Bearer ${token}`} })
+            .then((res) => {
+                dispatch({ type: 'CLEAR_ERROR', payload: [] });
+                dispatch(getUserNotification(userId, token));
+            })
+        };
+    } catch (error) {
+        Alert.alert(error.message)
+        dispatch({ type: 'HAS_ERROR', payload: error.message });
+    }
+};
