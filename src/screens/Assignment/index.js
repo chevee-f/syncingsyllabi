@@ -538,20 +538,31 @@ const AssignmentScreen = (navigation) => {
                   </View>
                   <View style={{marginTop: 24, width: '49%'}}>
                     <Label text="Due date *" />
-                    <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
-                      <View style={[styles.inputContainer, {borderColor: !duedateHasError ? color.default : 'red'}]}>
-                          <TextInput
-                              mode="flat"
-                              style={[styles.input]}
-                              placeholder="DD/MM/YYYY"
-                              value={classAssignments.dueDate}
-                              editable={false}
-                              selectionColor={color.primary}
-                              activeUnderlineColor={color.primary}
-                              theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                          />
-                      </View>
-                    </TouchableOpacity>
+                    {Platform.OS === 'android' ? 
+                       <TouchableOpacity activeOpacity={1.0} onPress={() => setCalendarVisible(true)}>
+                          <View style={[styles.inputContainer, {borderColor: !duedateHasError ? color.default : 'red'}]}>
+                              <TextInput
+                                  mode="flat"
+                                  style={[styles.input]}
+                                  placeholder="DD/MM/YYYY"
+                                  value={classAssignments.dueDate}
+                                  editable={false}
+                                  selectionColor={color.primary}
+                                  activeUnderlineColor={color.primary}
+                                  theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                              />
+                          </View>
+                        </TouchableOpacity> 
+                        :
+                        <DefaultInput 
+                            label="Due date"
+                            onPressIn={() => { setCalendarVisible(true)}}
+                            editable={false}
+                            value={classAssignments.dueDate}
+                            hasValue={classAssignments.dueDate.length}
+                        /> 
+                    }
+                   
                   </View>
                   {/* <View style={{marginTop: 24, width: '49%'}}>
                   <Label text="Reminder" />
@@ -602,6 +613,19 @@ const AssignmentScreen = (navigation) => {
                 </View>
             </ScrollView>
           </View>
+
+          <DateTimePicker 
+            onClose={() => { setCalendarVisible(!calendarVisible); }}
+            modalVisible={calendarVisible} 
+            showTimePicker={false}
+            onChangeDate={(startDate) =>  {
+              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
+              setDuedateHasError(false);
+              setErrorMessage(false);
+            }}
+            onSelectDate={() => setCalendarVisible(!calendarVisible)}
+        />
+
         </Modal>
         <Modal 
           isVisible={attachmentsVisible} 
@@ -659,17 +683,7 @@ const AssignmentScreen = (navigation) => {
               </View>
             </View>
           </Modal>
-        <DateTimePicker 
-            onClose={() => { setCalendarVisible(!calendarVisible); }}
-            modalVisible={calendarVisible} 
-            showTimePicker={false}
-            onChangeDate={(startDate) =>  {
-              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
-              setDuedateHasError(false);
-              setErrorMessage(false);
-            }}
-            onSelectDate={() => setCalendarVisible(!calendarVisible)}
-        />
+       
 
         <DateTimePicker 
             onClose={() => { setAllCalendarVisible(!allCalendarVisible); }}

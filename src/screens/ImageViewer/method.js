@@ -39,7 +39,7 @@ const method = (props) => {
         setImageFiles(props.route.params.file)
     }, [props.route.params.file]);
 
-    const scanImage = async() => {
+    const scanImage = async(nextScreen) => {
         try{
             let base64ArraySyllabi = [];
             let base64ArrayAssignment = [];
@@ -56,6 +56,7 @@ const method = (props) => {
 
             navigation.navigate('LoadingScreen', 
                 {previousScreen: 'Syllabus', 
+                 nextScreen: nextScreen,
                  base64StringSyllabi: base64ArraySyllabi,
                  base64StringAssignment: base64ArrayAssignment})
 

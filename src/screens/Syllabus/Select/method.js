@@ -1,5 +1,4 @@
 import React from 'react';
-import Triangle from '../../../components/Triangle'
 import DocumentPicker, { types } from 'react-native-document-picker'
 import * as ImagePicker from 'react-native-image-picker';
 import { PermissionsAndroid, Alert } from 'react-native';
@@ -7,7 +6,7 @@ import styles from './styles'
 
 const method = (navigation,props) => {
 
-    const openCamera = async () => {  
+    const openCamera = async (nextScreen) => {  
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.CAMERA,
@@ -35,7 +34,7 @@ const method = (navigation,props) => {
                        
                     }
                      else {
-                       if(response.assets !== undefined)  navigation.navigate('ImageViewerScreen', { file: response.assets, source: 'camera' })
+                       if(response.assets !== undefined)  navigation.navigate('ImageViewerScreen', { file: response.assets, source: 'camera', nextScreen: nextScreen })
                     }
                 });
               }, 1000)
@@ -47,19 +46,15 @@ const method = (navigation,props) => {
         } 
     };
 
-    const TriangleDown = () => {
-        return <Triangle style={styles.triangleDown} />;
-    };
-
-    const selectPdf = async() => {
+    const selectPdf = async(nextScreen) => {
         const pickerResult = await DocumentPicker.pickSingle({
             type: [types.pdf]
         })
         props.onClose()
-        navigation.navigate('PdfViewerScreen', { file: pickerResult, source: decodeURI(pickerResult.uri)})
+        navigation.navigate('PdfViewerScreen', { file: pickerResult, source: decodeURI(pickerResult.uri), nextScreen: nextScreen})
     };
 
-    const selectImage = async() => {
+    const selectImage = async(nextScreen) => {
         let options = {
             mediaType: 'photo',
             selectionLimit: 0
@@ -70,7 +65,7 @@ const method = (navigation,props) => {
             if (response.errorCode) {
                 Alert.alert('ImagePicker Error: ', response.errorMessage);
             } else {
-                if(response.assets !== undefined)  navigation.navigate('ImageViewerScreen', { file: response.assets, source: 'imgGallery' })
+                if(response.assets !== undefined)  navigation.navigate('ImageViewerScreen', { file: response.assets, source: 'imgGallery', nextScreen: nextScreen })
             }
         });
         }, 1000)
@@ -78,7 +73,6 @@ const method = (navigation,props) => {
 
     return {
         openCamera,
-        TriangleDown,
         selectPdf,
         selectImage
     };

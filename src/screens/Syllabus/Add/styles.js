@@ -47,5 +47,26 @@ export default StyleSheet.create({
         justifyContent:'space-between',
         marginVertical:10,
         marginBottom: 50
-    }
+    },
+    selectModal:{
+        justifyContent: 'center',
+        margin: height * 0.3,
+        flexDirection:'row'
+    },
+    triangleTransform:{
+        transform: [{ rotate: "270deg" }],
+        borderBottomColor: "#f2f2f2"
+    },
+    container: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10
+    },
+    labelContainer:{
+        width: width * 0.6
+    },
+    scoreContainer:{
+        width: width * 0.3
+    },
 })

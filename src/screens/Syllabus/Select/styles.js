@@ -5,7 +5,7 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
     triangleDown: {
-        transform: [{ rotate: "180deg" }],
+        transform: [{ rotate: "180deg" }]
     },
     modal:{
         justifyContent: 'flex-end', 
