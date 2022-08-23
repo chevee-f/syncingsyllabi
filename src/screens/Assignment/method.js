@@ -23,7 +23,8 @@ const method = () => {
         title: '',
         notes: '',
         dueDate: new Date(),
-        attachments: []
+        attachments: [],
+        attachmentFileName: ''
     });
     const [attachments, setAttachments] = useState([]);
     const { assignments } = useSelector(state => state.assignmentsReducer);
@@ -62,7 +63,6 @@ const method = () => {
                 pad(date.getUTCHours())      + ':' +
                 pad(date.getUTCMinutes())    + ':' +
                 pad(date.getUTCSeconds())    + 'Z';
-                console.log(date);
         // setClassAssignments({ ...classAssignments, dueDate: date });
         await dispatch(addAssignments(classAssignments, userId, token, date));
         if(hasError){
@@ -117,7 +117,6 @@ const method = () => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
         await dispatch(deleteAssignment(assignment.id, userId, token));
-        // console.log(assignment);
         let currentDate = assignment.assignmentDateEnd.split("T")[0];
         if(hasError){
             Alert.alert("Error", error);
@@ -130,7 +129,6 @@ const method = () => {
             for(let i = 0; i < newArr.length; i++) {
                 if(currentDate === newArr[i].date) {
                     for(let j = 0; j < newArr[i].data.length; j++) {
-                        console.log(newArr[i].data[j]['id'] === assignment.id)
                         if(newArr[i].data[j]['id'] === assignment.id) {
                             newArr[i].data.splice(j, 1);
                         }
@@ -158,7 +156,6 @@ const method = () => {
             for(let i = 0; i < newArr.length; i++) {
                 if(currentDate === newArr[i].date) {
                     for(let j = 0; j < newArr[i].data.length; j++) {
-                        console.log(newArr[i].data[j]['id'] === assignment.id)
                         if(newArr[i].data[j]['id'] === assignment.id) {
                             newArr[i].data.splice(j, 1);
                         }
@@ -223,7 +220,6 @@ const method = () => {
     }
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedDate, setSelectedDate] = React.useState(new Date());
-    // console.log("current day = " + selectedDate);
     const [successMessage, setSuccessMessage] = useState('');
     const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
@@ -234,22 +230,21 @@ const method = () => {
 
     const toggleModal = () => {
         console.log("toggleModal")
-      setModalVisible(!isModalVisible);
-      if(!isModalVisible) {
-        setSyllabusId(null);
-        setClassAssignments({...classAssignments, 
-          id: '', 
-          title: '', 
-          dueDate: '', 
-          notes: '',
-          attachments: []
-        });
-        setAttachments([]);
-      }
+        setModalVisible(!isModalVisible);
+        if(!isModalVisible) {
+            setSyllabusId(null);
+            setClassAssignments({...classAssignments, 
+            id: '', 
+            title: '', 
+            dueDate: '', 
+            notes: '',
+            attachments: []
+            });
+            setAttachments([]);
+        }
     };
 
     const callme = (date, ds = null) => {
-        console.log("calling call me " + d);
         const d = new Date(date);
         let m = (d.getMonth()+1);
         if(m.toString().length === 1) {
@@ -329,7 +324,6 @@ const method = () => {
           let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
           let hasData = false;
           for (let i = 0; i < fetchedDates.length; i++) {
-            console.log(fetchedDates[i].date)
             if(selectedDateY === fetchedDates[i].date && !hasData) {
               hasData = true;
               setCardData(fetchedDates[i].data);

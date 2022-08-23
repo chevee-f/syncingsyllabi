@@ -43,7 +43,7 @@ const MainHeader = props => {
             setForegroundDueDateMessage(remoteMessage.notification.body)
         });
         return unsubscribe;
-    }, [notification]);
+    }, [notification.length]);
 
     const readNotifications = () => {
         setModalForegroundVisible(false)
