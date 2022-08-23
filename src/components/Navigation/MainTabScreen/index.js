@@ -22,7 +22,7 @@ var {height, width} = Dimensions.get('window');
 const MainTabScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('Home');
-     
+  const [counter, setCounter] = useState(0)
     return (
       <>
         <Tab.Navigator
@@ -33,7 +33,24 @@ const MainTabScreen = () => {
         >
           <Tab.Screen
               name="Home"
-              component={HomeStackScreen}
+              children={({navigation}) => {
+                return(
+                  <Stack.Navigator screenOptions={{
+                    headerStyle:{
+                      backgroundColor: color.primary
+                    },
+                    title: '',
+                    headerTintColor:'#fff',
+                    header: () => <MainHeader/>
+                    
+                  }}>
+                      <Stack.Screen 
+                        name="Homee" 
+                        children={() => <HomeScreen counter={counter} />}
+                        options={{ headerLeft: null }} />
+                  </Stack.Navigator>
+                )
+              }}
               options={{
                 tabBarIcon: ({ focused }) => (
                   <View style={styles.iconContainer}>
@@ -55,6 +72,7 @@ const MainTabScreen = () => {
               }}
               listeners={() => ({
                 tabPress: e => {
+                  setCounter(counter+1);
                   setSelectedComponent('Home')
                 },
               })}

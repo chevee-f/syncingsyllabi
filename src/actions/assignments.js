@@ -1,5 +1,5 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAPIBaseUrl } from "../config/env";
 import { Alert } from 'react-native';
 import Moment from 'moment';
@@ -8,7 +8,6 @@ export const GET_ASSIGNMENTS_BY_USER = 'GET_ASSIGNMENTS_BY_USER';
 export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
     export const addAssignments = (assignment, userId, token, date) => {
         try {
-            // console.log(assignment)
             return async dispatch => {
                 const formData = new FormData();
                 formData.append('SyllabusId', assignment.syllabusId);
@@ -17,8 +16,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 formData.append('Notes', assignment.notes);
                 formData.append('AssignmentDateEnd', date);
                 formData.append('ColorInHex', '');
-                // formData.append('AttachmentFile', '');
-                // console.log(formData)
+                formData.append('AttachmentFile', assignment.attachments);
                 let res = await fetch(`${getAPIBaseUrl()}Assignment/CreateAssignment`,{
                     method: 'post',
                     headers: {
@@ -137,7 +135,6 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
   };
 
   export const getAssignmentsByUser = (userId, token, sort = '', showAll = false) => {
-    console.log("calling get assignments by user")
     try {
         var d = new Date();
         d.setMonth(d.getMonth() + 3);
@@ -203,8 +200,8 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                     }
                 },
                 { headers: {"Authorization" : `Bearer ${token}`} })
-                .then((res) => {
-                    console.log(res.data.data.items)
+                .then(async(res) => {
+                    // console.log(res.data.data.items)
                     dispatch({ type: 'CLEAR_ERROR', payload: [] });
                     dispatch({
                         type: GET_ASSIGNMENTS_BY_USER,

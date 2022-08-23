@@ -58,30 +58,33 @@ const method = () => {
       createNotificationListeners();
   }, [state]);
 
-    const callme = (date) => {
-        const d = new Date(date);
-        let m = (d.getMonth()+1);
-        if(m.toString().length === 1) {
-          m = "0" + m;
-        }
-        let dt = d.getDate();
-        if(dt.toString().length === 1) {
-          dt = "0" + dt;
-        }
-        let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
-        let hasData = false;
-        for (let i = 0; i < markedDatesArray.length; i++) {
-          if(selectedDateY === markedDatesArray[i].date && !hasData) {
-            hasData = true;
-            setCardData(markedDatesArray[i].data);
-          }
-        }
-
-        if(!hasData) {
-          setCardData([]);
-        } 
-        setSelectedDate(selectedDateY)
+  const callme = (date, ds = null) => {
+    const d = new Date(date);
+    let m = (d.getMonth()+1);
+    if(m.toString().length === 1) {
+      m = "0" + m;
     }
+    let dt = d.getDate();
+    if(dt.toString().length === 1) {
+      dt = "0" + dt;
+    }
+    let selectedDateY = d.getFullYear() + "-" + m + "-" + dt;
+    let markedDates = markedDatesArray;
+    if(ds != null)
+        markedDates = ds;
+    let hasData = false;
+    for (let i = 0; i < markedDates.length; i++) {
+      if(selectedDateY === markedDates[i].date && !hasData) {
+        hasData = true;
+        setCardData(markedDates[i].data);
+      }
+    }
+    
+    if(!hasData) {
+      setCardData([]);
+    } 
+    setSelectedDate(selectedDateY)
+  }
 
     return {
         cardData,

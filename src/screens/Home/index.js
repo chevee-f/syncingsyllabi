@@ -14,11 +14,11 @@ import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { useSelector, useDispatch } from 'react-redux';
 import { getGoalByUser } from '../../actions/goal';
 import { getAssignmentsByUser } from '../../actions/assignments';
+import { getSyllabusByUser } from '../../actions/syllabus';
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import FilePickerManager from 'react-native-file-picker';
 
-const HomeScreen = ({ navigation }) => {
-
+const HomeScreen = (props) => {
   const {
     cardData,
     selectedDate,
@@ -34,20 +34,43 @@ const HomeScreen = ({ navigation }) => {
   const { state } = useContext(AuthContext);
   const { goals } = useSelector(state => state.goalReducer);
   const { assignments } = useSelector(state => state.assignmentsReducer);
+  const { syllabus } = useSelector(state => state.syllabusReducer);
 
+  const [bgColor, setBgColor] = React.useState(
+    [
+      ['#FF9966', '#FF5E62'],
+      ['#56CCF2', '#2F80ED'],
+      ['#4776E6', '#8E54E9'],
+      ['#00B09B', '#96C93D'],
+      ['#A8C0FF', '#3F2B96'],
+      ['#ED213A', '#93291E'],
+      ['#FDC830', '#F37335'],
+      ['#00B4DB', '#0083B0'],
+      ['#AD5389', '#3C1053'],
+      ['#EC008C', '#FC6767'],
+      ['#DA4453', '#89216B'],
+      ['#654EA3', '#EAAFC8']
+    ]
+  );
   const [file, setFile] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("home useeffect in act *************************")
       let userId = state.userId
       let token = state.token
       dispatch(getAssignmentsByUser(userId, token));
       dispatch(getGoalByUser(userId, token));
+      // dispatch(getSyllabusByUser(userId, token));
       populateAssignment(assignments);
-  }, [goals.length]);
+  }, [assignments.length, goals.length]);
 
+  useEffect(() => {
+    ds = populateAssignment(assignments, true);
+    callme(selectedDate, ds);
+  }, [props.counter])
   let fetchedDates = [];
-  const populateAssignment = (assignments) => {
+  const populateAssignment = (assignments, isClick = false) => {
     fetchedDates = [];
     if(assignments.length > 0) {
       let dates = [];
@@ -80,7 +103,6 @@ const HomeScreen = ({ navigation }) => {
           data: fetchedDates[i].data
         });
       }
-      console.log(ds)
       setMarkedDatesArray(ds);
 
       const d = new Date();
@@ -105,6 +127,8 @@ const HomeScreen = ({ navigation }) => {
       if(!hasData) {
         setCardData([]);
       } 
+      if(isClick == true)
+        return ds;
     }
   }
     return (
@@ -145,7 +169,13 @@ const HomeScreen = ({ navigation }) => {
                 dayContainerStyle={styles.dayContainer}
                 startingDate={startingDate}
                 page={'home'}
-                onDateSelected={callme}
+                onDateSelected={async (date) => {
+                  let userId = state.userId
+                  let token = state.token
+                  await dispatch(getAssignmentsByUser(userId, token));
+                  ds = populateAssignment(assignments, true);
+                  callme(date, ds);
+                }}
                 //onDateSelected={(selectedDate) => alert(JSON.stringify(selectedDate))}
                 />
               </View>
@@ -172,8 +202,22 @@ const HomeScreen = ({ navigation }) => {
                   // completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
                   // onPress={toggleModal} 
                   // toggleAttachments={toggleAttachments}
-                  page={'home'}
-                  data={cardData} />
+                  // page={'home'}
+                  // data={cardData} />
+                  // <Card 
+                    // showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
+                    // editCardData={editCardData} 
+                    // completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
+                    // onPress={toggleModal} 
+                    // toggleAttachments={toggleAttachments}
+                    page={'home'}
+                    selectedDate={selectedDate}
+                    markedDatesArray={markedDatesArray}
+                    // allDatesArray={allDatesArray}
+                    // isShowAll={isShowAll}
+                    data={cardData}
+                    syllabus={syllabus}
+                    bgColor={bgColor} />
               </View>
         </ScrollView>
       </View>

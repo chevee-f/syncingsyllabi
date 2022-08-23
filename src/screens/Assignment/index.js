@@ -199,7 +199,8 @@ const AssignmentScreen = (navigation) => {
       dueDate: res.assignmentDateEnd, 
       notes: res.notes,
       syllabusId: res.syllabusId,
-      attachments: res.attachment
+      attachments: res.attachment,
+      attachmentFileName: res.attachmentFileName
     });
   }
 
@@ -294,8 +295,51 @@ const AssignmentScreen = (navigation) => {
     setNote(item.notes);
     setAttachmentsVisible(!attachmentsVisible);
   }
-  console.log("#$%^&*(")
-  console.log(classAssignments.attachments)
+  
+  const showAttachment = () => {
+    let tempAttach = '';
+    if(attachments.length > 0)
+      tempAttach = attachments[0].name
+    else if(!Array.isArray(classAssignments.attachments))
+      tempAttach = classAssignments.attachmentFileName
+    if(tempAttach != '')
+      return (
+          <View style={{ marginVertical: 5, paddingHorizontal: 16, paddingVertical: 5, borderWidth: 1, borderStyle: "dashed", borderRadius: 16, width: "100%" }}>
+            <View style={{ flex: 1, width: "100%", alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{tempAttach}</Text>
+              <TouchableOpacity 
+                style={{ 
+                  paddingLeft: 20, 
+                  paddingRight: 7, 
+                  paddingVertical: 7
+                }} 
+                onPress={() => {
+                  setClassAssignments({...classAssignments, attachments: []})
+                  setAttachments([])
+                }}>
+                  <Text>X</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+      );
+    else
+      return (
+        <View>
+          <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
+          <SecondaryButton onPress={async() => {
+            const attachment = await DocumentPicker.pickSingle({
+                type: [types.pdf, types.images]
+            });
+            
+            let attachmentsArray = attachments;
+            attachmentsArray.push(attachment);
+            setClassAssignments({...classAssignments, attachments: attachmentsArray[0]})
+            setIsAwait(isAwait+1);
+          }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
+        </View>
+      )
+  }
+  
   return (
     <>
       <View style={styles.container}>
@@ -537,25 +581,7 @@ const AssignmentScreen = (navigation) => {
                   </View>
                   <View style={{marginTop: 14, marginBottom: 24}}>
                       <Label text="Attachments" />
-                      { classAssignments.attachments ?
-                        // classAssignments.attachments.map((item) => {
-                          // return 
-                          <View style={{ marginVertical: 5, paddingHorizontal: 16, paddingVertical: 5, borderWidth: 1, borderStyle: "dashed", borderRadius: 16 }}><Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{classAssignments.attachments}</Text></View>
-                          : <View><Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
-                      
-                          <SecondaryButton onPress={async() => {
-                            const attachment = await DocumentPicker.pickSingle({
-                                type: [types.pdf, types.images]
-                            });
-                            
-                            let attachmentsArray = attachments;
-                            attachmentsArray.push(attachment);
-                            setAttachments(attachmentsArray);
-                            setClassAssignments({...classAssignments, attachments: attachmentsArray})
-                            setIsAwait(isAwait+1);
-                          }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
-                          </View>
-                      }
+                          {showAttachment()}
                   </View>
                   {/* <View style={{marginTop: 24}}>
                       <Label text="Attachments" />

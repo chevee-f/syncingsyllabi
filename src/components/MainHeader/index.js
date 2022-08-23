@@ -38,7 +38,7 @@ const MainHeader = props => {
             setBadgeCount(unreadNotification + 1)
         });
         return unsubscribe;
-    }, [notification]);
+    }, [notification.length]);
 
     const readNotifications = () => {
         setModalForegroundVisible(false)
