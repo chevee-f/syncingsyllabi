@@ -17,7 +17,7 @@ const RadioButton = ({
             {props.items.map(res => {
                 var name = res.name 
                 return (
-                    <View style={styles.container}>
+                    <View style={[styles.container, {...props.containerStyle}]}>
                         <View style={styles.subContainer}>
                             <TouchableOpacity
                                 style={styles.radioCircle}
@@ -38,7 +38,7 @@ const RadioButton = ({
                     </View>
                 );
             })}
-            <View style={styles.container}>
+            <View style={[styles.container, {...props.containerStyle}]}>
                 <View style={styles.subContainer}>
                     <TouchableOpacity
                         style={styles.radioCircle}

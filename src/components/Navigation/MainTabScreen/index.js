@@ -198,6 +198,8 @@ const MainTabScreen = () => {
         <SelectSyllabus 
             onClose={() => { setModalVisible(!modalVisible); }}
             modalVisible={modalVisible} 
+            isSideModal={false}
+            nextScreen={'ConfidenceScore'}
         />
       </>
     )

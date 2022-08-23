@@ -35,6 +35,7 @@ const HomeScreen = (props) => {
   const { goals } = useSelector(state => state.goalReducer);
   const { assignments } = useSelector(state => state.assignmentsReducer);
   const { syllabus } = useSelector(state => state.syllabusReducer);
+  //const { ocrResults } = useSelector(state => state.ocrReducer);
 
   const [bgColor, setBgColor] = React.useState(
     [
@@ -56,6 +57,7 @@ const HomeScreen = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    //alert(JSON.stringify(ocrResults))
     console.log("home useeffect in act *************************")
       let userId = state.userId
       let token = state.token

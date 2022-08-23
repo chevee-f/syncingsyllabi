@@ -9,6 +9,8 @@ function errorReducer(state = initialState, action) {
             return {...state, error: action.payload};
         case 'CLEAR_ERROR':
             return {...state, error: action.payload};
+        case 'RESET':
+            return {...state, error: []};
         default:
             return state;
     }

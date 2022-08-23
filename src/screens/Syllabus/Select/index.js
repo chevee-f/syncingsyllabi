@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, TouchableOpacity, SafeAreaView, Platform } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -8,18 +8,23 @@ import label from '../../../styles/label'
 import color from '../../../styles/colors'
 import { useNavigation } from '@react-navigation/native';
 import method from './method';
+import Triangle from '../../../components/Triangle'
 
 const SelectSyllabus = ({
     onPress,
     ...props
   }) => {
+      
     const navigation = useNavigation();
     const {
         openCamera,
-        TriangleDown,
         selectPdf,
         selectImage
     } = method(navigation,props);
+
+    const TriangleDown = () => {
+        return <Triangle style={[styles.triangleDown, {...props.triangleTransform}]} />;
+    };
 
     return (
         <SafeAreaView>
@@ -30,28 +35,30 @@ const SelectSyllabus = ({
                 backdropColor='transparent'
                 isVisible={props.modalVisible}
                 hideModalContentWhileAnimating
-                style={styles.modal}
+                style={[styles.modal, {...props.modal}]}
                 onBackButtonPress={props.onClose}
                 onBackdropPress={props.onClose}>
-
-            <View style={styles.modalContainer}>
+            {props.isSideModal &&
+                <TriangleDown />
+            }
+            <View style={[styles.modalContainer, {...props.modalContainer}]}>
               <Text style={[label.smallHeading2, {color:color.primary}]}>Add new Syllabus with your camera or from your photos</Text>
               <View style={styles.sourceContainer}>
-                    <TouchableOpacity style={styles.source} onPress={() => openCamera()}>
+                    <TouchableOpacity style={styles.source} onPress={() => openCamera(props.nextScreen)}>
                         <Icon 
                             name="camera-outline"
                             color={color.textDefault}
                             size={45}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.source} onPress={() => selectImage()}>
+                    <TouchableOpacity style={styles.source} onPress={() => selectImage(props.nextScreen)}>
                         <Icon 
                             name="image-outline"
                             color={color.textDefault}
                             size={40}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.source} onPress={() => selectPdf()}>
+                    <TouchableOpacity style={styles.source} onPress={() => selectPdf(props.nextScreen)}>
                         <Icon2 
                             name="pdffile1"
                             color={color.textDefault}
@@ -60,7 +67,10 @@ const SelectSyllabus = ({
                     </TouchableOpacity>
                 </View>
             </View>
-            <TriangleDown />
+            {!props.isSideModal &&
+                <TriangleDown />
+            }
+            
             </Modal>
       </SafeAreaView>
     )
