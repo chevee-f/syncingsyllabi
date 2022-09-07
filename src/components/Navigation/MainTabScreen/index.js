@@ -233,6 +233,8 @@ const MainTabScreen = ({ route, navigation }) => {
         <SelectSyllabus 
             onClose={() => { setModalVisible(!modalVisible); }}
             modalVisible={modalVisible} 
+            isSideModal={false}
+            nextScreen={'ConfidenceScore'}
         />
       </>
     )

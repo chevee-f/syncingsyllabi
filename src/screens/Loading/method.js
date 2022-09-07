@@ -16,11 +16,12 @@ const method = (props) => {
     const startLoading = () => {
         setTimeout(() => {
             setIsLoading(false);
-            navigation.navigate("SetUpScreen")
+            navigation.navigate("SetUpScreen", {isAddModalVisible: false})
         }, 3000);
     };
 
     const scanOcrSyllabi = async () => {
+        setIsLoading(true);
         let userId = state.userId
         let token = state.token
         if(props.route.params.base64StringSyllabi.length > 0) {
@@ -29,7 +30,14 @@ const method = (props) => {
         if(props.route.params.base64StringAssignment.length > 0) {
             await dispatch(scanSyllabi(userId, 2, 1, token, props.route.params.base64StringAssignment)); //for assignment
         }
-        setTimeout(function(){navigation.navigate('ConfidenceScoreScreen')}, 3000)
+        setTimeout(function(){
+            setIsLoading(false);
+            if(props.route.params.nextScreen === 'SetUp'){
+                navigation.navigate('SetUpScreen', {isAddModalVisible: true})
+            }else{
+                navigation.navigate('ConfidenceScoreScreen')
+            }
+        }, 3000)
     }
 
     useEffect(() => {

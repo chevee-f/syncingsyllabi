@@ -73,7 +73,7 @@ const RadioButton = ({
                 }
                 // console.log(value + " = " + name + " " + (value === name))
                 return (
-                    <View style={styles.container}>
+                    <View style={[styles.container, {...props.containerStyle}]}>
                         <View style={[{minHeight: 50, marginBottom: -10},styles.subContainer]}>
                             <TouchableOpacity
                                 style={styles.radioCircle}
@@ -96,7 +96,7 @@ const RadioButton = ({
                     </View>
                 );
             })}
-            <View style={styles.container}>
+            <View style={[styles.container, {...props.containerStyle}]}>
                 <View style={styles.subContainer}>
                     <TouchableOpacity
                         style={styles.radioCircle}

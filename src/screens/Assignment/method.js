@@ -74,7 +74,7 @@ const method = () => {
             let newArr = markedDatesArray;
             setMarkedDatesArray(newArr);
             toggleModal();
-            setSuccessModalVisible(true);
+            setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             setSelectedDate(date);
         }
     };

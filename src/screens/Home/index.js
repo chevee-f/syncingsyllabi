@@ -71,6 +71,7 @@ const HomeScreen = (props) => {
   const { goals } = useSelector(state => state.goalReducer);
   const { assignments } = useSelector(state => state.assignmentsReducer);
   const { syllabus } = useSelector(state => state.syllabusReducer);
+  //const { ocrResults } = useSelector(state => state.ocrReducer);
 
   const [bgColor, setBgColor] = React.useState(
     [

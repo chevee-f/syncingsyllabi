@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext} from 'react';
 import { Image, 
          Text, 
          View, 
@@ -8,15 +8,37 @@ import { Image,
 import color from '../../styles/colors'
 import label from '../../styles/label'
 import styles from './styles'
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { removeUserNotification } from '../../actions/notification';
+import {Context as AuthContext} from '../../components/Context/AuthContext';
 
 const NotificationListScreen = ({navigation}) => {
+
+    const { state } = useContext(AuthContext);
     const { notification } = useSelector(state => state.notificationReducer);
+    const dispatch = useDispatch();
+
     let notificationList = notification.sort(function(a,b){
         return new Date(b.dateCreated) - new Date(a.dateCreated);
     });
+
+    const removeNotification = (notificationId) => {
+        let userId = state.userId
+        let token = state.token
+        dispatch(removeUserNotification(notificationId, userId, token));
+    }
+
+    const removeAllNotification = () => {
+        let userId = state.userId
+        let token = state.token
+        let notifications = notification
+        for (let i = 0; i < notifications.length; i++) {
+           dispatch(removeUserNotification(notifications[i].id, userId, token));
+        }
+    }
+
     return (
         <View style={styles.mainContainer}>
             <View style={[styles.headerContainer]}>
@@ -29,9 +51,9 @@ const NotificationListScreen = ({navigation}) => {
                     </Text>
                 </View>
             </View>
-            <View style={styles.clearContainer}>
+            <TouchableOpacity onPress={removeAllNotification} style={styles.clearContainer}>
                 <Text style={styles.clearAll}>CLEAR ALL</Text>
-            </View>
+            </TouchableOpacity>
             <ScrollView>
                 {notificationList.map((item) => {
                     return (
@@ -51,8 +73,7 @@ const NotificationListScreen = ({navigation}) => {
                                     </Text>
                                 </View>
                             </View>
-                            <TouchableOpacity //onPress={props.onClose}
-                            >
+                            <TouchableOpacity onPress={() => removeNotification(item.id)}>
                                 <Icon name="close" size={22} color={'#FF3333'} />
                             </TouchableOpacity>
                         </TouchableOpacity>

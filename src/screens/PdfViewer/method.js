@@ -50,9 +50,8 @@ const method = (props) => {
         setIsLoading(false)
     }
 
-    const scanPdf = async() => {
+    const scanPdf = async(nextScreen) => {
         try{
-
             const pdfDocSyllabi = await PDFDocument.load(pdfData);
             const pdfDocAssignment = await PDFDocument.load(pdfData);
 
@@ -113,9 +112,10 @@ const method = (props) => {
             setAssignmentPagesCount(0)
             navigation.navigate('LoadingScreen', 
                 {previousScreen: 'Syllabus', 
+                 nextScreen: nextScreen,
                  base64StringSyllabi: base64ArraySyllabi,
-                 base64StringAssignment: base64ArrayAssignment})
-
+                 base64StringAssignment: base64ArrayAssignment})  
+                 
         }catch(e){
             alert(JSON.stringify(e.message))
         }

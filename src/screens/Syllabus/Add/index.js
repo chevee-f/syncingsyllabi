@@ -7,6 +7,7 @@ import { View,
          TouchableOpacity,
          Platform,
          KeyboardAvoidingView,
+         Text
         } from 'react-native';
 import styles from './styles'
 import Modal from "react-native-modal";
@@ -20,9 +21,12 @@ import DefaultButton from '../../../components/DefaultButton';
 import ConfirmationModal from '../../../components/ConfirmationModal'
 import method from './method'
 import color from '../../../styles/colors'
+import label from '../../../styles/label'
 import { useSelector } from 'react-redux';
 import {Context as AuthContext} from '../../../components/Context/AuthContext';
 import SuccessModal from '../../../components/SuccessModal'
+import SelectSyllabus from '../Select';
+import RadioButtonGroup from '../../../components/RadioButtonGroup'
 
 var {height, width} = Dimensions.get('window');
 
@@ -61,10 +65,13 @@ const AddSyllabus = ({
     } = method();
 
     const [calendarVisible, setCalendarVisible] = useState(false);
+    const [selectModalVisible, setSelectModalVisible] = useState(false);
     const colors = [0,1,2,3,4,5,6,7,8,9,10,11];
 
     const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
+    const { ocrResults } = useSelector(state => state.ocrReducer);
+
 
     useEffect(() => {
         if(modalVisible){
@@ -89,7 +96,7 @@ const AddSyllabus = ({
                 setHasValue(true)
             }
         }
-    }, [modalVisible,classSyllabus,syllabusId,syllabus,hasValue]);
+    }, [modalVisible,classSyllabus,syllabusId,syllabus,hasValue,ocrResults]);
 
     return (
         <SafeAreaView>
@@ -122,32 +129,68 @@ const AddSyllabus = ({
                     </TouchableOpacity>
                     <View style={styles.fieldContainer}>
                         <Label text={`${syllabusId === null ? 'Add' : 'Update'} your Syllabus`} isDarkTheme={state.isDarkTheme === 'true'}/>
-                        <AddItem />
+                        <AddItem onPress={() => setSelectModalVisible(true)}/>
                     </View>
-                    <View style={styles.fieldContainer}>
-                        <Label text="Input the Class Name or Class Code" isDarkTheme={state.isDarkTheme === 'true'}/>
-                        <DefaultInput 
-                            label="Class Name"
-                            value={classSyllabus.className}
-                            onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className, classCode: className})}
-                            hasValue={classSyllabus.className.length}
-                            hasError={!inputValidation.isValidClassName}
-                            errorMsg={inputValidation.classNameErrMsg}
-                            onEndEditing={(e)=>handleValidClassName(e.nativeEvent.text)}    
-                        /> 
-                    </View>
-                    <View style={styles.fieldContainer}>
-                        <Label text="What's the name of your teacher?" isDarkTheme={state.isDarkTheme === 'true'}/>
-                        <DefaultInput 
-                            label="Name of Teacher"
-                            value={classSyllabus.teacherName}
-                            onChangeText={(teacherName) =>  setClassSyllabus({...classSyllabus, teacherName: teacherName})}
-                            hasValue={classSyllabus.teacherName.length}
-                            hasError={!inputValidation.isValidTeacherName}
-                            errorMsg={inputValidation.teacherNameErrMsg}
-                            onEndEditing={(e)=>handleValidTeacherName(e.nativeEvent.text)}    
-                        /> 
-                    </View>
+                    {ocrResults.hasOwnProperty('ocrSyllabusModel') ?
+                        <View>
+                            <View style={styles.container}>
+                                <View style={styles.labelContainer}>
+                                    <Label text={`Input the Class Name or Class Code`} />
+                                </View>
+                                <View style={styles.scoreContainer}>
+                                    <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>
+                                        Syncing Score
+                                    </Text>
+                                </View>
+                            </View>
+                            <RadioButtonGroup items={ocrResults.ocrSyllabusModel.classCode} 
+                                              setValue={(className) => setClassSyllabus({...classSyllabus, className: className, classCode: className})}
+                                              value={classSyllabus.className} 
+                                              containerStyle={{marginHorizontal: 0}} />
+                            <View style={styles.container}>
+                                <View style={styles.labelContainer}>
+                                    <Label text={`What's the name of your teacher?`} />
+                                </View>
+                                <View style={styles.scoreContainer}>
+                                    <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>
+                                        Syncing Score
+                                    </Text>
+                                </View>
+                            </View>
+                            <RadioButtonGroup items={ocrResults.ocrSyllabusModel.teacherName} 
+                                              setValue={(teacherName) => setClassSyllabus({...classSyllabus, teacherName: teacherName})}
+                                              value={classSyllabus.teacherName} 
+                                              containerStyle={{marginHorizontal: 0}} />
+                        </View>
+                        :
+                        <View>
+                            <View style={styles.fieldContainer}>
+                                <Label text="Input the Class Name or Class Code" isDarkTheme={state.isDarkTheme === 'true'}/>
+                                <DefaultInput 
+                                    label="Class Name"
+                                    value={classSyllabus.className}
+                                    onChangeText={(className) =>  setClassSyllabus({...classSyllabus, className: className, classCode: className})}
+                                    hasValue={classSyllabus.className.length}
+                                    hasError={!inputValidation.isValidClassName}
+                                    errorMsg={inputValidation.classNameErrMsg}
+                                    onEndEditing={(e)=>handleValidClassName(e.nativeEvent.text)}    
+                                />
+                            </View>
+                            <View style={styles.fieldContainer}>
+                                <Label text="What's the name of your teacher?" isDarkTheme={state.isDarkTheme === 'true'}/>
+                                <DefaultInput 
+                                    label="Name of Teacher"
+                                    value={classSyllabus.teacherName}
+                                    onChangeText={(teacherName) =>  setClassSyllabus({...classSyllabus, teacherName: teacherName})}
+                                    hasValue={classSyllabus.teacherName.length}
+                                    hasError={!inputValidation.isValidTeacherName}
+                                    errorMsg={inputValidation.teacherNameErrMsg}
+                                    onEndEditing={(e)=>handleValidTeacherName(e.nativeEvent.text)}    
+                                />
+                            </View>
+                        </View>
+                    }
+
                     <View style={styles.fieldContainer}>
                         <Label text="What's your Schedule?" isDarkTheme={state.isDarkTheme === 'true'}/>
                             {Platform.OS === 'android' ?
@@ -254,6 +297,17 @@ const AddSyllabus = ({
                 headerText='Success'
                 onClose={() => {setSuccessModalVisible(!successModalVisible)
                                 setModalVisible(!modalVisible)}}
+            />
+
+            <SelectSyllabus 
+                onClose={() => { setSelectModalVisible(!selectModalVisible); 
+                                 setModalVisible(!modalVisible)}}
+                modalVisible={selectModalVisible} 
+                isSideModal = {true}
+                nextScreen={'SetUp'}
+                modal={styles.selectModal}
+                modalContainer={{backgroundColor: '#f2f2f2'}}
+                triangleTransform={styles.triangleTransform}
             />
           </Modal>
       </SafeAreaView>

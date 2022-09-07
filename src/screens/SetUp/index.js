@@ -22,11 +22,12 @@ import { ActivityIndicator } from 'react-native-paper';
 import { getSyllabusByUser } from '../../actions/syllabus';
 import { getGoalByUser } from '../../actions/goal';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 var {height, width} = Dimensions.get('window');
 
-const SetUpScreen = ({navigation}) => {
-
+const SetUpScreen = (props) => {
+    const navigation = useNavigation();
     const {
         profile,
         bgColor,
@@ -56,7 +57,9 @@ const SetUpScreen = ({navigation}) => {
         let token = state.token
         dispatch(getSyllabusByUser(userId, token));
         dispatch(getGoalByUser(userId, token));
-    }, [syllabus.length, goals.length]);
+
+        setModalVisible(props.route.params.isAddModalVisible)
+    }, [syllabus.length, goals.length,props.route.params.isAddModalVisible]);
 
     return (
       <View style={{ flex:1}}>

@@ -9,7 +9,7 @@ import color from '../../styles/colors'
 import { useNavigation } from '@react-navigation/native'
 
 const ForeGroundNotification = ({
-    //setModalForegroundVisible,
+    setModalForegroundVisible,
     ...props
 }) => {
 
@@ -28,7 +28,7 @@ const ForeGroundNotification = ({
 
     const seeAll = () => {
         setModalForegroundVisible(false)
-        navigation.navigate('Assignment')
+        navigation.navigate('NotificationListScreen')
     }
    
     let notificationList = props.notifications.sort(function(a,b){

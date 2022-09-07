@@ -43,7 +43,7 @@ const PdfViewerScreen = props => {
             <Text style={[label.boldLargeHeading, {color: color.textDefault,textAlign:'right', width:'15%'}]}>
               OCR
             </Text>
-            <TouchableOpacity onPress={() => scanPdf()}>
+            <TouchableOpacity onPress={() => scanPdf(props.route.params.nextScreen)}>
                 <Text style={[label.boldMediumHeading, {color: color.textDefault}]}>Scan</Text>
             </TouchableOpacity>
           </View>

@@ -46,8 +46,10 @@ const method = (navigation) => {
         if(isValidEmail && isValidPassword){
             setIsLoading(true)
             if(isSignUp){
+                dispatch({type: 'RESET'})
                 await signUp({email, password, isGoogleSignIn}) 
             }else{
+                dispatch({type: 'RESET'})
                 await signIn({email, password, isGoogleSignIn})
             }
             setIsLoading(false)
