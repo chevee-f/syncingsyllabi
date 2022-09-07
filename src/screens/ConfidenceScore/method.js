@@ -17,6 +17,7 @@ const method = (props) => {
     });
 
     useEffect(() => {
+        console.log("new confidence score creen=======================")
     }, [classSyllabi,ocrResults]);
 
     const syllabusItems = [
@@ -38,7 +39,7 @@ const method = (props) => {
         },
     ];
 
-    const assignment = [
+    const assignmentsItems = [
         {
             title: `Assignment Title or Subject`,
             field: 'subjectTitle'
@@ -94,7 +95,7 @@ const method = (props) => {
     return {
        ocrResults,
        syllabusItems,
-       assignment,
+       assignmentsItems,
        assignments,
        onSelect,
        activeTab,

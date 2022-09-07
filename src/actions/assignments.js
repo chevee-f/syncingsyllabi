@@ -7,6 +7,9 @@ import Moment from 'moment';
 export const GET_ASSIGNMENTS_BY_USER = 'GET_ASSIGNMENTS_BY_USER';
 export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
     export const addAssignments = (assignment, userId, token, date) => {
+        console.log("adding this->>>>>>>>>>>>>>>>>>>>>")
+        console.log(assignment)
+        console.log(date)
         try {
             return async dispatch => {
                 const formData = new FormData();
@@ -16,7 +19,10 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 formData.append('Notes', assignment.notes);
                 formData.append('AssignmentDateEnd', date);
                 formData.append('ColorInHex', '');
-                formData.append('AttachmentFile', assignment.attachments);
+                if(String(assignment.attachments) == "")
+                    assignment.attachments = null;
+                if(assignment.attachments != null)
+                    formData.append('AttachmentFile', assignment.attachments);
                 let res = await fetch(`${getAPIBaseUrl()}Assignment/CreateAssignment`,{
                     method: 'post',
                     headers: {
@@ -27,7 +33,8 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 });
 
                 let responseJson = await res.json();
-                // console.log(responseJson)
+                console.log("responseJson")
+                console.log(responseJson)
                 dispatch(getAssignmentsByUser(userId, token));
                 dispatch({
                     type: ADD_ASSIGNMENTS,
@@ -42,6 +49,10 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
 
   export const updateAssignment = (assignment, userId, token, date) => {
         try {
+            console.log("Updateing disVvvvvvvvvvvvvvvvvvvvvv")
+            console.log(assignment)
+            if(String(assignment.attachments) == "")
+                assignment.attachments = null;
             return async dispatch => {
                 const formData = new FormData();
                 formData.append('AssignmentId', assignment.id);
@@ -50,8 +61,9 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 formData.append('AssignmentTitle', assignment.title);
                 formData.append('Notes', assignment.notes);
                 formData.append('AssignmentDateEnd', date);
-                // formData.append('AttachmentFile', '');
-                // console.log(formData)
+                if(assignment.attachments != null) {
+                    formData.append('AttachmentFile', assignment.attachments);
+                }
                 let res = await fetch(`${getAPIBaseUrl()}Assignment/UpdateAssignment`,{
                     method: 'post',
                     headers: {
@@ -163,7 +175,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
             pad(date.getUTCDate())       + 'T' +
             pad(date.getUTCHours())      + ':' +
             pad(date.getUTCMinutes())    + ':' +
-            pad(date.getUTCSeconds())    + 'Z';
+            pad(date.getUTCSeconds());
             b = date.split("T")[0];
 
             date = new Date("2070");
@@ -172,7 +184,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
             pad(date.getUTCDate())       + 'T' +
             pad(date.getUTCHours())      + ':' +
             pad(date.getUTCMinutes())    + ':' +
-            pad(date.getUTCSeconds())    + 'Z';
+            pad(date.getUTCSeconds());
             d = date.split("T")[0];
         }
         return async dispatch => {

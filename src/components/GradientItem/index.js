@@ -32,6 +32,8 @@ const GradientItem = props => {
    
     const onTrigger = (id) => {
         props.parentCallback(id);
+        if(props.tab == 'assignments')
+          props.setAssignmentValue(props.index, id);
     }
 
     useEffect(() => {

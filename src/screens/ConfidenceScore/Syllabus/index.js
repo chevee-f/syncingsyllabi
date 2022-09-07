@@ -47,6 +47,7 @@ const Syllabus = ({
         <ScrollView>
             <View style={{flex:1, marginBottom: 10}}>
                 {props.items.map(res => {
+                    if(res.field != 'classCode')
                     return (
                         <View>
                             <View style={styles.container}>
@@ -163,7 +164,9 @@ const Syllabus = ({
                 successMessage={successMessage}
                 headerText='Success'
                 onClose={() => {setSuccessModalVisible(!successModalVisible)
-                                setActiveTab(1)}}
+                                // setActiveTab(1)
+                            
+                    navigation.navigate("MainTabScreen")}}
             />
         </ScrollView>
     )

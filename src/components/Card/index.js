@@ -93,16 +93,44 @@ const Card = ({data, ...props}) => {
   );
   
   const showNoteIcon = (item) => {
-    if(item.notes === '' && item.attachment === '') {
+    if(item.notes === '') {
       return <></>;
     } 
-    return <TouchableOpacity onPress={() => props.toggleAttachments(item)} style={{ position: 'absolute', right: 15, top: 18, height: 20, width: 20}}>
-      <Image 
-              source={require('../../assets/icons/NoteBlank.png')}
-              resizeMode='contain'
-              style={{ width: 20, height: 20 }}
-            />
-            </TouchableOpacity>;
+    return (
+      <TouchableOpacity 
+        onPress={() => props.toggleAttachments(item)} 
+        style={{ 
+          height: 20, 
+          width: 20,
+          marginRight: 5
+        }}>
+        <Image 
+          source={require('../../assets/icons/NoteBlank.png')}
+          resizeMode='contain'
+          style={{ width: 20, height: 20 }}
+        />
+      </TouchableOpacity>
+    );
+  }
+  
+  const showAttachmentIcon = (item) => {
+    if(item.attachment === null) {
+      return <></>;
+    } 
+    return (
+      <TouchableOpacity 
+        onPress={() => props.toggleAttachments(item)} 
+        style={{ 
+          height: 20, 
+          width: 20
+        }}>
+        <Image 
+          source={require('../../assets/icons/Paperclip.png')}
+          resizeMode='contain'
+          style={{ width: 20, height: 20 }}
+        />
+      </TouchableOpacity>
+    );
   }
 
   const Row = ({ item }) => {
@@ -138,8 +166,10 @@ const Card = ({data, ...props}) => {
         {Moment(item.assignmentDateEnd).format("MM/DD/YYYY") === Moment(tomorrow).format("MM/DD/YYYY") ?
                'Due Tomorrow ' + Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a") : Moment(item.assignmentDateEnd).format("MM-DD-YYYY | h:mm a")}
       </Text>
-
-      {showNoteIcon(item)}
+      <View style={{ flexDirection: 'row', position: 'absolute', top: 18, right: 15}}>
+        {showNoteIcon(item)}
+        {showAttachmentIcon(item)}
+      </View>
       
     </RectButton>;
   };

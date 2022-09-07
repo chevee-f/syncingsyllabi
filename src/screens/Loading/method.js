@@ -23,9 +23,13 @@ const method = (props) => {
     const scanOcrSyllabi = async () => {
         let userId = state.userId
         let token = state.token
-        await dispatch(scanSyllabi(userId, 1, 1, token, props.route.params.base64StringSyllabi));
+        if(props.route.params.base64StringSyllabi.length > 0) {
+            await dispatch(scanSyllabi(userId, 1, 1, token, props.route.params.base64StringSyllabi));        
+        }
+        if(props.route.params.base64StringAssignment.length > 0) {
+            await dispatch(scanSyllabi(userId, 2, 1, token, props.route.params.base64StringAssignment)); //for assignment
+        }
         setTimeout(function(){navigation.navigate('ConfidenceScoreScreen')}, 3000)
-        //await dispatch(scanSyllabi(userId, 2, 1, token, props.route.params.base64StringAssignment)); //for assignment
     }
 
     useEffect(() => {
