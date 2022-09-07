@@ -20,14 +20,14 @@ const DefaultButton = ({
           {props.title}
         </Text>
         {props.count !== undefined ?
-            props.isDone !== undefined && props.isDone ?
-              <View style={[styles.countContainer]}>
-                <Image 
-                    source={require('../../assets/icons/Vector.png')}
-                    style={styles.image}
-                />
-              </View>
-            :
+            // props.isDone !== undefined && props.isDone ?
+            //   <View style={[styles.countContainer]}>
+            //     <Image 
+            //         source={require('../../assets/icons/Vector.png')}
+            //         style={styles.image}
+            //     />
+            //   </View>
+            // :
             <View style={[styles.countContainer, {backgroundColor: props.isActive ? '#fff' : '#dee3eb'}]}>
               <Text style={styles.countText}>{props.count}</Text>
             </View>

@@ -85,7 +85,7 @@ const PdfViewerScreen = props => {
           />
         <View style={styles.checkboxContainer}>
           <Text style={[label.smallHeading2, {color: color.primary,textAlign:'right'}]}>
-            Include Page as {activeTab === 0 ? 'Syllabi' : 'Assignment'}
+            Include page as {activeTab === 0 ? 'Syllabi' : 'Assignment'}
           </Text>
           <CheckBox
               style={styles.checkbox}

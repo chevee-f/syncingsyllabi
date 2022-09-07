@@ -32,5 +32,26 @@ export default StyleSheet.create({
         width: width * 0.9,
         marginVertical: 15,
         flexDirection: 'row'
+    },
+    bottomContainer: {
+        paddingHorizontal: 25,
+        backgroundColor: '#fff',
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: width,
+        justifyContent: 'space-between',
+        height: 65,
+        borderTopColor: '#C1C6CE',
+        borderTopWidth: 0.4
+        // position: 'absolute',
+        // bottom: 0
+    },
+    removeAssignmentImage: {
+        height: height * 0.1,
+        width: width * 0.14
+    },
+    prevNextImage:{
+      height: height * 0.1,
+      width: width * 0.14,
     }
 })

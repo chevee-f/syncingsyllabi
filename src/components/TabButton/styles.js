@@ -5,13 +5,14 @@ var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
     btnContainer:{
-        height: 30,
+        height: 28,
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 16,
-
         flexDirection:'row',
-        paddingHorizontal: 10
+        paddingRight: 6,
+        paddingBottom: 1,
+        paddingLeft: 9
     },
     text:{
         fontWeight: 'bold',

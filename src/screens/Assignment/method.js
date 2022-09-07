@@ -53,6 +53,7 @@ const method = () => {
     }, []);
 
     const handleAddAssignments = async() => {
+        console.log('saving...assignments')
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
         let pad = function(num) { return ('00'+num).slice(-2) };
@@ -62,7 +63,7 @@ const method = () => {
                 pad(date.getUTCDate())       + 'T' +
                 pad(date.getUTCHours())      + ':' +
                 pad(date.getUTCMinutes())    + ':' +
-                pad(date.getUTCSeconds())    + 'Z';
+                pad(date.getUTCSeconds());
         // setClassAssignments({ ...classAssignments, dueDate: date });
         await dispatch(addAssignments(classAssignments, userId, token, date));
         if(hasError){
@@ -71,7 +72,6 @@ const method = () => {
             setSuccessMessage('Your assignment has been created!');
             setSuccessTitle('Congratulations!');
             let newArr = markedDatesArray;
-            
             setMarkedDatesArray(newArr);
             toggleModal();
             setTimeout(function(){setSuccessModalVisible(true)}, 1000)
@@ -83,7 +83,7 @@ const method = () => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
         let date = classAssignments.dueDate;
-        date = date + 'Z';
+        date = date;
         await dispatch(updateAssignment(classAssignments, userId, token, date));
         
         if(hasError){
@@ -223,7 +223,7 @@ const method = () => {
     const [successMessage, setSuccessMessage] = useState('');
     const [successTitle, setSuccessTitle] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
-    const [action, setAction] = React.useState('')
+    const [action, setAction] = React.useState('');
     const [confirmationVisible, setConfirmationVisible] = React.useState(false)
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [cardData, setCardData] = React.useState([]);

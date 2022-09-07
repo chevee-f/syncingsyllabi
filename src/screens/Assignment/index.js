@@ -25,10 +25,11 @@ import WeekdayTimePicker from '../../components/WeekdayTimePicker';
 import Moment from 'moment';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import SuccessModal from '../../components/SuccessModal';
-import DocumentPicker, { types } from 'react-native-document-picker'
+import DocumentPicker, { types } from 'react-native-document-picker';
+import { WebView } from 'react-native-webview';
 
 var {height, width} = Dimensions.get('window');
-const AssignmentScreen = (navigation) => {
+const AssignmentScreen = (props) => {
   const [selectedValue, setSelectedValue] = React.useState(false);
 
   const [value, setValue] = React.useState('id');
@@ -52,15 +53,10 @@ const AssignmentScreen = (navigation) => {
   const [duedateHasError, setDuedateHasError] = useState(false);
   const [classHasError, setClassHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
-  const [isAwait, setIsAwait] = useState(0)
+  const [isAwait, setIsAwait] = useState(0);
+  const [isAttachmentVisible, setIsAttachmentVisible] = useState(false);
+  const [attachmentUrl, setAttachmentUrl] = useState("");
   const dispatch = useDispatch();
-  useEffect(() => {
-    let userId = state.userId
-    let token = state.token
-    dispatch(getAssignmentsByUser(userId, token));
-    dispatch(getSyllabusByUser(userId, token));
-    useEffectFunction();
-  }, []);
 
   useEffect(() => {
     
@@ -112,6 +108,24 @@ const AssignmentScreen = (navigation) => {
     callme,
     useEffectFunction
   } = method();
+
+  useEffect(() => {
+    let userId = state.userId
+    let token = state.token
+    dispatch(getAssignmentsByUser(userId, token));
+    dispatch(getSyllabusByUser(userId, token));
+    useEffectFunction();
+  }, []);
+
+  useEffect(() => {
+    console.log("assignments useeffect from assignments-----------------------");
+    useEffectFunction();
+  }, [assignments.length]);
+
+  useEffect(async() => {
+    console.log("counter, populate assignments via assignments------asd-asd-asd-" + props.route)
+    useEffectFunction();
+  }, [props.counter]);
 
   let fetchedDates1 = [
     {
@@ -193,6 +207,9 @@ const AssignmentScreen = (navigation) => {
     toggleModal();
     setSyllabusId(res.syllabusId)
     console.log(res)
+    let tempAtt = res.attachmentFileName;
+    if(tempAtt == null)
+      tempAtt = [];
     setClassAssignments({...classAssignments, 
       id: res.id, 
       title: res.assignmentTitle, 
@@ -200,11 +217,11 @@ const AssignmentScreen = (navigation) => {
       notes: res.notes,
       syllabusId: res.syllabusId,
       attachments: res.attachment,
-      attachmentFileName: res.attachmentFileName
+      attachmentFileName: tempAtt
     });
   }
 
-  const saveAssignment = () => {
+  const saveAssignment = async () => {
     if(classAssignments.dueDate !== "" && classAssignments.title !== "" && classAssignments.syllabusId !== "") {
       if(classAssignments.id !== '')
         handleUpdateAssignment();
@@ -292,21 +309,38 @@ const AssignmentScreen = (navigation) => {
   }
 
   const toggleAttachments = (item) => {
+    console.log(item)
     setNote(item.notes);
     setAttachmentsVisible(!attachmentsVisible);
+    if(item.attachmentFileName != null) {
+        console.log('is true')
+        setAttachments(item.attachmentFileName)
+        setAttachmentUrl(item.attachment)
+        console.log(item.attachment)
+    }
+    else {
+        setAttachments("")
+        setAttachmentUrl("")
+    }
   }
   
-  const showAttachment = () => {
-    let tempAttach = '';
-    if(attachments.length > 0)
-      tempAttach = attachments[0].name
-    else if(!Array.isArray(classAssignments.attachments))
-      tempAttach = classAssignments.attachmentFileName
+  const showAttachment = (tempAttach = '', isAdd = true) => {
+    if(Array.isArray(attachments) && tempAttach == '') {
+        if(attachments.length > 0)
+            tempAttach = attachments[0].name
+        else if(!Array.isArray(classAssignments.attachments))
+            tempAttach = classAssignments.attachmentFileName
+    }
     if(tempAttach != '')
       return (
           <View style={{ marginVertical: 5, paddingHorizontal: 16, paddingVertical: 5, borderWidth: 1, borderStyle: "dashed", borderRadius: 16, width: "100%" }}>
-            <View style={{ flex: 1, width: "100%", alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{tempAttach}</Text>
+            <View style={{ width: "100%", alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
+              <TouchableOpacity style={{ width: "85%" }} onPress={() => {
+                console.log(attachmentUrl)
+                setIsAttachmentVisible(!isAttachmentVisible)
+              }}>
+                <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{tempAttach}</Text>
+              </TouchableOpacity>
               <TouchableOpacity 
                 style={{ 
                   paddingLeft: 20, 
@@ -322,22 +356,25 @@ const AssignmentScreen = (navigation) => {
             </View>
           </View>
       );
-    else
-      return (
-        <View>
-          <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
-          <SecondaryButton onPress={async() => {
-            const attachment = await DocumentPicker.pickSingle({
-                type: [types.pdf, types.images]
-            });
-            
-            let attachmentsArray = attachments;
-            attachmentsArray.push(attachment);
-            setClassAssignments({...classAssignments, attachments: attachmentsArray[0]})
-            setIsAwait(isAwait+1);
-          }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
-        </View>
-      )
+    else {
+        if(isAdd) {
+            return (
+                <View>
+                <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
+                <SecondaryButton onPress={async() => {
+                    const attachment = await DocumentPicker.pickSingle({
+                        type: [types.pdf, types.images]
+                    });
+                    
+                    let attachmentsArray = attachments;
+                    attachmentsArray.push(attachment);
+                    setClassAssignments({...classAssignments, attachments: attachmentsArray[0], attachmentFileName: attachmentsArray[0].name})
+                    setIsAwait(isAwait+1);
+                }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
+                </View>
+            )
+        }
+    }
   }
   
   return (
@@ -462,7 +499,35 @@ const AssignmentScreen = (navigation) => {
           }}
         />
         {/* <Button title="Show modal" onPress={toggleModal} /> */}
-
+        <Modal 
+            isVisible={isAttachmentVisible} 
+            onBackdropPress={() => setIsAttachmentVisible(!isAttachmentVisible)}
+            transparent={true} 
+            animationInTiming={300}
+            animationOutTiming={300}
+            backdropTransitionInTiming={0}
+            backdropTransitionOutTiming={0}
+            backdropOpacity={0.4}
+            style={{ marginVertical: 120, backgroundColor: 'white', padding: 15, borderRadius: 8, height: 550, flex: 0 }}>
+            <WebView 
+                style={{ }} 
+                automaticallyAdjustContentInsets={false}
+                source={{ uri: attachmentUrl }} />
+            <View style={{ height: 15}}></View>
+            <DefaultButton 
+                    title="Close" 
+                    style={{ }}
+                    buttonColor={{ 
+                      backgroundColor: "#E6EAF2", 
+                      borderColor: '#A6BEED',
+                      borderWidth: 1
+                    }}
+                    textStyle={{ 
+                      color: '#494AE2'
+                    }}
+                    onPress={() => setIsAttachmentVisible(!isAttachmentVisible)}
+                  /> 
+        </Modal>
         <Modal 
           isVisible={isModalVisible} 
           style={{
@@ -478,6 +543,32 @@ const AssignmentScreen = (navigation) => {
           backdropOpacity={0.4}
           // propagateSwipe={true}
           >
+          <DateTimePicker 
+              onClose={() => { setCalendarVisible(!calendarVisible); }}
+              modalVisible={calendarVisible} 
+              showTimePicker={false}
+              onChangeDate={(startDate) =>  {
+                setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
+                setDuedateHasError(false);
+                setErrorMessage(false);
+              }}
+              onSelectDate={() => setCalendarVisible(!calendarVisible)}
+          />
+  
+          {/* <DateTimePicker 
+              onClose={() => { setAllCalendarVisible(!allCalendarVisible); }}
+              modalVisible={allCalendarVisible} 
+              showTimePicker={false}
+              showAllAssignment={true}
+              showAllAssignments={showAllAssignments}
+              onChangeDate={(selectedDate) =>  {
+                  setAllCalendarVisible(!allCalendarVisible);
+                  setIsShowAll(false);
+                  callme(selectedDate)
+                  useEffectFunction();
+              }}
+              onSelectDate={{}}
+          /> */}
           <View style={{
             height: '66%',
             marginTop: 'auto',
@@ -523,6 +614,7 @@ const AssignmentScreen = (navigation) => {
                             return (
                               <GradientItem 
                                 parentCallback = {handleCallback}
+                                key={item.id}
                                 code={item.className}
                                 name={item.teacherName}
                                 schedule={!item.classSchedule ? '' : item.classSchedule.map(function(data){return data;}).join("|")}
@@ -639,7 +731,7 @@ const AssignmentScreen = (navigation) => {
           onBackdropPress={() => setAttachmentsVisible(!attachmentsVisible)} 
           >
             <View style={{
-            height: 250,
+            height: attachments != '' ? 310 : 250,
             backgroundColor:'white',
             position: 'relative',
             borderRadius: 16,
@@ -659,14 +751,15 @@ const AssignmentScreen = (navigation) => {
                     style={{
                       backgroundColor: '#FAF6EA', 
                       marginTop: 10, 
-                      marginBottom: 24, 
+                      marginBottom: 10, 
                       paddingTop: 10,
                       borderBottomLeftRadius: 10,
                       borderBottomRightRadius: 10
                     }}
                     value={note}
                   />
-                  {/* {attachments.map((item) => {})} */}
+                    <View style={{ marginBottom: 10 }}>
+                    {showAttachment(attachments, false)}</View>
                   <DefaultButton 
                     title="Close" 
                     style={{ marginBottom: 10 }}
@@ -743,7 +836,6 @@ const AssignmentScreen = (navigation) => {
         onClose={() => {
           setSuccessModalVisible(!successModalVisible);
           useEffectFunction("success");
-          
         }}
       />
 

@@ -174,7 +174,7 @@ const WeekdayTimePicker = ({
                         <View style={styles.addContainer}>
                             <DefaultButton title="Add Schedule" onPress={props.add} containerStyle={styles.addButton}/>
                         </View>
-                        <View style={styles.flatListContainer}>
+                        <SafeAreaView style={styles.flatListContainer}>
                             <FlatList
                                 data={props.list}
                                 renderItem={({ item, index }) => (
@@ -182,7 +182,7 @@ const WeekdayTimePicker = ({
                                  )}
                                 ListEmptyComponent={emptyListMessage}
                             />
-                        </View>
+                        </SafeAreaView>
                     </View>
                    
                     <View style={styles.buttonContainer}>

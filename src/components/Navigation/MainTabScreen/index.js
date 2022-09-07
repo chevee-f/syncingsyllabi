@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text,View,Image,Platform,Dimensions,TouchableOpacity } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,10 +19,17 @@ const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 var {height, width} = Dimensions.get('window');
 
-const MainTabScreen = () => {
+const MainTabScreen = ({ route, navigation }) => {
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('Home');
-  const [counter, setCounter] = useState(0)
+  const [counter, setCounter] = useState(0);
+  const [currentRoute, setCurrentRoute] = useState('Home')
+
+  useEffect(() => {
+    console.log("SHOULD UPDATE COUNTERRRRRRRRRRRRRRRRRR")
+  }, [route.params]);
+
     return (
       <>
         <Tab.Navigator
@@ -33,7 +40,7 @@ const MainTabScreen = () => {
         >
           <Tab.Screen
               name="Home"
-              children={({navigation}) => {
+              children={({navigation, route}) => {
                 return(
                   <Stack.Navigator screenOptions={{
                     headerStyle:{
@@ -45,8 +52,8 @@ const MainTabScreen = () => {
                     
                   }}>
                       <Stack.Screen 
-                        name="Homee" 
-                        children={() => <HomeScreen counter={counter} />}
+                        name="Home" 
+                        children={() => <HomeScreen counter={counter} route={currentRoute} />}
                         options={{ headerLeft: null }} />
                   </Stack.Navigator>
                 )
@@ -72,6 +79,7 @@ const MainTabScreen = () => {
               }}
               listeners={() => ({
                 tabPress: e => {
+                  setCurrentRoute('Home');
                   setCounter(counter+1);
                   setSelectedComponent('Home')
                 },
@@ -79,7 +87,30 @@ const MainTabScreen = () => {
           />
           <Tab.Screen
               name="Calendar"
-              component={CalendarStackScreen}
+              children={({navigation, route}) => {
+                return(
+                  <Stack.Navigator screenOptions={{
+                    headerStyle:{
+                      backgroundColor: color.primary
+                    },
+                    title: '',
+                    headerTintColor:'#fff',
+                    header: () => <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.11 : height * 0.13}]}>
+                                    <View style={styles.titleContainer}>
+                                        <Text style={[label.boldMediumHeading, {color: color.textDefault, textAlign:'center'}]}>
+                                          Calendar
+                                        </Text>
+                                    </View>
+                                  </View>
+                    
+                  }}>
+                      <Stack.Screen 
+                        name="Calendar" 
+                        children={() => <CalendarScreen counter={counter} route={currentRoute} />}
+                        options={{ headerLeft: null }} />
+                  </Stack.Navigator>
+                )
+              }}
               options={{
               tabBarIcon: ({ focused }) => (
                   <View style={styles.iconContainer}>
@@ -101,6 +132,8 @@ const MainTabScreen = () => {
               }}
               listeners={() => ({
                 tabPress: e => {
+                  setCurrentRoute('Calendar');
+                  setCounter(counter+1);
                   setSelectedComponent('Calendar')
                 },
               })}
@@ -165,7 +198,7 @@ const MainTabScreen = () => {
           />
           <Tab.Screen
               name="Assignment"
-              component={AssignmentScreen}
+              children={({navigation, route}) => <AssignmentScreen counter={counter} route={currentRoute} />}
               options={{
               tabBarIcon: ({ focused }) => (
                   <View style={styles.iconContainer}>
@@ -189,6 +222,8 @@ const MainTabScreen = () => {
               }}
               listeners={({ navigation, route }) => ({
                 tabPress: e => {
+                  setCurrentRoute('Assignment');
+                  setCounter(counter+1);
                   setSelectedComponent('Assignment')
                 },
               })}
