@@ -120,7 +120,7 @@ const CalendarScreen = (props) => {
 
     useEffect(async() => {
       console.log("counter, populate assignments via CALENDAR------qwe-qwe-QWE-" + props.route)
-      useEffectFunction();
+      useEffectFunction("success");
     }, [props.counter]);
 
   // const useEffectFunction = (status = "") => {

@@ -67,7 +67,7 @@ const MainHeader = props => {
     }
 
     return (
-        <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.21 : height * 0.28}]}>
+        <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.21 : height * 0.23}]}>
             <View>
                 <View style={styles.topLineContainer}>
                     <Image 

@@ -124,7 +124,7 @@ const AssignmentScreen = (props) => {
 
   useEffect(async() => {
     console.log("counter, populate assignments via assignments------asd-asd-asd-" + props.route)
-    useEffectFunction();
+    useEffectFunction("success");
   }, [props.counter]);
 
   let fetchedDates1 = [
@@ -604,7 +604,7 @@ const AssignmentScreen = (props) => {
                   <View style={{marginTop: 24}}>
                     <Label text="Select Class *" />
                     <View style={{flexDirection:'row'}}>
-                      <AddItem onPress={() => setModalVisible(true)} />
+                      {/* <AddItem onPress={() => setModalVisible(true)} /> */}
                       <ScrollView horizontal>
                         {syllabus.length > 0 &&
                           syllabus.map((item) => {

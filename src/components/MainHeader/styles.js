@@ -8,7 +8,8 @@ export default StyleSheet.create({
     headerContainer:{
         backgroundColor: color.primary,
         borderBottomRightRadius: 25,
-        borderBottomLeftRadius: 25
+        borderBottomLeftRadius: 25,
+        overflow: 'hidden'
       },
       titleContainer:{
         flexDirection: 'row',
