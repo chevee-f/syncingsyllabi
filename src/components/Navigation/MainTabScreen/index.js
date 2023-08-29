@@ -14,22 +14,50 @@ import GoalScreen from '../../../screens/Goal';
 import MainHeader from '../../MainHeader'
 import styles from './styles'
 import SelectSyllabus from '../../../screens/Syllabus/Select';
+import {Context as AuthContext} from '../../../components/Context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { getGoalByUser } from '../../../actions/goal';
+import { getAssignmentsByUser } from '../../../actions/assignments';
+import { getSyllabusByUser } from '../../../actions/syllabus';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 var {height, width} = Dimensions.get('window');
 
 const MainTabScreen = ({ route, navigation }) => {
-  
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState('Home');
   const [counter, setCounter] = useState(0);
   const [currentRoute, setCurrentRoute] = useState('Home')
 
-  useEffect(() => {
-    console.log("SHOULD UPDATE COUNTERRRRRRRRRRRRRRRRRR")
-  }, [route.params]);
+  const { state } = useContext(AuthContext);
+  const { goals } = useSelector(state => state.goalReducer);
+  const { assignments } = useSelector(state => state.assignmentsReducer);
+  const { syllabus } = useSelector(state => state.syllabusReducer);
 
+  const dispatch = useDispatch();
+  useEffect(async() => {
+    console.log("SHOULD UPDATE COUNTERRRRRRRRRRRRRRRRRR AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    
+    // let userId = state.userId
+    // let token = state.token
+    // await dispatch(getAssignmentsByUser(userId, token));
+    // await dispatch(getGoalByUser(userId, token));
+    // console.log(assignments)
+    console.log(route)
+    if(route.params)
+      console.log('has params')
+  }, []);
+
+  // useEffect(async ()=> {
+  //   if(assignments.length > 0) {
+  //     console.log(JSON.stringify(assignments))
+  //     await AsyncStorage.setItem('@assignments', JSON.stringify(assignments))
+  //   }
+  // }, [assignments.length])
+    if(route.params)
+      console.log('has params')
     return (
       <>
         <Tab.Navigator
@@ -40,7 +68,7 @@ const MainTabScreen = ({ route, navigation }) => {
         >
           <Tab.Screen
               name="Home"
-              children={({navigation, route}) => {
+              children={({navigation, route1}) => {
                 return(
                   <Stack.Navigator screenOptions={{
                     headerStyle:{
@@ -53,7 +81,12 @@ const MainTabScreen = ({ route, navigation }) => {
                   }}>
                       <Stack.Screen 
                         name="Home" 
-                        children={() => <HomeScreen counter={counter} route={currentRoute} />}
+                        children={() => <HomeScreen counter={()=> {
+                          if(route.params) {
+                            return route.params.counter
+                          }
+                          return counter;
+                        }} route={currentRoute} />}
                         options={{ headerLeft: null }} />
                   </Stack.Navigator>
                 )
@@ -87,30 +120,7 @@ const MainTabScreen = ({ route, navigation }) => {
           />
           <Tab.Screen
               name="Calendar"
-              children={({navigation, route}) => {
-                return(
-                  <Stack.Navigator screenOptions={{
-                    headerStyle:{
-                      backgroundColor: color.primary
-                    },
-                    title: '',
-                    headerTintColor:'#fff',
-                    header: () => <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.11 : height * 0.13}]}>
-                                    <View style={styles.titleContainer}>
-                                        <Text style={[label.boldMediumHeading, {color: color.textDefault, textAlign:'center'}]}>
-                                          Calendar
-                                        </Text>
-                                    </View>
-                                  </View>
-                    
-                  }}>
-                      <Stack.Screen 
-                        name="Calendar" 
-                        children={() => <CalendarScreen counter={counter} route={currentRoute} />}
-                        options={{ headerLeft: null }} />
-                  </Stack.Navigator>
-                )
-              }}
+              children={({navigation, route}) => <CalendarScreen counter={counter} route={currentRoute} />}
               options={{
               tabBarIcon: ({ focused }) => (
                   <View style={styles.iconContainer}>
@@ -198,7 +208,12 @@ const MainTabScreen = ({ route, navigation }) => {
           />
           <Tab.Screen
               name="Assignment"
-              children={({navigation, route}) => <AssignmentScreen counter={counter} route={currentRoute} />}
+              children={({navigation, route}) => <AssignmentScreen counter={()=> {
+                if(route.params) {
+                  return route.params.counter
+                }
+                return counter;
+              }} route={currentRoute} />}
               options={{
               tabBarIcon: ({ focused }) => (
                   <View style={styles.iconContainer}>

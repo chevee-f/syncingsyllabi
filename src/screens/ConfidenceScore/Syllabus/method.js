@@ -51,14 +51,29 @@ const method = (setClassSyllabi,classSyllabi) => {
             ['#654EA3', '#EAAFC8']
         ]
     );
+    
+    const handleValidSyllabi = () => {
+        if(classSyllabi.teacherName === ''){
+            message = 'Please enter Teacher Name' 
+            return message
+        }else if(classSyllabi.className === ''){
+            message = 'Please enter Class Name'
+            return message
+        }else if(classSyllabi.schedule === ''){
+            message = 'Please enter Schedule'
+            return message
+        }
+        return ''
+    }
 
     const handleValidSchedule = () => {
+        console.log(classSyllabi)
         if(classSyllabi.teacherName === ''){
             setInvalidMessage('Please enter Teacher Name')
             return false
-        }else if(classSyllabi.classCode === ''){
-            setInvalidMessage('Please enter Class Code')
-            return false
+        // }else if(classSyllabi.classCode === ''){
+        //     setInvalidMessage('Please enter Class Code')
+        //     return false
         }else if(classSyllabi.className === ''){
             setInvalidMessage('Please enter Class Name')
             return false
@@ -70,7 +85,7 @@ const method = (setClassSyllabi,classSyllabi) => {
     }
 
     const handleUpdateSyllabus = async() => {
-        if (handleValidSchedule()){
+        if (handleValidSyllabi() == ''){
             let userId = state.userId
             let token = state.token
             await dispatch(updateSyllabus(classSyllabi, userId, token))
@@ -82,15 +97,20 @@ const method = (setClassSyllabi,classSyllabi) => {
                 setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }
         }else{
-            Alert.alert('Required field', JSON.stringify(invalidMessage))
+            setIsLoading(false)
+            Alert.alert('Required field', handleValidSyllabi())
         }
     }
     
     const handleAddSyllabus = async() => {
-        if (handleValidSchedule()){
+        if (handleValidSyllabi() == ''){
             let userId = state.userId
             let token = state.token
-            await dispatch(addSyllabus(classSyllabi, userId, token))
+            let classCodes = [];
+            for(let i = 0; i < syllabus.length; i++) {
+                classCodes.push(syllabus[i].classCode)
+            }
+            await dispatch(addSyllabus(classSyllabi, userId, token, classCodes))
             if(hasError){
                 Alert.alert("Error", error);
             }else{
@@ -99,7 +119,8 @@ const method = (setClassSyllabi,classSyllabi) => {
                 setTimeout(function(){setSuccessModalVisible(true)}, 1000)
             }
         }else{
-            Alert.alert('Required field', JSON.stringify(invalidMessage))
+            setIsLoading(false)
+            Alert.alert('Required field', handleValidSyllabi())
         }
     }
 

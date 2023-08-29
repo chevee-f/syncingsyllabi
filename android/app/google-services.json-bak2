@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "192381362508",
+    "project_id": "syncing-syllabi-ddb6e",
+    "storage_bucket": "syncing-syllabi-ddb6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192381362508:android:507c0b0d50cb56e1e2efe9",
+        "android_client_info": {
+          "package_name": "com.creativeinterlace.SyncingSyllabi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192381362508-134lo6c77j66gmnqml52ir3vdvhlhpbe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsJ4z0wwefWIrnOtFlOm43X3jtiH-mLog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192381362508-134lo6c77j66gmnqml52ir3vdvhlhpbe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "192381362508-apu53pt1h4907dd45mgsit8oj6nied0n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.creativeinterlace.SyncingSyllabi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

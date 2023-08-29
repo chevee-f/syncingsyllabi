@@ -23,6 +23,7 @@ const method = () => {
     const [selectedItem, setSelectedItem] = useState(7);
     const [action, setAction] = useState('');
     const [activeTab, setActiveTab] = useState(1);
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
     const typeOfGoal = [
       {name: 'Short-Term', value: 1},
       {name: 'Medium-Term', value: 2},
@@ -64,6 +65,7 @@ const method = () => {
       if(goal.isCompleted || goal.isArchived){
         handleUpdateGoal()
       }
+      console.log("MY GOAL---USEEFFECT")
     }, [error, goal]);
 
     const onSelect = (value) => {
@@ -71,19 +73,23 @@ const method = () => {
     }
     
     const onClickAction = (action,id) => {
-      setGoalId(id)
-      setAction(action)
-      if(action === 'Edit'){
-       setGoalVisible(true)
-      }else if(action === 'Complete'){
-        setConfirmationMessage('Complete this Goal?')
-        setConfirmationVisible(true)
-      }else if(action === 'Archive'){
-        setConfirmationMessage('Archive this Goal?')
-        setConfirmationVisible(true)
-      }else{
-        setConfirmationMessage('Remove this Goal?')
-        setConfirmationVisible(true)
+      if(state.userId) {
+        setGoalId(id)
+        setAction(action)
+        if(action === 'Edit'){
+        setGoalVisible(true)
+        }else if(action === 'Complete'){
+          setConfirmationMessage('Complete this Goal?')
+          setConfirmationVisible(true)
+        }else if(action === 'Archive'){
+          setConfirmationMessage('Archive this Goal?')
+          setConfirmationVisible(true)
+        }else{
+          setConfirmationMessage('Remove this Goal?')
+          setConfirmationVisible(true)
+        }
+      } else {
+        setNotAvailableModalVisible(true);
       }
     }
 
@@ -156,6 +162,8 @@ const method = () => {
       action,
       isOpenMenu,
       selectedItem,
+      notAvailableModalVisible,
+      setNotAvailableModalVisible,
       setSelectedItem,
       setIsOpenMenu,
       setSuccessModalVisible,

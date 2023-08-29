@@ -34,7 +34,9 @@ const PdfViewerScreen = props => {
       <View style={{ height: height}}>
         <View style={styles.headerContainer}>
           <View style={styles.titleContainer}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => {
+              navigation.goBack()
+            }}>
               <Image source={require('../../assets/icons/CaretRight.png')}
                   resizeMode='contain'
                   style={styles.image}
@@ -69,8 +71,9 @@ const PdfViewerScreen = props => {
           <Pdf
             source={{uri:`${props.route.params.source}`}}
             trustAllCerts={false}
-            onLoadComplete={(numberOfPages, filePath) => {
+            onLoadComplete={(numberOfPages, pdfPath) => {
               setTotalPages(numberOfPages);
+              console.log("THIS IS LOADED")
             }}
             onPageChanged={(page, numberOfPages) => {
               setCurrentPage(page); 
@@ -82,6 +85,7 @@ const PdfViewerScreen = props => {
             enablePaging={true}
             page={pdfPage}
             style={styles.pdf}
+            
           />
         <View style={styles.checkboxContainer}>
           <Text style={[label.smallHeading2, {color: color.primary,textAlign:'right'}]}>
@@ -97,7 +101,9 @@ const PdfViewerScreen = props => {
           />
         </View>
         <View style={styles.bottomContainer}>
-          <TouchableOpacity onPress={() => setPdfPage(currentPage - 1)}>
+          <TouchableOpacity onPress={() => {
+            setPdfPage(currentPage - 1)
+            }}>
             <Image source={require('../../assets/icons/CaretCircle.png')}
                     resizeMode='contain'
                     style={styles.prevNextImage}/>
@@ -105,7 +111,9 @@ const PdfViewerScreen = props => {
               <Text style={[label.smallHeading2, {color: color.primary}]}>
                   {currentPage}/{totalPages}
               </Text>
-          <TouchableOpacity onPress={() => setPdfPage(currentPage + 1)}>
+          <TouchableOpacity onPress={() => {
+            setPdfPage(currentPage + 1)
+          }}>
             <Image source={require('../../assets/icons/CaretCircle.png')}
                     resizeMode='contain'
                     style={[styles.prevNextImage, {transform: [{ rotate: "180deg" }]}]}/>

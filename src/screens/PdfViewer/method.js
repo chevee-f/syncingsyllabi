@@ -20,7 +20,7 @@ const method = (props) => {
     const onSelect = (value) => {
         setActiveTab(value)
         setCurrentPage(1)
-        setPdfPage(0)
+        setPdfPage(1)
     }
 
     const includePages = () => {
@@ -38,22 +38,24 @@ const method = (props) => {
     useEffect(() => {
         setIsLoading(true)
         readPdf()
-        // console.log("new file")
-        setCurrentPage(1)
-        setPdfPage(0)
         setActiveTab(0)
     }, [props.route.params.file]);
 
     const readPdf = async() => {
         const pdfData = await RNFS.readFile(decodeURI(props.route.params.file.uri), 'base64');
         setPdfData(pdfData)
+        setPdfPage(1)
+        setCurrentPage(1)
         setIsLoading(false)
+        setIncludedPagesInSyllabi([])
+        setIncludedPagesInAssignment([])
     }
 
     const scanPdf = async(nextScreen) => {
         try{
             const pdfDocSyllabi = await PDFDocument.load(pdfData);
             const pdfDocAssignment = await PDFDocument.load(pdfData);
+            const ogpdfDocAssignment = await PDFDocument.load(pdfData);
 
             let base64ArraySyllabi = [];
             let base64ArrayAssignment = [];
@@ -64,6 +66,7 @@ const method = (props) => {
             // const indices = pdfDocAssignment.getPageIndices()
             // console.log("indices=============")
             // console.log(indices)
+            const assignmentIndices = [];
             for(let i = totalPages-1; i >= 0; i--) {
                 if(includedPagesInSyllabi.length > 0) {
                     if(includedPagesInSyllabi.indexOf(i+1) < 0) {
@@ -75,12 +78,15 @@ const method = (props) => {
                     if(includedPagesInAssignment.indexOf(i+1) < 0) {
                         console.log("removing a " + i) 
                         pdfDocAssignment.removePage(i);
+                    } else {
+                        assignmentIndices.push(i)
                     }
                 }
             }
-
+            // console.log(assignmentIndices)
             // console.log("NEW !!!!!!! indices=============")
             // console.log(pdfDocAssignment.getPageIndices())
+            // return
             if(activeTab == 0) {
                 for(let i = 0; i < includedPagesInSyllabi.length; i++) {
                     let newPdfDoc = await PDFDocument.create();
@@ -93,19 +99,25 @@ const method = (props) => {
             }
 
             if(activeTab == 1) {
-                for(let i = 0; i < includedPagesInAssignment.length; i++) {
+                for(let i = includedPagesInAssignment.length-1; i >=0 ; i--) {
                     let newPdfDoc = await PDFDocument.create();
-                    const [copiedPages] = await newPdfDoc.copyPages(pdfDocAssignment, [i])
+                    // console.log(pdfDocAssignment.getPageIndices())
+                    const [copiedPages] = await newPdfDoc.copyPages(pdfDocAssignment, [assignmentIndices[i]])
                     newPdfDoc.addPage(copiedPages)
+                    
                     // console.log(pdfDocAssignment.getPageCount())
-                    // const base64 = await newPdfDoc.saveAsBase64(); 
-                    const base64 = await pdfDocAssignment.saveAsBase64(); 
+                    const base64 = await newPdfDoc.saveAsBase64(); 
+                    // const base64 = await pdfDocAssignment.saveAsBase64(); 
                     // console.log(base64)
+                    // console.log("-------------------------")
+                    // console.log("-------------------------")
                     base64ArrayAssignment.push(base64);
                 }
             }
             // return;
+            // console.log(activeTab)
             // console.log(base64ArrayAssignment)
+            // return;
             setIncludedPagesInSyllabi([])
             setIncludedPagesInAssignment([])
             setSyllabiPagesCount(0)

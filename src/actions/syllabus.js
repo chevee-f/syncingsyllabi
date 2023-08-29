@@ -6,19 +6,37 @@ export const GET_SYLLABUS_BY_USER = 'GET_SYLLABUS_BY_USER';
 export const ADD_SYLLABUS = 'ADD_SYLLABUS';
 export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
 
-  export const addSyllabus = (syllabus, userId, token) => {
+  export const addSyllabus = (syllabus, userId, token, classCodes=[]) => {
     try {
+      console.log("adding syllabus")
+      console.log(syllabus)
+      let randCheck = true;
+      let classCode = 0;
+      while(randCheck) {
+        classCode = Math.floor(Math.random() * 1000);
+        randCheck = classCodes.includes(classCode);
+        if(!randCheck)
+          randCheck = false;
+      }
       return async dispatch => {
-        let classCode = syllabus.classCode.replace(/[ )(]/g,'');
+        // let classCode = syllabus.classCode.replace(/[ )(]/g,'');
         let className = syllabus.className.replace(/[ )(]/g,'');
+        console.log({
+          "userId": parseInt(userId),
+          "classCode": JSON.stringify(classCode),
+          "className": className,
+          "teacherName": syllabus.teacherName,
+          "classSchedule": syllabus.schedule,
+          "colorInHex": JSON.stringify(syllabus.colorInHex)
+        })
         axios.post(`${getAPIBaseUrl()}Syllabus/CreateSyllabus`,
         {
-            "userId": parseInt(userId),
-            "classCode": classCode,
-            "className": className,
-            "teacherName": syllabus.teacherName,
-            "classSchedule": syllabus.schedule,
-            "colorInHex": JSON.stringify(syllabus.colorInHex)
+          "userId": parseInt(userId),
+          "classCode": JSON.stringify(classCode),
+          "className": className,
+          "teacherName": syllabus.teacherName,
+          "classSchedule": syllabus.schedule,
+          "colorInHex": JSON.stringify(syllabus.colorInHex)
         },
         { headers: {"Authorization" : `Bearer ${token}`} })
         .then((res) => {
@@ -26,11 +44,12 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
             dispatch({ type: 'CLEAR_ERROR', payload: [] });
             dispatch(getSyllabusByUser(userId, token));
           }else{
-            dispatch({ type: 'HAS_ERROR', payload: 'Class name or class code must be unique' });
+            dispatch({ type: 'HAS_ERROR', payload: 'Class name must be unique' });
           }
         })
       };
     } catch (error) {
+      console.log(error.message)
       Alert.alert(error.message)
       dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
@@ -66,7 +85,11 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
   };
 
   export const getSyllabusByUser = (userId, token) => {
+
+    console.log("READING SYLLABUS ITEMS")
     try {
+      if(userId == null)
+        userId = 0;
       return async dispatch => {
         axios.post(`${getAPIBaseUrl()}Syllabus/GetSyllabusDetailsList`,
         {
@@ -74,6 +97,8 @@ export const GET_SYLLABUS_DETAIL= 'GET_SYLLABUS_DETAIL';
         },
         { headers: {"Authorization" : `Bearer ${token}`} })
         .then((res) => {
+            console.log("SYLLABUS ITEMS")
+            console.log(res.data.data.items)
             dispatch({ type: 'CLEAR_ERROR', payload: [] });
             dispatch({
                 type: GET_SYLLABUS_BY_USER,

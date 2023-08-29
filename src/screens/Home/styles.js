@@ -98,5 +98,44 @@ export default StyleSheet.create({
         width: 64,
         borderRadius: 16,
         backgroundColor: color.primaryLight //blue
-      }
+      },
+      inputContainer: {
+        borderRadius: 4,
+        height: height * 0.055,
+        overflow: 'hidden',
+        borderWidth:1,
+        borderRadius:16,
+        marginVertical:8
+      },
+      input: {
+        borderRadius: 0,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        height: height * 0.063,
+        overflow: 'hidden',
+        backgroundColor: '#fbfbfb',
+        paddingLeft:5,
+        fontFamily: "Manrope",
+        fontSize: height * 0.016,
+        justifyContent:'center',
+      },
+      closeBtn: {
+        zIndex: 999,
+        alignSelf: 'flex-end',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 40,
+        borderRadius: 100,
+        backgroundColor: '#E6EAF2',
+        marginTop: 13,
+        marginRight: 13,
+        marginBottom: 5
+      },
+      close:{
+        alignSelf:'flex-end',
+        marginTop: 13,
+        marginRight: 13,
+        marginBottom: 5
+      },
 })

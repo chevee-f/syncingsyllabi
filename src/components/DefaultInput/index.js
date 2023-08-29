@@ -12,6 +12,7 @@ const PrimaryTextInput = props => {
     <View>
       <View style={[styles.inputContainer, {borderColor: props.hasError ? color.error : props.hasValue ? color.primary : color.default}]}>
           <TextInput
+              disabled={props.disabled}
               {...props}
               mode="flat"
               style={[styles.input,{marginTop: isFocused || props.hasValue ? -5 : 0}]}

@@ -13,7 +13,10 @@ const RadioButton = ({
     }) => {
     //const [value, setValue] = useState(0);
     const [duedateHasError, setDuedateHasError] = useState(false);
-
+    const [otherVal, setOtherVal] = useState('')
+    useEffect(()=>{
+        setOtherVal('')
+    }, [props.scanCount])
     const showDueDateField = () => {
         let d = new Date(value);
         // console.log(props.calendarValue)
@@ -36,6 +39,8 @@ const RadioButton = ({
         // if(props.calendarValue != '') {
             
         // }
+        if(props.items.length > 0 && props.items.find(x => x !== null && x.name === value) && value !== '' && value !== 0)
+            selectedDateY = ''
         return (
             Platform.OS === 'android' ? 
             <TouchableOpacity activeOpacity={1.0} onPress={() => props.setCalendarVisible(true, props.index)}>
@@ -53,16 +58,21 @@ const RadioButton = ({
             </TouchableOpacity> :
             <DefaultInput 
                 label="Due date"
-                onPressIn={() => { props.setCalendarVisible(true)}}
+                onPressIn={() => { props.setCalendarVisible(true, props.index)}}
                 editable={false}
                 value={selectedDateY}
                 hasValue={selectedDateY.length}
             />
         )
     }
+    
+    // useEffect(() => {
+    //     console.log("============RELOADING OTHERVALUE=========");
+    // }, []);
+
     return (
         <View>
-            {props.items.map(res => {
+            {props.items.map((res, index) => {
                 var name, confidenceScore;
                 if(!res) {
                     name = '';
@@ -73,7 +83,7 @@ const RadioButton = ({
                 }
                 // console.log(value + " = " + name + " " + (value === name))
                 return (
-                    <View style={[styles.container, {...props.containerStyle}]}>
+                    <View key={Math.random()} style={[styles.container, {...props.containerStyle}]}>
                         <View style={[{minHeight: 50, marginBottom: -10},styles.subContainer]}>
                             <TouchableOpacity
                                 style={styles.radioCircle}
@@ -115,9 +125,11 @@ const RadioButton = ({
                             label="Other"
                             onChangeText={(otherValue) =>  {
                                 setValue(otherValue);
+                                setOtherVal(otherValue)
                                 if(props.tab == 'assignments')
                                     props.setAssignmentValue(props.index, otherValue);
                             }}
+                            value={otherVal}
                         /> 
                         }
                     </View>

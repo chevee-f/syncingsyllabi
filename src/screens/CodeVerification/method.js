@@ -6,7 +6,7 @@ import { Alert } from 'react-native';
 const method = (navigation) => {
 
     const errors = useSelector((state) => state.errors);
-    const {state, verifyUserCode, sendVerificationCode} = useContext(AuthContext);
+    const {state, verifyUserCode, sendVerificationCode, signOut} = useContext(AuthContext);
     const [verificationCode, setVerificationCode] = useState('');
     const [isLoading, setIsLoading] = useState(false);
      
@@ -35,12 +35,17 @@ const method = (navigation) => {
         await sendVerificationCode({emailAddress, codeType}) 
     }
 
+    const handleBack = () => {
+        signOut();
+    }
+
     return {
         isLoading,
         verificationCode,
         setVerificationCode,
         handleCodeVerification,
-        handleResendCode
+        handleResendCode,
+        handleBack
     };
   };
   

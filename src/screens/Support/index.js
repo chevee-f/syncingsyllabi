@@ -13,11 +13,15 @@ import color from './../../styles/colors'
 import label from './../../styles/label'
 import DefaultInput from '../../components/DefaultInput';
 import { TextInput } from 'react-native-paper';
+import NotAvailableModal from '../../components/NotAvailableModal';
 
 const SupportScreen = ({ navigation }) => {
 
     const {
-        closeModal
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
+        closeModal,
+        handleSendSupport
     } = method(navigation);
 
     return (
@@ -76,7 +80,9 @@ const SupportScreen = ({ navigation }) => {
                         </View> 
                     </View>
                     <View style={styles.button}>
-                        <DefaultButton title='Send'/>
+                        <DefaultButton title='Send' onPress={() => {
+                            handleSendSupport()
+                        }} />
                     </View>
                     <View style={{marginVertical:10}}>
                         <Text style={[label.boldSmallHeading, {color:color.primary}]}>Email Address</Text>
@@ -87,7 +93,9 @@ const SupportScreen = ({ navigation }) => {
                 </ScrollView>
             </View>
             
-
+            <NotAvailableModal 
+                isVisible={notAvailableModalVisible}
+                onClose={() => {setNotAvailableModalVisible(false)}}/>
 
         </KeyboardAvoidingView>
     )

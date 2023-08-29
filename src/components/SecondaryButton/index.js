@@ -9,7 +9,7 @@ const DefaultButton = ({
   return (
     <TouchableOpacity 
       style={{...styles.btnContainer, ...props.containerStyle}}
-      onPress={onPress}>
+      onPress={onPress} disabled={props.disabled}>
         {props.imgSource !== undefined &&
           <Image 
               source={props.imgSource}
@@ -26,7 +26,7 @@ const DefaultButton = ({
                 }}>+ </Text>
             </View>
           }
-          <Text style={{...styles.text, ...props.textStyle}}>
+          <Text style={!props.disabled ? {...styles.text, ...props.textStyle} : [{...styles.text, ...props.textStyle}, {color: 'gray'}]}>
               {props.title}
           </Text>
         </View>

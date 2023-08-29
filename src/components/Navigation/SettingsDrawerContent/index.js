@@ -23,14 +23,14 @@ import { getNavigationDrawerHome } from '../RootNavigation';
 import About from './About'
 import PrivacyPolicy from './PrivacyPolicy'
 import TermsCondition from './TermsCondition'
-import FastImage from 'react-native-fast-image'
+import FastImage from 'react-native-fast-image';
+import DeleteAccountModal from '../../DeleteAccountModal';
 
 export function SettingsDrawerContent (props) {
-    const { state } = useContext(AuthContext);
+    const { state, signOut } = useContext(AuthContext);
 
     const { user } = useSelector(state => state.userReducer);
     const navigationDrawerHome = getNavigationDrawerHome()
-   
     const {
         data,
         aboutModalVisible,
@@ -38,6 +38,8 @@ export function SettingsDrawerContent (props) {
         termsConditionModalVisible,
         isDarkTheme,
         imageLoading,
+        deleteModalVisible,
+        setDeleteModalVisible,
         setImageLoading,
         toggleTheme,
         setTermsConditionModalVisible,
@@ -77,7 +79,7 @@ export function SettingsDrawerContent (props) {
                         <View style={styles.row}>
                             {data.map((item) => {
                                 return (
-                                    <View style={styles.section}>
+                                    <View key={Math.random()} style={styles.section}>
                                         <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>{item.count}</Text>
                                         <Caption style={[label.extraSmallHeading2, styles.text ]}>{item.title}</Caption>
                                     </View>
@@ -111,7 +113,7 @@ export function SettingsDrawerContent (props) {
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
                             onPress={() => {props.navigation.navigate('SoundsVibrationScreen')}}
                         />
-                        <DrawerItem 
+                        {/* <DrawerItem 
                             //icon={() => (<Image source={require('../../../assets/icons/moon.png')}/>)}
                             label=""
                             icon={() => (<View style={{flexDirection:'row'}}>
@@ -129,7 +131,7 @@ export function SettingsDrawerContent (props) {
                                          </View>
                                         )} 
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
-                        />
+                        /> */}
                         <DrawerItem 
                             icon={() => (<Image source={require('../../../assets/icons/BellSimpleRinging.png')}/>)}
                             label="Notifications"
@@ -159,6 +161,14 @@ export function SettingsDrawerContent (props) {
                             label="Support"
                             labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
                             onPress={() => {props.navigation.navigate('SupportScreen')}}
+                        />
+                        <DrawerItem 
+                            icon={() => (<Image source={require('../../../assets/icons/DeleteUser.png')}/>)}
+                            label="Delete Account"
+                            labelStyle={[label.extraSmallHeading3, {color: color.textDefault, marginLeft: -25}]}
+                            onPress={() => {
+                                setDeleteModalVisible(true);
+                            }}
                         />
                    </Drawer.Section>    
                    {/*
@@ -194,6 +204,22 @@ export function SettingsDrawerContent (props) {
             isVisible={termsConditionModalVisible}
           />
 
+        <DeleteAccountModal 
+            modalVisible={deleteModalVisible} 
+            confirmationMessage={'Delete Account'}
+            status={'delete'}
+            subText={'Deleting your account will remove all of your information from our database. This cannot be undone.'}
+            onClose={() => {
+                setDeleteModalVisible(false);
+            }}
+            onConfirm={() => {
+                setDeleteModalVisible(false);
+            }}
+            doneDelete={() => {
+                signOut();
+                props.navigation.navigate('MainTabScreen');
+            }}
+        />
         </View>
     )
 }

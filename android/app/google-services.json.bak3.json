@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "824174854315",
+    "project_id": "syncing-syllabi-96f70",
+    "storage_bucket": "syncing-syllabi-96f70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824174854315:android:06d0cfe53f9c4f544fb7ee",
+        "android_client_info": {
+          "package_name": "com.creativeinterlace.SyncingSyllabi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "824174854315-b2vq1en35svbro5pn0qht4tvcsrabdvo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.creativeinterlace.SyncingSyllabi",
+            "certificate_hash": "b50231aeb91e4976a5b5a70141b3b9ebee2224be"
+          }
+        },
+        {
+          "client_id": "824174854315-28mh9lr14k19mcfea7icoc67dncefkqe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDV7r1soctSvrJ27TMHJK93U8VAsvX2VhA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "824174854315-28mh9lr14k19mcfea7icoc67dncefkqe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "824174854315-j6mc0r92fg09mur2ct10aq34ogblhjof.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.creativeinterlace.SyncingSyllabi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

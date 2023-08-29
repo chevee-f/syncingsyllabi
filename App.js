@@ -15,6 +15,7 @@ import CodeVerificationScreen from './src/screens/CodeVerification';
 import LoadingScreen from './src/screens/Loading';
 import SoundsVibrationScreen from './src/screens/SoundsVibration';
 import SupportScreen from './src/screens/Support';
+import DeleteAccountScreen from './src/screens/DeleteAccount';
 import ConfidenceScoreScreen from './src/screens/ConfidenceScore'
 import PdfViewerScreen from './src/screens/PdfViewer'
 import ImageViewerScreen from './src/screens/ImageViewer'
@@ -35,7 +36,8 @@ const MainDrawer = createDrawerNavigator();
 
 function MainDrawerContent(props) {
   const {state} = useContext(AuthContext);
-
+  console.log('checking state')
+  console.log(state)
   return (
     <MainDrawer.Navigator
       //initialRouteName="SetUpScreen"
@@ -45,12 +47,13 @@ function MainDrawerContent(props) {
       drawerContent={props => <DrawerContent {... props} />}
     >
       <MainDrawer.Screen name="MainTabScreen" component={MainTabScreen} />
-      <MainDrawer.Screen name="SetUpScreen" component={SetUpScreen} />
+      <MainDrawer.Screen name="SetUpScreen" component={SetUpScreen} options={{isAddModalVisible: true}} />
       <MainDrawer.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       <MainDrawer.Screen name="ProfileScreen" component={ProfileScreen} />
       <MainDrawer.Screen name="LoadingScreen" component={LoadingScreen} />
       <MainDrawer.Screen name="CodeVerificationScreen" component={CodeVerificationScreen} />
       <MainDrawer.Screen name="SupportScreen" component={SupportScreen} />
+      <MainDrawer.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} />
       <MainDrawer.Screen name="ConfidenceScoreScreen" component={ConfidenceScoreScreen} />
       <MainDrawer.Screen name="PdfViewerScreen" component={PdfViewerScreen} options={{ headerLeft: null }} />
       <MainDrawer.Screen name="ImageViewerScreen" component={ImageViewerScreen} options={{ headerLeft: null }} />
@@ -84,7 +87,7 @@ function App() {
   return (
       <Provider store={store}>
         <NavigationContainer theme={state.isDarkTheme === 'true' ? CustomDarkTheme : DefaultTheme}>
-          {state.token !== null || state.isForCodeVerification || state.isGoogle ? (
+          {state.token !== null || state.isForCodeVerification || state.isGoogle || state.isGuest ? (
 
             <SettingsDrawer.Navigator
               initialRouteName="MainDrawerContent"

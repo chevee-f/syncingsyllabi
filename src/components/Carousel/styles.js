@@ -8,9 +8,10 @@ export default StyleSheet.create({
       backgroundColor: 'transparent',
       alignItems:'center',
       justifyContent:'center',
-      height: Platform.OS === 'ios' ? height * 0.51 : height * 0.47,
+      height: Platform.OS === 'ios' ? height * 0.3 : height * 0.28,
       width: '100%',
       marginLeft: width * -0.1,
+      marginTop: 50
     },
     image: {
       height: Platform.OS === 'ios' ? height * 0.14 : height * 0.14

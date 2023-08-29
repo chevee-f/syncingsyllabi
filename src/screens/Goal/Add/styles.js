@@ -4,6 +4,7 @@ import color from '../../../styles/colors'
 var {height, width} = Dimensions.get('window');
 
 export default StyleSheet.create({
+    container: { flex: 1, marginTop: 24, marginBottom: 100 },
     modal:{
         //justifyContent: 'flex-end', 
         marginBottom: height * -0.35,

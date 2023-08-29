@@ -24,6 +24,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getSyllabusByUser } from '../../../actions/syllabus';
 import GradientItem from '../../../components/GradientItem';
 import DateTimePicker from '../../../components/DateTimePicker';
+import Moment from 'moment';
+import { Alert } from 'react-native';
 
 const Assignments = ({
     setActiveTab,
@@ -42,10 +44,17 @@ const Assignments = ({
         successMessage,
         successTitle,
         successModalVisible,
+        assignmentSyllabi,
+        isSaving,
+        closeDisabled,
+        setCloseDisabled,
+        setIsSaving,
+        setAssignmentSyllabi,
         handleSaveAssignments,
         setSuccessMessage,
         setSuccessTitle,
-        setSuccessModalVisible
+        setSuccessModalVisible,
+        isDateValid
     } = method(classSyllabi,setClassSyllabi);
     // console.log("props.assignments")
     // console.log(props.assignments)
@@ -101,7 +110,6 @@ const Assignments = ({
       );
     const [scannedAssignments, setScannedAssignments] = useState([]);
     // const [successModalVisible, setSuccessModalVisible] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
     const { state } = useContext(AuthContext);
     const { syllabus } = useSelector(state => state.syllabusReducer);
     const dispatch = useDispatch();
@@ -113,7 +121,7 @@ const Assignments = ({
     const [deletedIndexes, setDeletedIndexes] = useState([]);
     const [tmpAssignments, setTmpAssignments] = useState();
     
-    useEffect(async () => {
+    useEffect(() => {
         console.log("HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         let arr = [];
         // console.log(props.assignments)
@@ -133,7 +141,7 @@ const Assignments = ({
         setScannedAssignments(arr)
         let userId = state.userId;
         let token = state.token;
-        await dispatch(getSyllabusByUser(userId, token));
+        dispatch(getSyllabusByUser(userId, token));
         // console.log(syllabus)
         isCarousel.current?.snapToItem?.(0)
     }, [props.assignments]);
@@ -153,12 +161,13 @@ const Assignments = ({
             dueDate = item.assignmentDateEnd.name;
         // console.log("scannedAssignments " + index)
         // console.log(scannedAssignments)
+        // console.log(item)
         // console.log(scannedAssignments.length + " < " + index)
         return (
             <View>
                 <View style={styles.container}>
                     <View style={styles.labelContainer}>
-                        <Label text={"What's the name of your teacher?"} />
+                        <Label text={"Assignment Title"} />
                     </View>
                     <View style={styles.scoreContainer}>
                         <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}>Syncing Score</Text>
@@ -179,7 +188,8 @@ const Assignments = ({
                                         }}
                                         index={index}
                                         tab={'assignments'}
-                                        value={scannedAssignments[index].title} />
+                                        value={scannedAssignments[index].title}
+                                        scanCount={props.scanCount} />
                 </View>
                 <View style={styles.container}>
                     <View style={styles.labelContainer}>
@@ -212,53 +222,8 @@ const Assignments = ({
                                             console.log("hello") 
                                         }}
                                         calendarValue={calendarValue}
-                                        value={scannedAssignments[index].dueDate} />
-                </View>
-                <View style={styles.container}>
-                    <View style={styles.labelContainer}>
-                        <Label text={'Class Syllabi'} />
-                    </View>
-                    <View style={styles.scoreContainer}>
-                        <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}></Text>
-                    </View>
-                </View>
-                <View>
-                    <View style={{ marginLeft: 15}}>
-                        <ScrollView horizontal>
-                            {syllabus.length > 0 &&
-                            syllabus.map((syllabi) => {
-                                let isSelected = false;
-                                if(syllabi.id == scannedAssignments[index].syllabi)
-                                    isSelected = true;
-                                return (
-                                <GradientItem 
-                                    isSelected={isSelected}
-                                    setAssignmentValue={(index, val) => {
-                                        setScannedAssignments(current =>
-                                            current.map(obj => {
-                                            if (obj.id === index) {
-                                                return {...obj, syllabi: val};
-                                            }
-                                            return obj;
-                                            }),
-                                        );
-                                        setSyllabiValue(val)
-                                    }} 
-                                    tab={'assignments'}
-                                    index={index}
-                                    parentCallback = {(index, val) => {
-                                        
-                                    }}
-                                    code={syllabi.className}
-                                    name={syllabi.teacherName}
-                                    schedule={!syllabi.classSchedule ? '' : syllabi.classSchedule.map(function(data){return data;}).join("|")}
-                                    selectedBgColor={bgColor[parseInt(syllabi.colorInHex)]}
-                                    id={syllabi.id}
-                                />
-                                );
-                            })}
-                        </ScrollView>
-                    </View>
+                                        value={scannedAssignments[index].dueDate}
+                                        scanCount={props.scanCount} />
                 </View>
                 <View style={styles.container}>
                     <View style={styles.labelContainer}>
@@ -283,7 +248,8 @@ const Assignments = ({
                             borderRightColor: '#C1C6CE',
                             borderRightWidth: 0.4,
                             borderBottomColor: '#C1C6CE',
-                            borderBottomWidth: 1
+                            borderBottomWidth: 1,
+                            height: 150
                         }}
                         value={scannedAssignments[index].note}
                         onChangeText={(notes) => {
@@ -381,17 +347,64 @@ const Assignments = ({
             />
             <ScrollView style={{ backgroundColor: '#F7F9FA'}}>
                 <Carousel
-                layout="default"
-                ref={isCarousel}
-                data={tmpAssignments}
-                renderItem={CarouselCardItem}
-                sliderWidth={Dimensions.get('window').width}
-                itemWidth={Dimensions.get('window').width}
-                onBeforeSnapToItem={(index) => setIndex(index)}
-                onSnapToItem={(index) => setIndex(index)}
-                useScrollView={false}
+                    layout="default"
+                    ref={isCarousel}
+                    data={tmpAssignments}
+                    renderItem={CarouselCardItem}
+                    sliderWidth={Dimensions.get('window').width}
+                    itemWidth={Dimensions.get('window').width}
+                    onBeforeSnapToItem={(index) => setIndex(index)}
+                    onSnapToItem={(index) => setIndex(index)}
+                    useScrollView={false}
                 />
             </ScrollView>
+            <View>
+                {/* <View style={styles.container}>
+                    <View style={styles.labelContainer}>
+                        <Label text={'Class Syllabi'} />
+                    </View>
+                    <View style={styles.scoreContainer}>
+                        <Text style={[label.smallHeading2,{color:color.primary, textAlign: 'center'}]}></Text>
+                    </View>
+                </View> */}
+                <View style={{ marginLeft: 15, marginBottom: 10}}>
+                    <ScrollView horizontal>
+                        {syllabus.length > 0 &&
+                        syllabus.map((syllabi) => {
+                            let isSelected = false;
+                            if(syllabi.id == assignmentSyllabi)
+                                isSelected = true;
+                            return (
+                            <GradientItem 
+                                isSelected={isSelected}
+                                setAssignmentValue={(index, val) => {
+                                    // setScannedAssignments(current =>
+                                    //     current.map(obj => {
+                                    //     if (obj.id === index) {
+                                    //         return {...obj, syllabi: val};
+                                    //     }
+                                    //     return obj;
+                                    //     }),
+                                    // );
+                                    // setSyllabiValue(val)
+                                    setAssignmentSyllabi(val)
+                                }} 
+                                tab={'assignments'}
+                                index={0}
+                                parentCallback = {(index, val) => {
+                                    
+                                }}
+                                code={syllabi.className}
+                                name={syllabi.teacherName}
+                                schedule={!syllabi.classSchedule ? '' : syllabi.classSchedule.map(function(data){return data;}).join("|")}
+                                selectedBgColor={bgColor[parseInt(syllabi.colorInHex)]}
+                                id={syllabi.id}
+                            />
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+            </View>
             <SafeAreaView style={styles.bottomContainer}>
                 <TouchableOpacity onPress={() => isCarousel.current?.snapToPrev?.()}>
                     <Image source={require('../../../assets/icons/CaretCircle.png')}
@@ -401,24 +414,57 @@ const Assignments = ({
                 <Text style={[label.smallHeading2, {color: color.primary}]}>
                     {index+1}/{props.assignments.length}
                 </Text>
-                { index+1 !== props.assignments.length ?
+                { index+1 !== props.assignments.length &&
                     <TouchableOpacity onPress={() => {
                         isCarousel.current?.snapToNext?.()
                     }}>
                         <Image source={require('../../../assets/icons/CaretCircle.png')}
                                 resizeMode='contain'
                                 style={[styles.prevNextImage, {transform: [{ rotate: "180deg" }]}]}/>
-                    </TouchableOpacity>:
-                    isSaving ? 
-                        <View style={{
-                            width: 50
-                        }}>
-                            <ActivityIndicator size="small" color={'#0036A1'} />
-                        </View>
-                    :
+                    </TouchableOpacity>
+  }{
+                    // isSaving ? 
+                    //     <View style={{
+                    //         width: 50
+                    //     }}>
+                    //         <ActivityIndicator size="small" color={'#0036A1'} />
+                    //     </View>
+                    // :
                     <TouchableOpacity style={{ padding: 8}} onPress={() => {
-                        handleSaveAssignments(scannedAssignments)
-                        setIsSaving(true)
+                        if(assignmentSyllabi == 0)
+                            Alert.alert("Please assign a syllabi");
+                        else {
+                            let isValid = true;
+                            let invalidDates = [];
+                            scannedAssignments.map((assignment, ind) => {
+                                if(assignment.included) {
+                                    if(!isDateValid(new Date(assignment.dueDate))) {
+                                        // isValid = false;
+                                        // invalidDates.push(ind+1);
+                                    }
+                                }
+                            })
+                            let dateString = "";
+                            if(invalidDates.length > 0) {
+                                for(let i = 0; i< invalidDates.length; i++) {
+                                    dateString += invalidDates[i];
+                                    if(i+1 != invalidDates.length)
+                                        dateString += ", ";
+                                }
+                                
+                                console.log("[" + dateString + "]");
+                                if(invalidDates.length == 1)
+                                    dateString = "Page " + dateString + " has an invalid Date";
+                                else
+                                    dateString = "Pages " + dateString + " have invalid Dates";
+                                
+                                Alert.alert(dateString);
+                            }
+                            if(isValid) {
+                                handleSaveAssignments(scannedAssignments)
+                                setIsSaving(true)
+                            }
+                        }
                     }}>
                         <Text style={{ fontWeight: 'bold', fontSize: 16, color: '#0036A1'}}>Save</Text>
                     </TouchableOpacity>
@@ -477,10 +523,13 @@ const Assignments = ({
                 successModalVisible={successModalVisible} 
                 successMessage={successMessage}
                 headerText={successTitle}
+                disabled={closeDisabled}
                 onClose={() => {
+                    // if()
+                    console.log("SUCCESS MDOAL CLOSSSED!!")
                     setSuccessModalVisible(!successModalVisible)
                     setIsSaving(false)
-                    navigation.navigate("MainTabScreen", { counter: 1})
+                    navigation.navigate("MainTabScreen", { counter: Math.random()})
                 }}
             />
         </KeyboardAvoidingView>

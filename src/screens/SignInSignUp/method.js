@@ -9,6 +9,7 @@ import { AccessToken,
          GraphRequest,
          GraphRequestManager,
          LoginManager } from 'react-native-fbsdk';
+import { appleAuth, appleAuthAndroid } from '@invertase/react-native-apple-authentication';
 
 const method = (navigation) => {
 
@@ -16,7 +17,7 @@ const method = (navigation) => {
     const {user} = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
-    const {state, signIn, signUp} = useContext(AuthContext);
+    const {state, signIn, signUp, isGuest} = useContext(AuthContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -28,6 +29,7 @@ const method = (navigation) => {
     const [isGoogleSignIn, isSetGoogleSignIn] = React.useState(false);
     const [isFacebookSignIn, setFacebookSignIn] = React.useState(false);
     const [userInfo, setuserInfo] = React.useState([]);
+    const [signUpVisible, setSignUpVisible] = useState(false)
 
     const [inputValidation, setInputValidation] = React.useState({
         isValidEmail: true,
@@ -35,6 +37,38 @@ const method = (navigation) => {
         emailErrMsg: '',
         passErrMsg: ''
     });
+
+    const onAppleButtonPress = async () => {
+      if(!appleAuthAndroid.isSupported) {
+        console.log('on apple button press')
+        const appleAuthRequestResponse = await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          // Note: it appears putting FULL_NAME first is important, see issue #293
+          requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+        });
+        console.log(appleAuthRequestResponse)
+        // get current authentication state for user
+        // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+        const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+      
+        // use credentialState response to ensure the user is authenticated
+        if (credentialState === appleAuth.State.AUTHORIZED) {
+          // user is authenticated
+          console.log('is apple auth')
+        } else {
+          console.log( 'something went wrong with apple auth')
+        }
+      }
+    }
+
+    useEffect(() => {
+      // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+      if(!appleAuthAndroid.isSupported) {
+        return appleAuth.onCredentialRevoked(async () => {
+          console.warn('If this function executes, User Credentials have been Revoked');
+        });
+      }
+    }, []);
 
     const updateSecureTextEntry = () => {
         setSecureTextEntry(!secureTextEntry)
@@ -44,6 +78,7 @@ const method = (navigation) => {
         let isValidEmail = await handleValidEmail()
         let isValidPassword = await handleValidPassword()
         if(isValidEmail && isValidPassword){
+            console.log("IS CHECKIN FOR LOGIN " + isSignUp + " GOOGLE? " + isGoogleSignIn)
             setIsLoading(true)
             if(isSignUp){
                 dispatch({type: 'RESET'})
@@ -104,6 +139,8 @@ const method = (navigation) => {
    }
 
     const handleGoogleSignIn = async() => {
+      console.log(userInfo)
+      console.log('dis')
         try {
             await GoogleSignin.hasPlayServices();
             const {accessToken, idToken} = await GoogleSignin.signIn();
@@ -117,14 +154,22 @@ const method = (navigation) => {
             }
           } catch (error) {
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+              console.log("error")
+              console.log(error)
               // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
+              console.log("error")
+              console.log(error)
               Alert.alert('Sign In in progress');
               // operation (f.e. sign in) is in progress already
             } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+              console.log("error")
+              console.log(error)
               Alert.alert('Play services not available or outdated');
               // play services not available or outdated
             } else {
+              console.log("error")
+              console.log(error)
               Alert.alert(error.message)
               // some other error happened
             }
@@ -132,7 +177,10 @@ const method = (navigation) => {
     }
     
     function onAuthStateChanged(user) {
+      console.log('on auth state changed')
+      console.log(user)
         if (user){
+          console.log('setting user')
             setuserInfo(user);
         }
     }
@@ -155,6 +203,7 @@ const method = (navigation) => {
             webClientId: getWebClientId(Platform.OS),
             offlineAccess: true
         });
+        
         const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
         return subscriber; 
     }, [inputValidation,isGoogleSignIn,isFacebookSignIn]);
@@ -217,6 +266,10 @@ const method = (navigation) => {
         }
     }
 
+    const handleSignInAsGuest = async () => {
+      await isGuest(true);
+    }
+
     return {
         email,
         password,
@@ -225,6 +278,8 @@ const method = (navigation) => {
         isFocused,
         isSignUp,
         inputValidation,
+        signUpVisible,
+        setSignUpVisible,
         updateSecureTextEntry,
         handleSignInSignUp,
         handleValidEmail,
@@ -234,7 +289,9 @@ const method = (navigation) => {
         setIsFocused,
         setPassword,
         setEmail,
-        handleFacebookSignIn
+        handleFacebookSignIn,
+        handleSignInAsGuest,
+        onAppleButtonPress,
     };
   };
   

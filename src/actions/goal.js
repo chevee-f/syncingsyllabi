@@ -1,5 +1,5 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAPIBaseUrl } from "../config/env";
 import { Alert } from 'react-native';
 import Moment from 'moment';
@@ -15,7 +15,7 @@ export const addGoal = (goal, userId, token) => {
         axios.post(`${getAPIBaseUrl()}Goal/CreateGoal`,
         {
             "userId": parseInt(userId),
-            "goalTitle": '',
+            "goalTitle": goal.title,
             "goalType": goal.type,
             "goalDescription": goal.description,
             "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
@@ -40,7 +40,7 @@ export const updateGoal = (goal, userId, token) => {
       {
           "goalId": goal.id,
           "userId": parseInt(userId),
-          "goalTitle": '',
+          "goalTitle": goal.title,
           "goalType": goal.type,
           "goalDescription": goal.description,
           "goalDateStart": Moment(goal.startDate, 'MM-DD-YYYY HH:mm'),
@@ -84,6 +84,8 @@ export const getGoalByUser = (userId, token) => {
 
 export const getGoalByUserSortBy = (userId, token, sortBy) => {
   try {
+    if(userId == null)
+      userId = 0;
     return async dispatch => {
       axios.post(`${getAPIBaseUrl()}Goal/GetGoalDetailsList`,
       {

@@ -35,12 +35,10 @@ export default StyleSheet.create({
         backgroundColor: color.primary
     },
     mainContainer: {
-        flex: 1.27,
-        backgroundColor: '#fff',
-        borderTopLeftRadius: 23,
-        borderTopRightRadius: 23,
+        flex: 1,
         paddingHorizontal: 20,
-        paddingVertical: height * 0.04
+        paddingVertical: height * 0.04,
+        paddingTop: 10
     },
     otherOptionContainer:{
         flexDirection: 'row', 
@@ -59,7 +57,10 @@ export default StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 10
+        marginTop: 10,
+        borderColor: color.default,
+        borderWidth: 1,
+        borderRadius: 16
     },
     signInContainer:{
         flexDirection:'row',
@@ -86,16 +87,28 @@ export default StyleSheet.create({
         width:width * 0.75
     },
     carouselContainer: {
-        flex: 1,
+        // flex: 1,
         justifyContent: 'center',
-        paddingBottom: height * 0.05
+        // paddingBottom: 20,
+        // backgroundColor: 'red'
     },
     errorMsg: {
         color: '#E54C29',
         fontSize: height * 0.0135,
     },
     forgotPassword:{
+        marginTop: 10,
         padding:10,
-        marginBottom:Platform.OS === 'ios' ? height * -0.02 : height * -0.06
+        marginBottom:Platform.OS === 'ios' ? height * -0.025 : height * -0.065
+    },
+    signUpModal: {
+        position: 'absolute', 
+        backgroundColor: '#fff', 
+        width: '100%', 
+        height: 335, 
+        bottom: 0, 
+        zIndex: 1, 
+        borderTopRightRadius: 14,
+        borderTopLeftRadius: 14
     }
 })

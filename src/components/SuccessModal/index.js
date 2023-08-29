@@ -38,6 +38,7 @@ const SuccessModal = props => {
                         title='Close'
                         containerStyle={styles.closeButton}
                         onPress={props.onClose}
+                        disabled={props.disabled}
                     />
                 </View>
             </Modal>

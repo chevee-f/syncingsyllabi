@@ -67,12 +67,24 @@ const ProfileScreen = ({ navigation }) => {
               </ImageBackground>
           </View>
         <View style={{ marginTop: height * 0.38 }}>
-            <Text style={styles.name}>{user.firstName} {user.lastName}</Text>
+            
+            <Text style={styles.name}>
+                {state.userId ?
+                    <>{user.firstName} {user.lastName}</>
+                    :
+                    <>Guest</>
+                }
+            </Text>
             <View style={styles.row}>
                 <Icon name="location-pin" color={color.default} size={18} />
-                <Text style={[label.boldSmallHeading, { color: color.primary, marginLeft: 5 }]}>
-                    {user.school}
-                </Text>
+                
+                    <Text style={[label.boldSmallHeading, { color: color.primary, marginLeft: 5 }]}>
+                        {state.userId ?
+                            <>{user.school}</>
+                            : 
+                            <>Fresno State University</>
+                        }
+                    </Text>
             </View>
             <View style={styles.row}>
                 <View style={styles.countContainer}>
@@ -102,11 +114,22 @@ const ProfileScreen = ({ navigation }) => {
             <Text style={[label.boldMediumHeading, { color: color.primary, marginBottom: 10 }]}>Basic Information</Text>
             <View style={styles.emailContainer}>
                 <Email name="envelope" color={color.default} size={30} />
-                <Text style={[label.smallHeading2, {color: color.primary}]}>{user.email}</Text>
+                <Text style={[label.smallHeading2, {color: color.primary}]}>
+                    {state.userId ? 
+                        <>{user.email}</>
+                        :
+                        <>mail@mail.com</>
+                    }
+                </Text>
             </View>
                 <Text style={[label.smallHeading2, styles.info ]}>Birthdate: {user.dateOfBirth !== null ? Moment(user.dateOfBirth).format("MM/DD/YYYY") : ''}</Text>
-                <Text style={[label.smallHeading2, styles.info ]}>Major: {user.major}</Text>
-
+                <Text style={[label.smallHeading2, styles.info ]}>Major: 
+                    {state.userId ? 
+                        <>{user.major}</>
+                        :
+                        <>Marketing</>
+                    }
+                </Text>
             <View style={{marginTop:height * 0.03}}>
                 <DefaultButton 
                     title="Edit Profile" 

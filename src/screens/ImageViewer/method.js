@@ -44,9 +44,18 @@ const method = (props) => {
             let base64ArraySyllabi = [];
             let base64ArrayAssignment = [];
 
-            for(let i = 0; i < includedPagesInSyllabi.length; i++) {
-                let imgBase64 = await RNFS.readFile(decodeURI(props.route.params.file[includedPagesInSyllabi[i] - 1].uri), 'base64');
-                base64ArraySyllabi.push(imgBase64);
+            if(activeTab == 0) {
+                for(let i = 0; i < includedPagesInSyllabi.length; i++) {
+                    let imgBase64 = await RNFS.readFile(decodeURI(props.route.params.file[includedPagesInSyllabi[i] - 1].uri), 'base64');
+                    base64ArraySyllabi.push(imgBase64);
+                }
+            }
+
+            if(activeTab == 1) {
+                for(let i = 0; i < includedPagesInAssignment.length; i++) {
+                    let imgBase64 = await RNFS.readFile(decodeURI(props.route.params.file[includedPagesInAssignment[i] - 1].uri), 'base64');
+                    base64ArrayAssignment.push(imgBase64);
+                }
             }
 
             setIncludedPagesInSyllabi([])

@@ -73,6 +73,8 @@ const method = () => {
         ]
       );
 
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
+
     const handleAddSyllabus = async() => {
         let userId = state.userId
         let token = state.token
@@ -240,7 +242,17 @@ const method = () => {
         }
         setHasValue(false)
     }
-      
+    
+    const handleSaveSyllabi = () => {
+        let userId = state.userId;
+        if(userId) {
+            setAction('Add')
+            setConfirmationMessage('Add this Syllabi?')
+            setConfirmationVisible(true)
+        } else {
+            setNotAvailableModalVisible(true)
+        }
+    }
     return {
         bgColor,
         classSyllabus,
@@ -251,6 +263,8 @@ const method = () => {
         confirmationVisible,
         successMessage,
         successModalVisible,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
@@ -263,7 +277,8 @@ const method = () => {
         handleValidClassName,
         handleValidTeacherName,
         resetClassSyllabus,
-        onConfirm
+        onConfirm,
+        handleSaveSyllabi
     };
   };
   

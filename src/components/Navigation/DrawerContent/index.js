@@ -72,7 +72,7 @@ export function DrawerContent (props) {
                         <View style={styles.row}>
                             {data.map((item) => {
                                 return (
-                                    <View style={styles.section}>
+                                    <View key={Math.random()} style={styles.section}>
                                         <Text style={[label.boldLargeHeading, { color: color.textDefault }]}>{item.count}</Text>
                                         <Caption style={[label.extraSmallHeading2, styles.text ]}>{item.title}</Caption>
                                     </View>

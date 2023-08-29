@@ -26,7 +26,8 @@ import { useSelector } from 'react-redux';
 import {Context as AuthContext} from '../../../components/Context/AuthContext';
 import SuccessModal from '../../../components/SuccessModal'
 import SelectSyllabus from '../Select';
-import RadioButtonGroup from '../../../components/RadioButtonGroup'
+import RadioButtonGroup from '../../../components/RadioButtonGroup';
+import NotAvailableModal from '../../../components/NotAvailableModal';
 
 var {height, width} = Dimensions.get('window');
 
@@ -49,6 +50,8 @@ const AddSyllabus = ({
         confirmationVisible,
         successMessage,
         successModalVisible,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
@@ -61,7 +64,8 @@ const AddSyllabus = ({
         handleValidClassName,
         handleValidTeacherName,
         resetClassSyllabus,
-        onConfirm
+        onConfirm,
+        handleSaveSyllabi
     } = method();
 
     const [calendarVisible, setCalendarVisible] = useState(false);
@@ -115,6 +119,10 @@ const AddSyllabus = ({
           onBackdropPress={() => { setModalVisible(!modalVisible);
                                    setSyllabusId(null)
                                    resetClassSyllabus() }}>
+
+            <NotAvailableModal
+                isVisible={notAvailableModalVisible}
+                onClose={() => {setNotAvailableModalVisible(false)}} />
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
                               style={[styles.modalContainer,{backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
             <ScrollView>
@@ -131,7 +139,7 @@ const AddSyllabus = ({
                         <Label text={`${syllabusId === null ? 'Add' : 'Update'} your Syllabus`} isDarkTheme={state.isDarkTheme === 'true'}/>
                         <AddItem onPress={() => setSelectModalVisible(true)}/>
                     </View>
-                    {ocrResults.hasOwnProperty('ocrSyllabusModel') ?
+                    {ocrResults.ocrSyllabusModel ?
                         <View>
                             <View style={styles.container}>
                                 <View style={styles.labelContainer}>
@@ -224,7 +232,7 @@ const AddSyllabus = ({
                                 {
                                     colors.map((item) => {
                                         return (
-                                            <Colors selectedColor={item} onPress={() => setClassSyllabus({...classSyllabus, colorInHex: item})}/>
+                                            <Colors key={Math.random()} selectedColor={item} onPress={() => setClassSyllabus({...classSyllabus, colorInHex: item})}/>
                                         );
                                     })                
                                 }              
@@ -256,9 +264,7 @@ const AddSyllabus = ({
                         </View> :
                         <View style={[styles.fieldContainer,{marginBottom: 50}]}>
                             <DefaultButton title="Save" 
-                                    onPress={() => {setAction('Add')
-                                                    setConfirmationMessage('Add this Syllabi?')
-                                                    setConfirmationVisible(true)}}
+                                    onPress={() => {handleSaveSyllabi()}}
                             />       
                         </View>
                     }

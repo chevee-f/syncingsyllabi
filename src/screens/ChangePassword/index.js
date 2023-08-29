@@ -9,6 +9,7 @@ import color from './../../styles/colors'
 import label from './../../styles/label'
 import SuccessModal from '../../components/SuccessModal'
 import {Context as AuthContext} from '../../components/Context/AuthContext';
+import NotAvailableModal from '../../components/NotAvailableModal';
 
 const ChangePasswordScreen = ({ navigation }) => {
 
@@ -22,6 +23,8 @@ const ChangePasswordScreen = ({ navigation }) => {
         isLoading,
         modalVisible,
         inputValidation,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setCurrentPassword,
         setNewPassword,
         setConfirmNewPassword,
@@ -137,6 +140,9 @@ const ChangePasswordScreen = ({ navigation }) => {
                 onClose={closeModal}
             />
 
+            <NotAvailableModal 
+                isVisible={notAvailableModalVisible}
+                onClose={() => {setNotAvailableModalVisible(false)}} />
         </KeyboardAvoidingView>
     )
 

@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
-import { Button, Text, View, StyleSheet, Image, Dimensions, Picker, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { Button, Text, View, StyleSheet, Image, Dimensions, Picker, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Modal from "react-native-modal";
 import Card from '../../components/Card';
 import CalendarStrip from 'react-native-calendar-strip';
@@ -27,6 +27,8 @@ import ConfirmationModal from '../../components/ConfirmationModal';
 import SuccessModal from '../../components/SuccessModal';
 import DocumentPicker, { types } from 'react-native-document-picker';
 import { WebView } from 'react-native-webview';
+import Assignments from '../../components/Assignments';
+import NotAvailableModal from '../../components/NotAvailableModal';
 
 var {height, width} = Dimensions.get('window');
 const AssignmentScreen = (props) => {
@@ -56,6 +58,7 @@ const AssignmentScreen = (props) => {
   const [isAwait, setIsAwait] = useState(0);
   const [isAttachmentVisible, setIsAttachmentVisible] = useState(false);
   const [attachmentUrl, setAttachmentUrl] = useState("");
+  const [currentModalTime, setCurrentModalTime] = useState(Moment(new Date()).format("HH:mm"));
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -82,6 +85,8 @@ const AssignmentScreen = (props) => {
     syllabusId,
     attachments,
     bgColor,
+    notAvailableModalVisible,
+    setNotAvailableModalVisible,
     setBgColor,
     setAttachments,
     setSyllabusId,
@@ -106,25 +111,26 @@ const AssignmentScreen = (props) => {
     handleCompleteAssignment,
     handleSortAssignment,
     callme,
-    useEffectFunction
+    useEffectFunction, 
+    handleAddFile,
   } = method();
 
-  useEffect(() => {
-    let userId = state.userId
-    let token = state.token
-    dispatch(getAssignmentsByUser(userId, token));
-    dispatch(getSyllabusByUser(userId, token));
-    useEffectFunction();
-  }, []);
+  // useEffect(() => {
+  //   let userId = state.userId
+  //   let token = state.token
+  //   dispatch(getAssignmentsByUser(userId, token));
+  //   dispatch(getSyllabusByUser(userId, token));
+  //   useEffectFunction();
+  // }, []);
 
-  useEffect(() => {
-    console.log("assignments useeffect from assignments-----------------------");
-    useEffectFunction();
-  }, [assignments.length]);
+  // useEffect(() => {
+  //   console.log("assignments useeffect from assignments-----------------------");
+  //   useEffectFunction();
+  // }, [assignments.length]);
 
   useEffect(async() => {
     console.log("counter, populate assignments via assignments------asd-asd-asd-" + props.route)
-    useEffectFunction("success");
+    // useEffectFunction("success");
   }, [props.counter]);
 
   let fetchedDates1 = [
@@ -222,19 +228,24 @@ const AssignmentScreen = (props) => {
   }
 
   const saveAssignment = async () => {
-    if(classAssignments.dueDate !== "" && classAssignments.title !== "" && classAssignments.syllabusId !== "") {
-      if(classAssignments.id !== '')
-        handleUpdateAssignment();
-      else
-        handleAddAssignments();
+    let userId = state.userId;
+    if(userId) {
+      if(classAssignments.dueDate !== "" && classAssignments.title !== "" && classAssignments.syllabusId !== "") {
+        if(classAssignments.id !== '')
+          handleUpdateAssignment();
+        else
+          handleAddAssignments();
+      } else {
+        setErrorMessage(true);
+        if(!classAssignments.title)
+          setTitleHasError(true);
+        if(!classAssignments.dueDate)
+          setDuedateHasError(true);
+        if(!classAssignments.syllabusId)
+          setClassHasError(true);
+      }
     } else {
-      setErrorMessage(true);
-      if(!classAssignments.title)
-        setTitleHasError(true);
-      if(!classAssignments.dueDate)
-        setDuedateHasError(true);
-      if(!classAssignments.syllabusId)
-        setClassHasError(true);
+      setNotAvailableModalVisible(true);
     }
   }
 
@@ -336,8 +347,13 @@ const AssignmentScreen = (props) => {
           <View style={{ marginVertical: 5, paddingHorizontal: 16, paddingVertical: 5, borderWidth: 1, borderStyle: "dashed", borderRadius: 16, width: "100%" }}>
             <View style={{ width: "100%", alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between'}}>
               <TouchableOpacity style={{ width: "85%" }} onPress={() => {
-                console.log(attachmentUrl)
-                setIsAttachmentVisible(!isAttachmentVisible)
+                // console.log(attachmentUrl)
+                setAttachmentsVisible(!attachmentsVisible)
+                setTimeout(() => {
+                  // console.log("here")
+                  setIsAttachmentVisible(!isAttachmentVisible)
+                }, 1200)
+                
               }}>
                 <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1', fontSize: 12 }}>{tempAttach}</Text>
               </TouchableOpacity>
@@ -361,16 +377,7 @@ const AssignmentScreen = (props) => {
             return (
                 <View>
                 <Text style={{ marginTop: 10, marginBottom: 10, color: '#0036A1' }}>No Attachments</Text>
-                <SecondaryButton onPress={async() => {
-                    const attachment = await DocumentPicker.pickSingle({
-                        type: [types.pdf, types.images]
-                    });
-                    
-                    let attachmentsArray = attachments;
-                    attachmentsArray.push(attachment);
-                    setClassAssignments({...classAssignments, attachments: attachmentsArray[0], attachmentFileName: attachmentsArray[0].name})
-                    setIsAwait(isAwait+1);
-                }} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
+                <SecondaryButton onPress={handleAddFile} type='add-file' containerStyle={{ width: "100%" }} title="Add File" />
                 </View>
             )
         }
@@ -399,17 +406,18 @@ const AssignmentScreen = (props) => {
           <Text style={{ 
             textAlign: 'center', 
             color: 'white', 
-            marginTop:  Platform.OS === 'ios' ? 55 : 18, 
+            marginTop:  Platform.OS === 'ios' ? 55 : 20, 
             fontSize: 18, 
             fontFamily:'Manrope',
             fontWeight: 'bold'
             }}>Assignments</Text>
         </View>
-          <View
+        {/* <View
             style={{
               position: 'absolute', 
               top: Platform.OS === 'ios' ? 23 : 12, 
-              right: 15
+              right: 15,
+              zIndex: 1
             }}
           >
           <TouchableOpacity onPress={toggleModal}><Text
@@ -417,117 +425,9 @@ const AssignmentScreen = (props) => {
               color: 'white',
               fontSize: 25
             }}>+</Text>
-            </TouchableOpacity></View>
-        <CalendarStrip
-          ref={calendarRef}
-          onDateSelected={callme}
-          scrollable
-          showWeek={isShowAll}
-          // scrollerPaging={true}
-          selectedDate={selectedDate}
-          style={isShowAll ? {height: 0, marginTop: 100, paddingBottom: 0, overflow: 'visible'} : {height: 80, marginTop: 110, paddingBottom: 10, overflow: 'visible'}}
-          calendarHeaderFormat={"MMMM YYYY"}
-          calendarHeaderContainerStyle={isShowAll ? {
-            marginTop: -35,
-            left: 15,
-            position: 'absolute'
-          }: {
-            marginTop: -45,
-            left: 15,
-            position: 'absolute'
-          }}
-          calendarHeaderStyle={{
-            color: 'white',
-            fontSize: 16, 
-            fontWeight: '100'
-          }}
-          calendarHeaderClick={() => {
-            setAllCalendarVisible(true)
-          }}
-          iconContainer={{flex: 0.1}}
-          calendarAnimation={{type: 'sequence', duration: 30}}
-          daySelectionAnimation={{type: 'background', duration: 200, highlightColor: 'black'}}
-          markedDates={markedDatesArray}
-          page={'assignment'}
-          markedDatesStyle={{ top: 10, bottom: 0}}
-          weekendDateNameStyle={{
-            fontSize: 12,
-            fontWeight: 'bold',
-            color: '#0036A1',
-            top: -5
-          }}
-          weekendDateNumberStyle={{
-            color: 'black',
-            top: 9,
-            marginBottom: -10
-          }}
-          dateNumberStyle={{ // day number
-            color: 'black',
-            top: 9,
-            marginBottom: -10
-          }}
-          dateNameStyle={{ // day name
-            fontSize: 12,
-            fontWeight: 'bold',
-            color: '#0036A1',
-            top: -5
-          }}
-          dayContainerStyle={{
-            backgroundColor: 'white'
-          }}
-          highlightDateNumberStyle={{  // selected day
-            top: 19,
-            color: 'white'
-          }}
-          highlightDateNameStyle={{ // day name
-            fontSize: 12,
-            fontWeight: 'bold',
-            height: 20,
-            width: 100,
-            flex: 1,
-            position: 'absolute',
-            top: -25,
-            color: '#0036A1'
-          }}
-          highlightDateContainerStyle={{ // selected circle
-            position: 'absolute', 
-            top: 15,
-            justifyContent: 'flex-end', 
-            height: 30, 
-            width: 30,
-            backgroundColor: '#0036A1' //blue
-          }}
-        />
+            </TouchableOpacity></View> */}
         {/* <Button title="Show modal" onPress={toggleModal} /> */}
-        <Modal 
-            isVisible={isAttachmentVisible} 
-            onBackdropPress={() => setIsAttachmentVisible(!isAttachmentVisible)}
-            transparent={true} 
-            animationInTiming={300}
-            animationOutTiming={300}
-            backdropTransitionInTiming={0}
-            backdropTransitionOutTiming={0}
-            backdropOpacity={0.4}
-            style={{ marginVertical: 120, backgroundColor: 'white', padding: 15, borderRadius: 8, height: 550, flex: 0 }}>
-            <WebView 
-                style={{ }} 
-                automaticallyAdjustContentInsets={false}
-                source={{ uri: attachmentUrl }} />
-            <View style={{ height: 15}}></View>
-            <DefaultButton 
-                    title="Close" 
-                    style={{ }}
-                    buttonColor={{ 
-                      backgroundColor: "#E6EAF2", 
-                      borderColor: '#A6BEED',
-                      borderWidth: 1
-                    }}
-                    textStyle={{ 
-                      color: '#494AE2'
-                    }}
-                    onPress={() => setIsAttachmentVisible(!isAttachmentVisible)}
-                  /> 
-        </Modal>
+        
         <Modal 
           isVisible={isModalVisible} 
           style={{
@@ -541,19 +441,23 @@ const AssignmentScreen = (props) => {
           backdropTransitionInTiming={0}
           backdropTransitionOutTiming={0}
           backdropOpacity={0.4}
+          avoidKeyboard
           // propagateSwipe={true}
           >
-          <DateTimePicker 
+            <NotAvailableModal
+            isVisible={notAvailableModalVisible}
+            onClose={() => {setNotAvailableModalVisible(false)}} />
+          {/* <DateTimePicker 
               onClose={() => { setCalendarVisible(!calendarVisible); }}
               modalVisible={calendarVisible} 
-              showTimePicker={false}
+              showTimePicker={true}
               onChangeDate={(startDate) =>  {
                 setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
                 setDuedateHasError(false);
                 setErrorMessage(false);
               }}
               onSelectDate={() => setCalendarVisible(!calendarVisible)}
-          />
+          /> */}
   
           {/* <DateTimePicker 
               onClose={() => { setAllCalendarVisible(!allCalendarVisible); }}
@@ -585,6 +489,8 @@ const AssignmentScreen = (props) => {
                   style={styles.close}
               />
             </TouchableOpacity>
+
+            {/* <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}> */}
             <ScrollView style={{ }}>
                 <View style={{ marginHorizontal: 13 }}>
                   <View style={{marginTop: 24}}>
@@ -704,95 +610,9 @@ const AssignmentScreen = (props) => {
           <View style={{marginTop: 24}}></View>
                 </View>
             </ScrollView>
+            {/* </KeyboardAvoidingView> */}
           </View>
-
-          <DateTimePicker 
-            onClose={() => { setCalendarVisible(!calendarVisible); }}
-            modalVisible={calendarVisible} 
-            showTimePicker={false}
-            onChangeDate={(startDate) =>  {
-              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY")});
-              setDuedateHasError(false);
-              setErrorMessage(false);
-            }}
-            onSelectDate={() => setCalendarVisible(!calendarVisible)}
-        />
-
-        </Modal>
-        <Modal 
-          isVisible={attachmentsVisible} 
-          style={{
-            margin: 0
-          }} 
-          transparent={true} 
-          animationInTiming={500}
-          animationOutTiming={1000}
-          backdropOpacity={0.4}
-          onBackdropPress={() => setAttachmentsVisible(!attachmentsVisible)} 
-          >
-            <View style={{
-            height: attachments != '' ? 310 : 250,
-            backgroundColor:'white',
-            position: 'relative',
-            borderRadius: 16,
-            width: Dimensions.get("window").width - 40,
-            marginHorizontal: 20
-          }}>
-              <View style={{ marginHorizontal: 13, marginTop: 12 }}>
-                  <Text style={{
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    color: '#0036A1'
-                  }}>Attachments</Text>
-                  <TextInput 
-                    multiline
-                    disabled={true}
-                    numberOfLines={5}
-                    style={{
-                      backgroundColor: '#FAF6EA', 
-                      marginTop: 10, 
-                      marginBottom: 10, 
-                      paddingTop: 10,
-                      borderBottomLeftRadius: 10,
-                      borderBottomRightRadius: 10
-                    }}
-                    value={note}
-                  />
-                    <View style={{ marginBottom: 10 }}>
-                    {showAttachment(attachments, false)}</View>
-                  <DefaultButton 
-                    title="Close" 
-                    style={{ marginBottom: 10 }}
-                    buttonColor={{ 
-                      backgroundColor: "#E6EAF2", 
-                      borderColor: '#A6BEED',
-                      borderWidth: 1
-                    }}
-                    textStyle={{ 
-                      color: '#494AE2'
-                    }}
-                    onPress={() => setAttachmentsVisible(!attachmentsVisible)}
-                  /> 
-              </View>
-            </View>
-          </Modal>
-       
-
-        <DateTimePicker 
-            onClose={() => { setAllCalendarVisible(!allCalendarVisible); }}
-            modalVisible={allCalendarVisible} 
-            showTimePicker={false}
-            showAllAssignment={true}
-            showAllAssignments={showAllAssignments}
-            onChangeDate={(selectedDate) =>  {
-                setAllCalendarVisible(!allCalendarVisible);
-                setIsShowAll(false);
-                callme(selectedDate)
-                useEffectFunction();
-            }}
-            onSelectDate={{}}
-        />
-        {/* <WeekdayTimePicker 
+          {/* <WeekdayTimePicker 
                 onClose={() => { setCalendarVisible(!calendarVisible); }}
                 modalVisible={calendarVisible} 
                 showTimePicker={true}
@@ -808,49 +628,44 @@ const AssignmentScreen = (props) => {
                 // parentCallback = {handleCallback}
                 // onSelectDate={() => setCalendarVisible(!calendarVisible)}
             /> */}
-        {/* {checkHasData()} */}
-        <Card 
-          showRemoveModal={(item, message, status) => openConfirmationModal(item, message, status)} 
-          editCardData={editCardData} 
-          completeCardData={(item, message, status) => openConfirmationModal(item, message, status)}
-          onPress={toggleModal} 
-          toggleAttachments={toggleAttachments}
-          page={'assignments'}
-          selectedDate={selectedDate}
-          markedDatesArray={markedDatesArray}
-          allDatesArray={allDatesArray}
-          isShowAll={isShowAll}
-          data={cardData}
-          syllabus={syllabus}
-          bgColor={bgColor} />
+          <DateTimePicker 
+            onClose={() => { setCalendarVisible(!calendarVisible); }}
+            modalVisible={calendarVisible} 
+            showTimePicker={true}
+            time={classAssignments.dueDate ? classAssignments.dueDate : new Date()}
+            onChangeDate={(startDate) =>  {
+              console.log("[");
+              // console.log(startDate)
+              console.log(Moment(startDate).format("MM/DD/YYYY") + " " + currentModalTime);
+              console.log("]");
+              // console.log(currentModalTime);
+              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY") + " " + currentModalTime});
+              setDuedateHasError(false);
+              setErrorMessage(false);
+            }}
+            onChangeTime={(startDate) => {
+              console.log("[");
+              console.log(startDate)
+              console.log(Moment(startDate).format("MM/DD/YYYY HH:mm"))
+              console.log("]");
+              console.log(Moment(startDate).format("HH:mm"))
+              setCurrentModalTime(Moment(startDate).format("HH:mm"))
+              setClassAssignments({...classAssignments, dueDate: Moment(startDate).format("MM/DD/YYYY HH:mm")});
+              setDuedateHasError(false);
+              setErrorMessage(false);
+            }}
+            selectedDate={classAssignments.dueDate ? classAssignments.dueDate : new Date()}
+            onSelectDate={() => setCalendarVisible(!calendarVisible)} 
+        />
+
+        </Modal>
+        
+      <Assignments 
+      counter={props.counter}
+      selectedDate={selectedDate}
+      showWeek={true}
+      screen={'assignments'} />
       </View>
-    {/* <View style={{ flex:1,alignItems:'center',justifyContent:'center' }}>
-      <Text>Assignment Screen</Text>
-      <Card />
-    </View> */}
-
-      <SuccessModal 
-        successModalVisible={successModalVisible} 
-        successMessage={successMessage}
-        headerText={successTitle}
-        onClose={() => {
-          setSuccessModalVisible(!successModalVisible);
-          useEffectFunction("success");
-        }}
-      />
-
-      <ConfirmationModal 
-          modalVisible={confirmationVisible} 
-          confirmationMessage={confirmationMessage}
-          status={confirmationStatus}
-          onClose={() => setConfirmationVisible(!confirmationVisible)}
-          onConfirm={() => {
-            if(confirmationStatus === 'remove')
-              handleDeleteAssignment(item);
-            if(confirmationStatus === 'complete')
-              handleCompleteAssignment(item);
-          }}
-      />
     </>
   )
 }

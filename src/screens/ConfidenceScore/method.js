@@ -16,10 +16,6 @@ const method = (props) => {
         colorInHex: 0
     });
 
-    useEffect(() => {
-        console.log("new confidence score creen=======================")
-    }, [classSyllabi,ocrResults]);
-
     const syllabusItems = [
         {
             title: `What's the name of your teacher?`,

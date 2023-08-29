@@ -31,10 +31,12 @@ const Dropdown = ({
                 itemProps={{
                   style:{ 
                    padding: 10,
-                   paddingLeft: 20
+                   paddingLeft: 20,
+                   flexDirection: 'row'
                   }
                 }}
                 textStyle={styles.text}
+                zIndex={1000}
             />
   );
 };

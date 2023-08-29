@@ -15,7 +15,8 @@ const CodeVerificationScreen = ({ navigation }) => {
         verificationCode,
         setVerificationCode,
         handleCodeVerification,
-        handleResendCode
+        handleResendCode,
+        handleBack
     } = method(navigation);
 
 
@@ -41,8 +42,19 @@ const CodeVerificationScreen = ({ navigation }) => {
                     Please enter the verification code we sent to your email address
                 </Text>
             </View>
-
             <View style={styles.mainContainer}>
+                <TouchableOpacity onPress={() => {
+                    console.log('closing verification');
+                    handleBack()
+                }}
+                style={{position: 'absolute', right: 20, top: 20}}>
+                    <Image 
+                        source={require('../../assets/icons/closeButton.png')}
+                        resizeMode='contain'
+                        style={styles.close}
+                    />
+                </TouchableOpacity>
+                <View style={{ height: 20}}></View>
                 <View style={styles.button}>
                     <DefaultInput 
                         label="Verification Code"

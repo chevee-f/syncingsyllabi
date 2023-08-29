@@ -55,7 +55,7 @@ const ForeGroundNotification = ({
                     <ScrollView>
                     {notificationList.map((item) => {
                         return (
-                            <TouchableOpacity style={[styles.messageContainer, {borderBottomColor: item.isRead ? color.default : color.primary}]} 
+                            <TouchableOpacity key={Math.random()} style={[styles.messageContainer, {borderBottomColor: item.isRead ? color.default : color.primary}]} 
                                               onPress={() => onTrigger(item.id, item.title)}>
                                 {!item.isRead &&
                                     <View style={styles.newIndicator} />

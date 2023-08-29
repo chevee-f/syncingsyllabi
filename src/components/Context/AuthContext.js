@@ -1,10 +1,11 @@
 import createDataContext from './CreateDataContext';
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAPIBaseUrl } from "../../config/env";
 import { Alert } from 'react-native';
 import { GoogleSignin } from 'react-native-google-signin';  
 import { LoginManager } from 'react-native-fbsdk';
+import { getWebClientId } from "../../config/env";
 const authReducer = (state, action) => {
 
   switch (action.type) {
@@ -66,6 +67,10 @@ const authReducer = (state, action) => {
      case 'setTheme':
       return {
                 isDarkTheme: action.payload.isDarkTheme
+             };
+     case 'isGuest':
+      return {
+                isGuest: action.payload.isGuest
              };
     default:
       return state;
@@ -220,6 +225,10 @@ const sendVerificationCode = dispatch => {
 
 const signIn = dispatch => {
   return async({email, password, isGoogleSignIn}) => {
+    console.log(email)
+    console.log(password)
+    console.log(isGoogleSignIn)
+
       try {
             if(await getUserInfo(email) == null){
               Alert.alert('Account','Account does not exist. Enter a different account or get a new one.')
@@ -229,9 +238,11 @@ const signIn = dispatch => {
             {
                 "email": email,
                 "password": !isGoogleSignIn ? password : null,
-                "IsGoogle": isGoogleSignIn
+                "IsGoogle": true
             })
             .then(async(res) => {
+              console.log("THE RES")
+              console.log(res.data.data.item)
               if(res.data.data.item == null){
                 Alert.alert('Incorrect Password','The password you entered is incorrect. Please try again.')
               }
@@ -248,7 +259,7 @@ const signIn = dispatch => {
                           payload: {token: null, 
                                     userId: res.data.data.item.id,
                                     email: email,
-                                    isForCodeVerification: true
+                                    isForCodeVerification: false
                         }});
               }
             })
@@ -337,13 +348,21 @@ const signOut = dispatch => {
   return async() => {
     let isGoogleSignIn = await AsyncStorage.getItem('isGoogleSignIn')
     if(isGoogleSignIn){
-      try{
+      // try{
+
+        GoogleSignin.configure({
+            scopes: ['email'], 
+            webClientId: getWebClientId(Platform.OS),
+            offlineAccess: true
+        });
         await GoogleSignin.revokeAccess();
         await GoogleSignin.signOut();
         auth().signOut()
-      }catch(e){
+        console.log(isGoogleSignIn + "IS SIGNING OUT")
+      // }catch(e){
         await LoginManager.logOut();
-      }
+        // console.log(isGoogleSignIn + "IS SIGNING OUT, BUT HERE")
+      // }
     }
 
     await AsyncStorage.removeItem('userToken');
@@ -360,6 +379,12 @@ const setTheme = dispatch => {
   };
 };
 
+const isGuest = dispatch => {
+  return async({isGuest}) => {
+    dispatch({type: 'isGuest', payload: { isGuest: JSON.stringify(isGuest) }});
+  }
+};
+
 export const {Provider, Context} = createDataContext(
   authReducer,
   { signIn, 
@@ -369,6 +394,7 @@ export const {Provider, Context} = createDataContext(
     verifyUserCode,
     changePassword,
     sendVerificationCode,
-    setTheme },
+    setTheme,
+    isGuest },
   {token: null, email: ''},
 );

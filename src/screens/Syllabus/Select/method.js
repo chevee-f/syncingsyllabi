@@ -1,11 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import DocumentPicker, { types } from 'react-native-document-picker'
 import * as ImagePicker from 'react-native-image-picker';
 import { PermissionsAndroid, Alert } from 'react-native';
 import styles from './styles'
 
 const method = (navigation,props) => {
-
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false)
     const openCamera = async (nextScreen) => {  
         try {
             const granted = await PermissionsAndroid.request(
@@ -48,7 +48,7 @@ const method = (navigation,props) => {
 
     const selectPdf = async(nextScreen) => {
         const pickerResult = await DocumentPicker.pickSingle({
-            type: [types.pdf]
+            type: [types.pdf, types.images]
         })
         props.onClose()
         navigation.navigate('PdfViewerScreen', { file: pickerResult, source: decodeURI(pickerResult.uri), nextScreen: nextScreen})
@@ -74,7 +74,9 @@ const method = (navigation,props) => {
     return {
         openCamera,
         selectPdf,
-        selectImage
+        selectImage,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
     };
   };
   

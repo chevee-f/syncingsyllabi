@@ -9,7 +9,8 @@ export default StyleSheet.create({
         justifyContent: 'center',
         alignItems:'center',
         height: height * 0.058,
-        borderRadius:16
+        borderRadius:16,
+        flexDirection: 'row'
     },
     text: {
       color: color.textDefault,

@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useContext } from 'react';
-import { Button, Text, View, StyleSheet, Animated, I18nManager, Image, TouchableOpacity } from 'react-native';
-import { Swipeable, RectButton, FlatList } from 'react-native-gesture-handler';
+import { Button, Text, View, StyleSheet, Animated, I18nManager, Image } from 'react-native';
+import { Swipeable, RectButton, FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import Moment from 'moment';
 import MenuIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import label from '../../styles/label'
@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 const tomorrow = Moment().add(1, 'days');
 const Card = ({data, ...props}) => {
+  // console.log(props)
   const { state } = useContext(AuthContext);
   const [sortValue, setSortValue] = React.useState('id');
   const [isFocus, setIsFocus] = React.useState(false);
@@ -26,7 +27,7 @@ const Card = ({data, ...props}) => {
   
   const renderLeftActions = (progress, item) => {
     return (
-      <View style={{ width: 96, height: 106, marginTop: 10 }}>
+      <View style={{ width: 96, marginTop: 10 }}>
         <TouchableOpacity style={styles.leftAction}
           onPress={() => removePressHandler(item)}>
           <Animated.Text
@@ -86,7 +87,7 @@ const Card = ({data, ...props}) => {
   };
   
   const renderRightActions = (progress, item) => (
-    <View style={{ width: 192, height: 106, marginTop: 10, flexDirection: I18nManager.isRTL? 'row-reverse' : 'row' }}>
+    <View style={{ width: 192, marginTop: 10, flexDirection: I18nManager.isRTL? 'row-reverse' : 'row' }}>
       {renderCompleteRightAction(item, 'Done', '#70C862', progress)}
       {renderRightAction(item, 'Edit', '#FDC830', progress)}
     </View>
@@ -98,7 +99,10 @@ const Card = ({data, ...props}) => {
     } 
     return (
       <TouchableOpacity 
-        onPress={() => props.toggleAttachments(item)} 
+        onPress={() => {
+          console.log('red')
+          props.toggleAttachments(item)
+        }} 
         style={{ 
           height: 20, 
           width: 20,
@@ -139,8 +143,10 @@ const Card = ({data, ...props}) => {
       dueColor = "#E54C29";
     }
     let color = '#000';
+    let className = '';
     for (let syllabi of props.syllabus) {
       if (syllabi.id == item.syllabusId) {
+        className = syllabi.className;
         color = props.bgColor[syllabi.colorInHex][1]
       }
     }
@@ -155,7 +161,7 @@ const Card = ({data, ...props}) => {
         top: 0,
         bottom: 0
       }} />
-      <Text style={styles.fromText}>{item.assignmentTitle}</Text>
+      <Text style={styles.fromText}>{item.assignmentTitle} | {className}</Text>
       <View
         style={{
           borderBottomColor: '#E6EAF2',
@@ -239,14 +245,18 @@ const Card = ({data, ...props}) => {
       return null;
     }
   }
-  
+  // console.log(data.length)
+  // console.log(props)
   if(data.length > 0) {
     return (
       <View style={{ 
-        flex: 1,
-        width: '100%' }}>
+        // flex: 1,
+        // height: 200,
+        // backgroundColor: 'pink',
+        width: '100%' 
+        }}>
         {
-          props.page === 'home' ?
+          props.sort == 'hide'?
           <View style={styles.header}>
             <Text style={[label.boldSmallHeading2,{color:state.isDarkTheme === 'true' ? color.default : color.primary}]}>Assignments</Text>
             <MenuIcon 
@@ -311,7 +321,7 @@ const styles = StyleSheet.create({
   },
   header:{
     flexDirection:'row',
-    width:width * 0.89,
+    width: width * 0.89,
     justifyContent:'space-between',
     alignSelf:'center',
     alignItems:'center',
@@ -319,11 +329,10 @@ const styles = StyleSheet.create({
     marginBottom:5
   },
   leftAction: {
-    flex: 1,
     backgroundColor: '#E54C29',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 106
+    height: "100%"
   },
   actionText: {
     color: 'white',
@@ -332,13 +341,11 @@ const styles = StyleSheet.create({
   },
   rightAction: {
     alignItems: 'center',
-    flex: 1,
     justifyContent: 'center',
-    height: 106,
+    height: "100%"
   },
   rectButton: {
     flex: 1,
-    height: 106,
     paddingHorizontal: 10,
     flexDirection: 'column',
     backgroundColor: 'white',
@@ -354,7 +361,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     paddingLeft: 27,
     paddingTop: 16,
-    paddingBottom: 16
+    paddingBottom: 16,
+    maxWidth: width * 0.775
   },
   messageText: {
     color: '#999',

@@ -14,6 +14,10 @@ const ConfirmationModal = props => {
         buttonText = "Remove";
         buttonColor = "#E54C29";
     }
+    if(props.status === 'delete') {
+        buttonText = "Delete";
+        buttonColor = "#E54C29";
+    }
     return (
         <SafeAreaView>
                 <Modal
@@ -30,6 +34,9 @@ const ConfirmationModal = props => {
 
                     <View style={styles.modalContainer}>
                         <Text style={label.boldMediumHeading}>{props.confirmationMessage}</Text>
+                        {props.subText &&
+                            <Text style={{fontSize: 16, marginTop: 10, textAlign: "center", lineHeight: 25}}>{props.subText}</Text>
+                        }
                         <View style={styles.buttonContainer}>
                             <CancelButton title="Close" containerStyle={styles.button} onPress={props.onClose} />
                             <DefaultButton title={buttonText} buttonColor={{backgroundColor: buttonColor}} containerStyle={styles.button} onPress={props.onConfirm} />

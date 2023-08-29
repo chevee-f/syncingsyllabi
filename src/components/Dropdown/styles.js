@@ -8,14 +8,14 @@ export default StyleSheet.create({
         height: 50,
         width: width * 0.9,
         marginTop: 10,
-        zIndex: 30
+        // zIndex: 30
     },
     dropDown:{
         borderRadius: 15,
         borderColor: color.default,
         borderBottomStartRadius: 10,
         borderBottomEndRadius: 10,
-        backgroundColor: '#fbfbfb'
+        backgroundColor: '#fbfbfb',
     },
     dropDownContainerStyle: {
         borderWidth: 0,

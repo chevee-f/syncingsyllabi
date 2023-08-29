@@ -57,9 +57,11 @@ const SetUpScreen = (props) => {
         let token = state.token
         dispatch(getSyllabusByUser(userId, token));
         dispatch(getGoalByUser(userId, token));
+        // console.log("Inside SetUp");
+        // console.log(props.route.params);
 
-        setModalVisible(props.route.params.isAddModalVisible)
-    }, [syllabus.length, goals.length,props.route.params.isAddModalVisible]);
+        // setModalVisible(true)
+    }, [syllabus.length, goals.length]);
 
     return (
       <View style={{ flex:1}}>

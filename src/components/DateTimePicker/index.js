@@ -18,7 +18,8 @@ const DateTimePicker = ({
   }) => {
 
     const { state } = useContext(AuthContext);
-
+    // console.log(new Date(Date.parse(props.time)) + "--- props.time")
+    // console.log(new Date(Date.parse(props.selectedDate)))
     return (
         <SafeAreaView>
             <Modal
@@ -48,6 +49,7 @@ const DateTimePicker = ({
                         yearTitleStyle={styles.titleStyle}
                         onDateChange={props.onChangeDate}
                         initialDate={props.selectedDate}
+                        selectedStartDate={new Date(Date.parse(props.selectedDate))}
                     />
 
                     {props.showTimePicker &&
@@ -57,7 +59,7 @@ const DateTimePicker = ({
                             <DatePicker 
                                 mode="time"
                                 textColor={color.primary}
-                                date={props.time} 
+                                date={new Date(Date.parse(props.time))} 
                                 onDateChange={props.onChangeTime}
                             />
                         </View>

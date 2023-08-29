@@ -21,6 +21,7 @@ const method = () => {
     const [allDatesArray, setAllDatesArray] = useState([]);
     const { assignments } = useSelector(state => state.assignmentsReducer);
     const { syllabus } = useSelector(state => state.syllabusReducer);
+    const [syllabusId, setSyllabusId] = useState(null);
     const [classAssignments, setClassAssignments] = useState({
         id: '',
         title: '',
@@ -57,7 +58,7 @@ const method = () => {
                 pad(date.getUTCDate())       + 'T' +
                 pad(date.getUTCHours())      + ':' +
                 pad(date.getUTCMinutes())    + ':' +
-                pad(date.getUTCSeconds())    + 'Z';
+                pad(date.getUTCSeconds())    + '';
                 console.log(date);
         // setClassAssignments({ ...classAssignments, dueDate: date });
         await dispatch(addAssignments(classAssignments, userId, token, date));
@@ -78,8 +79,14 @@ const method = () => {
     const handleUpdateAssignment = async() => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
-        let date = classAssignments.dueDate;
-        date = date + 'Z';
+        let pad = function(num) { return ('00'+num).slice(-2) };
+        let date = new Date(classAssignments.dueDate);
+        date = date.getUTCFullYear()         + '-' +
+                pad(date.getUTCMonth() + 1)  + '-' +
+                pad(date.getUTCDate())       + 'T' +
+                pad(date.getUTCHours())      + ':' +
+                pad(date.getUTCMinutes())    + ':' +
+                pad(date.getUTCSeconds())    + '';
         await dispatch(updateAssignment(classAssignments, userId, token, date));
         
         if(hasError){
@@ -265,7 +272,7 @@ const method = () => {
         } 
         setSelectedDate(selectedDateY)
     }
-    const useEffectFunction = (status = "") => {
+    const useEffectFunction = (status = "", tmpDate = "") => {
         fetchedDates = [];
         if(assignments.length > 0) {
           let dates = [];
@@ -328,26 +335,64 @@ const method = () => {
         //     },
         // }
             let tmp = {};
+            let hasSelectedFromList = false;
+            let selectedDots = [];
+            let tmpSelectedDate = tmpDate == "" ? selectedDate : tmpDate
+          console.log("SELECTED DATE" + selectedDate)
+            let currentDate = Moment(tmpSelectedDate).format("YYYY-MM-DD");
             for (let i = 0; i < fetchedDates.length; i++) {
                 // console.log(fetchedDates[i].data[0].assignmentDateEnd);
                 let dots = [];
                 for (let j = 0; j < fetchedDates[i].data.length; j++) {
+                    let color = '#000';
+                    for (let syllabi of syllabus) {
+                        if (syllabi.id == fetchedDates[i].data[j].syllabusId) {
+                        color = bgColor[syllabi.colorInHex][1]
+                        }
+                    }
                     dots.push({
                         "key": fetchedDates[i].data[j].id,
-                        "color": "blue"
+                        "color": color
                     })
                 }
-                console.log("selectedDate")
-                console.log(selectedDate)
+
                 let isSelected = false;
-                if(selectedDate == fetchedDates[i].date)
+                let d;
+                // if(tmpDate == "")
+                    d = currentDate;
+                console.log(d + " " + fetchedDates[i].date)
+                if(d === fetchedDates[i].date) {
                     isSelected = true;
-                tmp[fetchedDates[i].date] = {
-                    'dots': dots,
-                    'selected': isSelected, 
-                    'selectedColor': 'red'
+                    hasSelectedFromList = true;
+                    selectedDots = dots;
+                    console.log("IT'S AN IF!")
+                } else {
+                    console.log("IT'S AN ELSE!")
+                    tmp[fetchedDates[i].date] = {
+                        'dots': dots,
+                        'selected': false, 
+                        'selectedColor': '#0036A1',
+                        'selectedTextColor': 'white'
+                    }
                 }
                 
+            }
+            if(tmpDate == "")
+                tmpDate = currentDate;
+            if(hasSelectedFromList) {
+                console.log("CREATING ANOTHER")
+                tmp[tmpDate] = {
+                    'dots': selectedDots,
+                    'selected': true, 
+                    'selectedColor': '#0036A1',
+                    'selectedTextColor': 'white'
+                }
+            } else {
+                tmp[tmpDate] = {
+                    'selected': true, 
+                    'selectedColor': '#0036A1',
+                    'selectedTextColor': 'white'
+                }
             }
             // console.log(tmp['2022-08-30'])
             setCalendarMarkedDatesArray(tmp)
@@ -471,6 +516,8 @@ const method = () => {
         successTitle,
         allDatesArray,
         calendarMarkedDatesArray,
+        syllabusId,
+        setSyllabusId,
         setCalendarMarkedDatesArray,
         setAllDatesArray,
         setSuccessTitle,

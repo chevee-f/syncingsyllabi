@@ -21,6 +21,7 @@ import { useSelector } from 'react-redux';
 import ConfirmationModal from '../../../components/ConfirmationModal'
 import SuccessModal from '../../../components/SuccessModal'
 import {Context as AuthContext} from '../../../components/Context/AuthContext';
+import NotAvailableModal from '../../../components/NotAvailableModal';
 
 var {height, width} = Dimensions.get('window');
 
@@ -44,6 +45,8 @@ const AddGoal = ({
         action,
         successMessage,
         successModalVisible,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
@@ -53,7 +56,8 @@ const AddGoal = ({
         setOpenMenu,
         handleSelectItem,
         resetGoal,
-        onConfirm
+        onConfirm,
+        handleSaveGoal
     } = method();
 
     const [startDateVisible, setStartDateVisible] = useState(false);
@@ -88,17 +92,23 @@ const AddGoal = ({
     }, [goalVisible,goal,goalId,goals,hasValue]);
 
     return (
-        <SafeAreaView>
+        // <SafeAreaView>
+        <>
+      <View style={styles.container}>
             <Modal
-                useNativeDriver={true}
-                backdropColor='rgba(0, 0, 0, 0.7)'
-                backdropOpacity={0.5}
-                animationIn='slideInUp'
-                animationOut='slideOutDown'
-                //isVisible={props.modalVisible}
+                style={{
+                    margin: 0,
+                    justifyContent: 'flex-end'
+                }} 
+                
+                transparent={true} 
+                animationInTiming={300}
+                animationOutTiming={300}
+                backdropTransitionInTiming={0}
+                backdropTransitionOutTiming={0}
+                backdropOpacity={0.4}
+                avoidKeyboard
                 isVisible={goalVisible}
-                hideModalContentWhileAnimating
-                style={styles.modal}
                 onBackButtonPress={() => {setGoalVisible(!goalVisible);
                                           setGoalId(null)
                                           resetGoal() 
@@ -107,102 +117,7 @@ const AddGoal = ({
                                         setGoalId(null)
                                         resetGoal() 
                                        }}>
-
-                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} 
-                                      style={[styles.modalContainer, {backgroundColor: state.isDarkTheme === 'true' ? color.darkTheme : '#fff'}]}>
-                    <ScrollView>
-                        <TouchableOpacity onPress={() => { setGoalVisible(!goalVisible);
-                                                           setGoalId(null)
-                                                           resetGoal() }}>
-                            <Image 
-                                source={require('../../../assets/icons/closeButton.png')}
-                                resizeMode='contain'
-                                style={styles.close}
-                            />
-                        </TouchableOpacity>
-                        <View style={styles.fieldContainer}>
-                            <Label text="Type of Goal" isDarkTheme={state.isDarkTheme === 'true'} />
-                            <Dropdown isOpen={openMenu} 
-                                      openMenu={() => setOpenMenu(true)} 
-                                      onDismiss={() => setOpenMenu(false)}
-                                      onSelectItem = { handleSelectItem }
-                                      selectedItem = {goal.type}
-                                      items = {typeOfGoal} />
-                        </View>
-                        <View style={[styles.fieldContainer,{zIndex:-5}]}>
-                            <Label text="Description of the Goal" isDarkTheme={state.isDarkTheme === 'true'} />
-                            <View style={[styles.inputContainer, {height: height * 0.15}]}>
-                                <TextInput
-                                    mode="flat"
-                                    style={[styles.input,{height: height * 0.16}]}
-                                    placeholder="Description of Goal"
-                                    selectionColor={color.primary}
-                                    activeUnderlineColor={color.primary}
-                                    //multiline={true}
-                                    //numberOfLines={5}
-                                    theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                                    value={goal.description}
-                                    onChangeText={(description) =>  setGoal({...goal, description: description})}
-                                />
-                            </View> 
-                        </View>
-                        <View style={[styles.fieldContainer,{zIndex:-5,flexDirection:'row',justifyContent:'space-between'}]}>
-                            <View style={{width: '49%'}}>
-                                <Label text="Start Date" isDarkTheme={state.isDarkTheme === 'true'} />
-                                <View style={styles.inputContainer}>
-                                    <TextInput
-                                        mode="flat"
-                                        style={[styles.input]}
-                                        onPressIn={() => { setStartDateVisible(true)}}
-                                        placeholder="DD/MM/YYYY"
-                                        editable={false}
-                                        value={goal.stringStartDate}
-                                        selectionColor={color.primary}
-                                        activeUnderlineColor={color.primary}
-                                        theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                                    />
-                                </View> 
-                            </View>
-                            <View style={{width: '49%'}}>
-                                <Label text="End Date" isDarkTheme={state.isDarkTheme === 'true'} />
-                                <View style={styles.inputContainer}>
-                                    <TextInput
-                                        mode="flat"
-                                        style={[styles.input]}
-                                        onPressIn={() => { setEndDateVisible(true)}}
-                                        placeholder="DD/MM/YYYY"
-                                        editable={false}
-                                        value={goal.stringEndDate}
-                                        selectionColor={color.primary}
-                                        activeUnderlineColor={color.primary}
-                                        theme={{ colors: { text: color.primary, placeholder: color.default } }}
-                                    />
-                                </View> 
-                            </View>
-                        </View>
-                        {goalId !== null ?
-                            <View style={styles.actionContainer}>
-                                <DefaultButton containerStyle={{width: width * 0.44, backgroundColor: color.error }} 
-                                                title="Remove" 
-                                                onPress={() => {setAction('Delete')
-                                                                setConfirmationMessage('Remove this Goal?')
-                                                                setConfirmationVisible(true)}}/>    
-                                <DefaultButton containerStyle={{width: width * 0.44}} 
-                                                title="Update" 
-                                                onPress={() => {setAction('Update')
-                                                                setConfirmationMessage('Update this Goal?')
-                                                                setConfirmationVisible(true)}}/>         
-                            </View> :
-                            <View style={styles.fieldContainer}>
-                                <DefaultButton title="Save"
-                                                onPress={() => {setAction('Add')
-                                                                setConfirmationMessage('Add this Goal?')
-                                                                setConfirmationVisible(true)}} />       
-                            </View>
-                        }
-                    </ScrollView>
-                </KeyboardAvoidingView>
-
+                
                 <DateTimePicker 
                     onClose={() => setStartDateVisible(!startDateVisible)}
                     modalVisible={startDateVisible} 
@@ -211,7 +126,7 @@ const AddGoal = ({
                                                             startDate: startDate,
                                                             stringStartDate: Moment(startDate).format("MM/DD/YYYY")})}
                     onSelectDate={() => setStartDateVisible(!startDateVisible)}
-                    //selectedDate={Moment(goal.startDate).format("MM/DD/YYYY")}
+                    selectedDate={goal.startDate ? goal.startDate : new Date()}
                 />
 
                 <DateTimePicker 
@@ -222,7 +137,7 @@ const AddGoal = ({
                     onChangeDate={(endDate) =>  setGoal({...goal, 
                                                             endDate: endDate,
                                                             stringEndDate: Moment(endDate).format("MM/DD/YYYY")})}
-                    //selectedDate={Moment(goal.endDate).format("MM/DD/YYYY")}
+                    selectedDate={goal.endDate ? goal.endDate : new Date()}
                 />
 
                 <ConfirmationModal 
@@ -243,9 +158,147 @@ const AddGoal = ({
                                     setActiveTab(goal.type)
                                     resetGoal()}}
                 />
+                <NotAvailableModal
+                    isVisible={notAvailableModalVisible}
+                    onClose={() => {setNotAvailableModalVisible(false)}} />
+
+                <View style={{
+                    height: '66%',
+                    marginTop: 'auto',
+                    backgroundColor:'white',
+                    position: 'relative',
+                    borderTopRightRadius: 16,
+                    borderTopLeftRadius: 16,
+                    alignItems: 'flex-end'
+                }}>
+
+                    <TouchableOpacity style={{
+                        width: 50, 
+                        padding: 10
+                    }} onPress={() => { setGoalVisible(!goalVisible);
+                                                            setGoalId(null)
+                                                            resetGoal() }}>
+                        <Image 
+                            source={require('../../../assets/icons/closeButton.png')}
+                            resizeMode='contain'
+                            style={styles.close}
+                        />
+                    </TouchableOpacity>
+                    <ScrollView style={{}}>
+                        <View style={{ marginHorizontal: 13 }}>
+                            <View style={styles.fieldContainer}>
+                                <Label text="Type of Goal" isDarkTheme={state.isDarkTheme === 'true'} />
+                                <Dropdown isOpen={openMenu} 
+                                        openMenu={() => setOpenMenu(true)} 
+                                        onDismiss={() => setOpenMenu(false)}
+                                        onSelectItem = { handleSelectItem }
+                                        selectedItem = {goal.type}
+                                        items = {typeOfGoal} />
+                            </View>
+                            <View style={[styles.fieldContainer,{zIndex:-5}]}>
+                                <Label text="Title" isDarkTheme={state.isDarkTheme === 'true'} />
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        mode="flat"
+                                        style={styles.input}
+                                        value={goal.title}
+                                        selectionColor={color.primary}
+                                        activeUnderlineColor={color.primary}
+                                        onChangeText={(title) =>  setGoal({...goal, title: title})} />
+                                </View>
+                            </View>
+                            {/* <View style={[styles.fieldContainer,{zIndex:-5}]}>
+                                <Label text="Description" isDarkTheme={state.isDarkTheme === 'true'} />
+                                    <TextInput
+                                        // mode="flat"
+                                        style={[styles.input,{marginTop: 10, marginBottom: 24, paddingTop: 10}]}
+                                        placeholder="Description of Goal"
+                                        selectionColor={color.primary}
+                                        activeUnderlineColor={color.primary}
+                                        multiline={true}
+                                        numberOfLines={8}
+                                        theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                                        value={goal.description}
+                                        onChangeText={(description) =>  setGoal({...goal, description: description})}
+                                    />
+                            </View> */}
+                            <View style={{zIndex:-5, marginTop: 24}}>
+                                <Label text="Action Plan to Achieve Goal" />
+                                <TextInput 
+                                    multiline
+                                    mode="outlined"
+                                    outlineColor="#faf6ea"
+                                    style={{height: 200, marginTop: 10, marginBottom: 24, textAlignVertical: 'top', shadowColor: '#171717',backgroundColor: '#fbfbfb',
+                                    shadowOffset: {width: 0, height: 0},
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 3,}}
+                                    value={goal.description}
+                                    onChangeText={(description) =>  setGoal({...goal, description: description})}
+                                />
+                            </View>
+                            <View style={[styles.fieldContainer,{zIndex:-5,flexDirection:'row',justifyContent:'space-between'}]}>
+                                <View style={{width: '49%'}}>
+                                    <Label text="Start Date" isDarkTheme={state.isDarkTheme === 'true'} />
+                                    <View style={styles.inputContainer}>
+                                        <TextInput
+                                            mode="flat"
+                                            style={[styles.input]}
+                                            onPressIn={() => { setStartDateVisible(true)}}
+                                            placeholder="DD/MM/YYYY"
+                                            editable={Platform.OS == 'ios' ? false : true}
+                                            value={goal.stringStartDate}
+                                            selectionColor={color.primary}
+                                            activeUnderlineColor={color.primary}
+                                            theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                                        />
+                                    </View> 
+                                </View>
+                                <View style={{width: '49%'}}>
+                                    <Label text="End Date" isDarkTheme={state.isDarkTheme === 'true'} />
+                                    <View style={styles.inputContainer}>
+                                        <TextInput
+                                            mode="flat"
+                                            style={[styles.input]}
+                                            onPressIn={() => { setEndDateVisible(true)}}
+                                            placeholder="DD/MM/YYYY"
+                                            editable={Platform.OS == 'ios' ? false : true}
+                                            value={goal.stringEndDate}
+                                            selectionColor={color.primary}
+                                            activeUnderlineColor={color.primary}
+                                            theme={{ colors: { text: color.primary, placeholder: color.default } }}
+                                        />
+                                    </View> 
+                                </View>
+                            </View>
+                            {goalId !== null ?
+                                <View style={styles.actionContainer}>
+                                    <DefaultButton containerStyle={{width: width * 0.44, backgroundColor: color.error }} 
+                                                    title="Remove" 
+                                                    onPress={() => {setAction('Delete')
+                                                                    setConfirmationMessage('Remove this Goal?')
+                                                                    setConfirmationVisible(true)}}/>    
+                                    <DefaultButton containerStyle={{width: width * 0.44}} 
+                                                    title="Update" 
+                                                    onPress={() => {setAction('Update')
+                                                                    setConfirmationMessage('Update this Goal?')
+                                                                    setConfirmationVisible(true)}}/>         
+                                </View> :
+                                <View style={styles.fieldContainer}>
+                                    <DefaultButton title="Save"
+                                                    onPress={() => {handleSaveGoal()}} />       
+                                </View>
+                                
+                            }
+                            <View style={{height: 34}}></View>
+                        </View>
+                    </ScrollView>
+                    
+                </View>
 
           </Modal>
-        </SafeAreaView>
+          </View>
+          </>
+        // </SafeAreaView>
     )
 }
 

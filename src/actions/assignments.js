@@ -33,8 +33,19 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 });
 
                 let responseJson = await res.json();
-                console.log("responseJson")
-                console.log(responseJson)
+                // console.log("responseJson from add")
+                // console.log(responseJson.data.item)
+                // setTimeout(async ()=>{
+
+                // let tmpAssignmentData = JSON.parse(await AsyncStorage.getItem('assignments'));
+                // console.log(tmpAssignmentData)
+                // if(tmpAssignmentData == null)
+                //     tmpAssignmentData = [];
+                // tmpAssignmentData.push(responseJson.data.item);
+                // console.log("---------------NEW ITEM----------------")
+                // console.log(tmpAssignmentData)
+                // await AsyncStorage.setItem('assignments', JSON.stringify(tmpAssignmentData));
+                // },300)
                 dispatch(getAssignmentsByUser(userId, token));
                 dispatch({
                     type: ADD_ASSIGNMENTS,
@@ -74,12 +85,13 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 });
 
                 let responseJson = await res.json();
-                // console.log(responseJson)
-                dispatch(getAssignmentsByUser(userId, token));
-                dispatch({
-                    type: ADD_ASSIGNMENTS,
-                    payload: responseJson.data
-                });
+                console.log("responseJson")
+                console.log(responseJson)
+                // dispatch(getAssignmentsByUser(userId, token));
+                // dispatch({
+                //     type: ADD_ASSIGNMENTS,
+                //     payload: responseJson.data
+                // });
             };
         } catch (error) {
             Alert.alert(error.message)
@@ -94,7 +106,7 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                 { headers: {"Authorization" : `Bearer ${token}`} })
                 dispatch({ type: 'CLEAR_ERROR', payload: [] });
                 console.log("CALLING delete assignments")
-                dispatch(getAssignmentsByUser(userId, token));
+                // dispatch(getAssignmentsByUser(userId, token));
             };
         } catch (error) {
             Alert.alert(error.message)
@@ -187,8 +199,11 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
             pad(date.getUTCSeconds());
             d = date.split("T")[0];
         }
+
+        if(userId == null)
+            userId = 0;
         return async dispatch => {
-            axios.post(`${getAPIBaseUrl()}Assignment/GetAssignmentDetailsList`,
+            await axios.post(`${getAPIBaseUrl()}Assignment/GetAssignmentDetailsList`,
                 {
                     "UserId": parseInt(userId),
                     "IsCompleted": false,
@@ -212,8 +227,17 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
                     }
                 },
                 { headers: {"Authorization" : `Bearer ${token}`} })
-                .then(async(res) => {
-                    // console.log(res.data.data.items)
+                .then(async (res) => {
+                    // let tmpAssignmentData = JSON.parse(await AsyncStorage.getItem('assignments'));
+                // console.log(tmpAssignmentData)
+                // if(tmpAssignmentData == null)
+                //     tmpAssignmentData = [];
+                // tmpAssignmentData.push(responseJson.data.item);
+                // console.log("---------------NEW ITEM----------------")
+                // console.log(tmpAssignmentData)
+                console.log(res.data.data.items);
+                await AsyncStorage.setItem('assignments', JSON.stringify(res.data.data.items));
+
                     dispatch({ type: 'CLEAR_ERROR', payload: [] });
                     dispatch({
                         type: GET_ASSIGNMENTS_BY_USER,
@@ -226,3 +250,18 @@ export const ADD_ASSIGNMENTS = 'ADD_ASSIGNMENTS';
         dispatch({ type: 'HAS_ERROR', payload: error.message });
     }
   };
+
+  export const getAttachmentsByAssignmentId = (assignmentId, token) => {
+    try {
+        return async dispatch => {
+            const res = await axios.get(`${getAPIBaseUrl()}Assignment/GetAssignmentAttachment/` + assignmentId,
+                    { headers: {"Authorization" : `Bearer ${token}`} });
+            dispatch({ type: 'CLEAR_ERROR', payload: [] });
+            await AsyncStorage.setItem('attachmentUrl', JSON.stringify(res.data.data.attachmentUrl));
+            // console.log(res.data.data.attachmentUrl)
+        };
+        
+    } catch (error) {
+
+    }
+  }

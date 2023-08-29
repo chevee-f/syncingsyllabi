@@ -6,7 +6,7 @@ import { addNotificationToken } from '../../actions/notification';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { Alert } from 'react-native';
 import { addAssignments, updateAssignment, deleteAssignment, completeAssignment, getAssignmentsByUser } from '../../actions/assignments';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const method = () => {
 
@@ -108,12 +108,19 @@ const method = () => {
 
 
   const handleUpdateAssignment = async() => {
+    console.log("updating from home")
       let userId = state.userId;
       let token = await AsyncStorage.getItem('userToken');
-      let date = classAssignments.dueDate;
-      date = date;
-      console.log("classAssignments")
-      console.log(classAssignments)
+      let pad = function(num) { return ('00'+num).slice(-2) };
+      let date = new Date(classAssignments.dueDate);
+      date = date.getUTCFullYear()         + '-' +
+              pad(date.getUTCMonth() + 1)  + '-' +
+              pad(date.getUTCDate())       + 'T' +
+              pad(date.getUTCHours())      + ':' +
+              pad(date.getUTCMinutes())    + ':' +
+              pad(date.getUTCSeconds())    + '';
+      // console.log("classAssignments")
+      // console.log(classAssignments)
       await dispatch(updateAssignment(classAssignments, userId, token, date));
       
       if(hasError){
@@ -198,7 +205,7 @@ const method = () => {
   }
 
   const toggleModal = () => {
-    console.log("toggleModal")
+    console.log("toggleModal from Home")
     setModalVisible(!isModalVisible);
     if(!isModalVisible) {
         setSyllabusId(null);
@@ -214,6 +221,7 @@ const method = () => {
   };
 
   const useEffectFunction = (status = "") => {
+    console.log("useeffectfunction ...............")
       fetchedDates = [];
       if(assignments.length > 0) {
         let dates = [];

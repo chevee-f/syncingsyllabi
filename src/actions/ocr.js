@@ -9,18 +9,26 @@ export const scanSyllabi = (userId, ocrTypeEnum, OcrUploadTypeEnum, token, base6
         formData.append('UserId', userId)
         formData.append('OcrTypeEnum', ocrTypeEnum)
         formData.append('OcrUploadTypeEnum', OcrUploadTypeEnum)
+        console.log("OcrUploadTypeEnum")
+        console.log(OcrUploadTypeEnum)
+        console.log("ocrTypeEnum")
+        console.log(ocrTypeEnum)
+        console.log("base64Array.length")
+        console.log(base64Array.length)
         for(let i = 0; i < base64Array.length; i++)
           formData.append('PdfFile', base64Array[i]);
-          let res = await fetch(`${getAPIBaseUrl()}Syllabus/OcrScan`,{
-                    method: 'post',
-                    headers: {
-                      'Content-Type': 'multipart/form-data',
-                      "Authorization" : `Bearer ${token}`
-                    },
-                    body: formData
-                })
+        let res = await fetch(`${getAPIBaseUrl()}Syllabus/OcrScan`,{
+                  method: 'post',
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                    "Authorization" : `Bearer ${token}`
+                  },
+                  body: formData
+              })
         let responseJson = await res.json();  
-        //alert(JSON.stringify(responseJson.data))
+        // alert(JSON.stringify(responseJson.data))
+        console.log("THI S IS THE RESULT  ")
+        console.log(responseJson.data)
         dispatch({
           type: GET_SYLLABUS_OCR_RESULT,
           payload: responseJson.data,

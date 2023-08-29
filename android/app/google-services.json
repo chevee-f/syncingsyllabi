@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:824174854315:android:06d0cfe53f9c4f544fb7ee",
+        "mobilesdk_app_id": "1:824174854315:android:dddafd620f63e4164fb7ee",
         "android_client_info": {
           "package_name": "com.creativeinterlace.SyncingSyllabi"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "824174854315-b2vq1en35svbro5pn0qht4tvcsrabdvo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.creativeinterlace.SyncingSyllabi",
+            "certificate_hash": "b50231aeb91e4976a5b5a70141b3b9ebee2224be"
+          }
+        },
         {
           "client_id": "824174854315-28mh9lr14k19mcfea7icoc67dncefkqe.apps.googleusercontent.com",
           "client_type": 3

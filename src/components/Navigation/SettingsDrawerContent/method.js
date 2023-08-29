@@ -16,6 +16,7 @@ const method = () => {
     const [isDarkTheme, setIsDarkTheme] = useState(null);
     const [changeTheme, setChangeTheme] = useState(false);
     const [imageLoading, setImageLoading] = useState(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false);
     
     const toggleTheme = () => {
         setIsDarkTheme(previousState => !previousState)
@@ -59,6 +60,8 @@ const method = () => {
         termsConditionModalVisible,
         isDarkTheme,
         imageLoading,
+        deleteModalVisible,
+        setDeleteModalVisible,
         setImageLoading,
         toggleTheme,
         setTermsConditionModalVisible,

@@ -14,6 +14,7 @@ import AddGoal from '../../screens/Goal/Add'
 import ConfirmationModal from '../../components/ConfirmationModal'
 import SuccessModal from '../../components/SuccessModal'
 import Icon from 'react-native-vector-icons/Ionicons';
+import NotAvailableModal from '../../components/NotAvailableModal';
 
 var {height, width} = Dimensions.get('window');
 
@@ -30,6 +31,8 @@ const GoalScreen = props => {
       action,
       isOpenMenu,
       selectedItem,
+      notAvailableModalVisible,
+      setNotAvailableModalVisible,
       setSelectedItem,
       setIsOpenMenu,
       setSuccessModalVisible,
@@ -50,6 +53,7 @@ const GoalScreen = props => {
         let userId = state.userId
         let token = state.token
         dispatch(getGoalByUserSortBy(userId, token, selectedItem));
+        console.log("--GOAL USEEFFECT")
     }, [goals.length, selectedItem]);
 
     React.useLayoutEffect(() => {
@@ -84,7 +88,6 @@ const GoalScreen = props => {
               );
           })}     
         </View>
-        
         <View style={styles.sortContainer}>
             <Text style={[label.boldExtraSmallHeading, {color: color.default, marginLeft:10}]}>Sort by</Text>
             <DropDownPicker
@@ -105,6 +108,9 @@ const GoalScreen = props => {
                 textStyle={[styles.text, {color:  state.isDarkTheme === 'true' ? color.default : color.primary}]}
             />
         </View>
+        <NotAvailableModal
+          isVisible={notAvailableModalVisible}
+          onClose={() => {setNotAvailableModalVisible(false)}} />
         <Card data={activeTab === 4 ? goals.filter((x) => x.isArchived == true && x.isCompleted == false) : 
                     goals.filter((x) => x.goalType == activeTab && x.isArchived == false && x.isCompleted == false)} 
               onClickAction={onClickAction} />

@@ -10,6 +10,7 @@ const method = (navigation) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [isLoading, setIsLoading] = React.useState(false);
     const [modalVisible, setModalVisible] = React.useState(false);
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
 
 
     useEffect(() => {
@@ -32,12 +33,16 @@ const method = (navigation) => {
     });
 
     const handleChangePassword = () => {
-        if(inputValidation.isValidCurrentPassword && inputValidation.isValidNewPassword && inputValidation.isValidConfirmNewPassword){
-            setIsLoading(true)
-            let updatedPassword = confirmNewPassword
-            let userId = state.userId
-            changePassword({userId, currentPassword, updatedPassword}) 
-            setIsLoading(false)
+        if(state.userId) {
+            if(inputValidation.isValidCurrentPassword && inputValidation.isValidNewPassword && inputValidation.isValidConfirmNewPassword){
+                setIsLoading(true)
+                let updatedPassword = confirmNewPassword
+                let userId = state.userId
+                changePassword({userId, currentPassword, updatedPassword}) 
+                setIsLoading(false)
+            }
+        } else {
+            setNotAvailableModalVisible(true);
         }
     }
 
@@ -161,6 +166,8 @@ const method = (navigation) => {
         secureNewPassword,
         secureConfirmNewPassword,
         inputValidation,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setModalVisible,
         setCurrentPassword,
         setNewPassword,

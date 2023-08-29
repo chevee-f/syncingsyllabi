@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {Context as AuthContext} from '../../components/Context/AuthContext';
 import { addAssignments, updateAssignment, deleteAssignment, completeAssignment, getAssignmentsByUser } from '../../actions/assignments';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Moment from 'moment';
 
 const method = () => {
@@ -29,6 +29,7 @@ const method = () => {
     const [attachments, setAttachments] = useState([]);
     const { assignments } = useSelector(state => state.assignmentsReducer);
     const { syllabus } = useSelector(state => state.syllabusReducer);
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
 
     const [bgColor, setBgColor] = React.useState(
       [
@@ -82,8 +83,14 @@ const method = () => {
     const handleUpdateAssignment = async() => {
         let userId = state.userId;
         let token = await AsyncStorage.getItem('userToken');
-        let date = classAssignments.dueDate;
-        date = date;
+        let pad = function(num) { return ('00'+num).slice(-2) };
+        let date = new Date(classAssignments.dueDate);
+        date = date.getUTCFullYear()         + '-' +
+                pad(date.getUTCMonth() + 1)  + '-' +
+                pad(date.getUTCDate())       + 'T' +
+                pad(date.getUTCHours())      + ':' +
+                pad(date.getUTCMinutes())    + ':' +
+                pad(date.getUTCSeconds());
         await dispatch(updateAssignment(classAssignments, userId, token, date));
         
         if(hasError){
@@ -338,6 +345,21 @@ const method = () => {
           }
         }
     }
+
+    const handleAddFile = async () => {
+        if(state.userId) {
+            const attachment = await DocumentPicker.pickSingle({
+                type: [types.pdf, types.images]
+            });
+            
+            let attachmentsArray = attachments;
+            attachmentsArray.push(attachment);
+            setClassAssignments({...classAssignments, attachments: attachmentsArray[0], attachmentFileName: attachmentsArray[0].name})
+            setIsAwait(isAwait+1);
+        } else {
+            setNotAvailableModalVisible(true)
+        }
+    }
     
     return {
         assignments,
@@ -359,6 +381,8 @@ const method = () => {
         syllabusId,
         attachments,
         bgColor,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setBgColor,
         setAttachments,
         setSyllabusId,
@@ -383,7 +407,8 @@ const method = () => {
         handleCompleteAssignment,   
         handleSortAssignment,
         callme,
-        useEffectFunction
+        useEffectFunction,
+        handleAddFile,
     };
 };
   

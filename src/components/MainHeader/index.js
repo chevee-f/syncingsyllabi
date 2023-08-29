@@ -25,6 +25,7 @@ const MainHeader = props => {
     
     const [badgeCount, setBadgeCount] = useState(0);
     const [modalForegroundVisible, setModalForegroundVisible] = useState(false);
+    const [isUser, setIsUser] = useState(true);
 
     const dispatch = useDispatch();
     
@@ -37,6 +38,11 @@ const MainHeader = props => {
             let unreadNotification = notification.filter(x => x.isRead === false).length
             setBadgeCount(unreadNotification + 1)
         });
+        
+        if(userId == null)
+            setIsUser(false);
+        else
+            setIsUser(true);
         return unsubscribe;
     }, [notification.length]);
 
@@ -67,7 +73,7 @@ const MainHeader = props => {
     }
 
     return (
-        <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.21 : height * 0.23}]}>
+        <View style={[styles.headerContainer,{height: Platform.OS === 'ios' ? height * 0.21 : height * 0.20}]}>
             <View>
                 <View style={styles.topLineContainer}>
                     <Image 
@@ -105,7 +111,11 @@ const MainHeader = props => {
                         </View>
                         <View style={styles.nameContainer}>
                             <Text style={[label.mediumHeading,{color:color.textDefault}]}>Hello</Text>
-                            <Text style={[label.boldMediumHeading,{color:color.textDefault}]}>{user.firstName} {user.lastName} 👋</Text>
+                            { isUser ? 
+                                <Text style={[label.boldMediumHeading,{color:color.textDefault}]}>{user.firstName} {user.lastName} 👋</Text>
+                                :
+                                <Text style={[label.boldMediumHeading,{color:color.textDefault}]}>Guest 👋</Text>
+                            }
                         </View>
                     </View>
                     <View style={styles.rightContainer}>

@@ -23,7 +23,7 @@ export default StyleSheet.create({
       topLineContainer:{
         position:'absolute',
         alignSelf:'flex-end',
-        marginTop:Platform.OS === 'ios' ? height * -0.27 : height * -0.32,
+        marginTop:Platform.OS === 'ios' ? height * -0.27 : height * -0.29,
         width:'55%'
       },
       bottomLineContainer:{
@@ -34,11 +34,12 @@ export default StyleSheet.create({
       },
       container:{
         flexDirection:'row',
-        marginHorizontal:20
+        marginHorizontal:20,
+        marginTop: Platform.OS === 'ios' ? 0 : -25
       },
       profileContainer:{
         flexDirection:'row',
-        marginTop:25
+        marginTop: Platform.OS === 'ios' ? 25 : 5
       },
       avatarContainer:{
         height:68,

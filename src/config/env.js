@@ -10,6 +10,6 @@ export const getWebClientId = (platform) => {
   if (platform === 'ios') {
     return '824174854315-j6mc0r92fg09mur2ct10aq34ogblhjof.apps.googleusercontent.com';
   }else{
-    return '824174854315-5icqsh8g7skrh32u5l6bca4etvlrfcr2.apps.googleusercontent.com'
+    return '824174854315-28mh9lr14k19mcfea7icoc67dncefkqe.apps.googleusercontent.com';
   }
 }

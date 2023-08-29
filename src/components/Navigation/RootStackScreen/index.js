@@ -5,6 +5,12 @@ import {Context as AuthContext} from '../../Context/AuthContext';
 import SplashScreen from '../../../screens/Splash';
 import SignInSignUpScreen from '../../../screens/SignInSignUp';
 import RecoverAccountScreen from '../../../screens/RecoverAccount';
+import MainTabScreen from '../MainTabScreen';
+
+import ChangePasswordScreen from '../../../../src/screens/ChangePassword'
+import SoundsVibrationScreen from '../../../../src/screens/SoundsVibration';
+import SupportScreen from '../../../../src/screens/Support';
+import NotificationListScreen from '../../../../src/screens/NotificationList'
 
 const RootStack = createStackNavigator();
 console.disableYellowBox = true;

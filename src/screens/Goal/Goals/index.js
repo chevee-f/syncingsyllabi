@@ -24,10 +24,10 @@ const Goals = props => {
             </View>
             {props.goals.map((item) => {
                     return (
-                        <View style={styles.container}>
+                        <View key={Math.random()} style={styles.container}>
                             <ImageBackground source={require('../../../assets/backgrounds/fetti.png')} resizeMode="cover" style={styles.backgroundImage}>
-                            <View>
-                                <Text style={[label.boldSmallHeading2,{color:'#fbe206',marginBottom:5}]}>{item.goalDescription}</Text>
+                            <View style={{ width: 200}}>
+                                <Text style={[label.boldSmallHeading2,{color:'#fbe206',marginBottom:5}]}>{item.goalTitle.length > 25 ? item.goalTitle.slice(0, 25) + '...' : item.goalTitle} | {item.goalTypeName}</Text>
                                 <View style={{flexDirection:'row'}}>
                                     <Icon 
                                         name="clock"

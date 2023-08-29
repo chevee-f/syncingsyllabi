@@ -18,6 +18,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ActivityIndicator } from 'react-native-paper';
 import method from './method'
 import Moment from 'moment';
+import NotAvailableModal from '../../../components/NotAvailableModal';
 
 const EditProfile = ({
     onPress,
@@ -31,6 +32,8 @@ const EditProfile = ({
         isLoading,
         inputValidation,
         selectedDate,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSelectedDate,
         setProfile,
         handleUpdateProfile,
@@ -53,6 +56,9 @@ const EditProfile = ({
           onBackButtonPress={props.onClose}
           onBackdropPress={props.onClose}>
 
+            <NotAvailableModal
+                isVisible={notAvailableModalVisible}
+                onClose={() => {setNotAvailableModalVisible(false)}} />
             <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.modalContainer}>
                 <ScrollView>
                     <TouchableOpacity onPress={props.onClose}>

@@ -24,10 +24,13 @@ const method = (props) => {
         setIsLoading(true);
         let userId = state.userId
         let token = state.token
+        console.log(props.route.params.base64StringAssignment.length + " aninu")
         if(props.route.params.base64StringSyllabi.length > 0) {
+            console.log("SCANNING SYLLABI")
             await dispatch(scanSyllabi(userId, 1, 1, token, props.route.params.base64StringSyllabi));        
         }
         if(props.route.params.base64StringAssignment.length > 0) {
+            console.log("SCANNING ASSIGNMENTS")
             await dispatch(scanSyllabi(userId, 2, 1, token, props.route.params.base64StringAssignment)); //for assignment
         }
         setTimeout(function(){
@@ -46,7 +49,7 @@ const method = (props) => {
         }else{
             startLoading()
         }
-    }, [props, isFocused]);
+    }, [props]);
 
 
     return {

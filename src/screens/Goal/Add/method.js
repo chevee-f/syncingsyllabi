@@ -18,6 +18,7 @@ const method = () => {
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [successModalVisible, setSuccessModalVisible] = React.useState(false)
     const [successMessage, setSuccessMessage] = useState('');
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
 
     const [goal, setGoal] = useState({
         id: '',
@@ -123,6 +124,16 @@ const method = () => {
         }
     }
 
+    const handleSaveGoal = () => {
+        if(state.userId) {
+            setAction('Add')
+            setConfirmationMessage('Add this Goal?')
+            setConfirmationVisible(true)
+        } else {
+            setNotAvailableModalVisible(true);
+        }
+    }
+
     return {
         openMenu,
         goal,
@@ -133,6 +144,8 @@ const method = () => {
         action,
         successMessage,
         successModalVisible,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSuccessModalVisible,
         setConfirmationVisible,
         setAction,
@@ -143,7 +156,8 @@ const method = () => {
         handleSelectItem,
         handleAddGoal,
         resetGoal,
-        onConfirm
+        onConfirm,
+        handleSaveGoal
     };
   };
   

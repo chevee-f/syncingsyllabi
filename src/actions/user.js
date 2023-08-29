@@ -1,9 +1,10 @@
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getAPIBaseUrl } from "../config/env";
 import { Alert } from 'react-native';
 
 export const GET_USER = 'GET_USER';
+export const DELETE_USER = 'DELETE_USER';
 export const GET_USER_BY_EMAIL = 'GET_USER_BY_EMAIL';
 export const UPDATE_USER = 'UPDATE_USER';
 
@@ -35,6 +36,21 @@ export const getUserByEmail = email => {
 
   }
 };
+
+export const updateUserTimeZone = (userId, token) => {
+  // console.log()
+  // axios.post(`${getAPIBaseUrl()}Assignment/UpdateUserTimeZone`,
+  //   {
+  //     "userId": userId,
+  //     "timeZone": "string"
+  //   },
+  // { headers: {"Authorization" : `Bearer ${token}`} })
+  // .then((res) => {
+  //     dispatch({ type: 'CLEAR_ERROR', payload: [] });
+  //     console.log("CALLING complete assignments")
+  //     dispatch(getAssignmentsByUser(userId, token));
+  // })
+}
 
 export const updateUser = (profile, userId, token) => {
     return async dispatch => {
@@ -74,3 +90,18 @@ export const updateUser = (profile, userId, token) => {
       }
     };
 };
+
+export const deleteUser = (token, userId, isActive) => {
+  try {
+    return async dispatch => {
+      const res = await axios.get(`${getAPIBaseUrl()}User/DeleteUserAccount/${userId}/${isActive}`,
+      { headers: {"Authorization" : `Bearer ${token}`} })
+        dispatch({
+          type: DELETE_USER,
+          payload: res.data.data.item,
+        });
+    };
+  } catch (error) {
+    Alert.alert(JSON.stringify(error.message))
+  }
+}

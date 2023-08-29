@@ -59,12 +59,15 @@ const renderRightActions = (id) => (
   
 const Row = ({ item }) => (
     <View style={styles.container}>
-        <Text style={label.boldSmallHeading2}>
-          {item.goalDescription}
+      <View>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, backgroundColor: 'transparent', 
+    paddingBottom: 10,}}>{item.goalTitle.length > 25 ? item.goalTitle.slice(0, 25) + '...' : item.goalTitle} | {item.goalTypeName}</Text>
+      </View>
+        <Text style={label.smallHeading}>
+          {item.goalDescription.length > 48 ? item.goalDescription.slice(0, 48) + '...' : item.goalDescription}
         </Text>
-        <Text style={label.extraSmallHeading2}>
-          {item.goalTypeName}
-        </Text>
+        {/* <Text style={label.extraSmallHeading2}>
+        </Text> */}
         <View style={styles.horizontalLine} />
         <View style={{flexDirection:'row', alignItems:'center'}}>
             <Icon name="clock" size={28} />
@@ -79,6 +82,7 @@ const Row = ({ item }) => (
 );
 
 const SwipeableRow = ({ item, index }) => {
+  console.log(item)
     return (   
         <Swipeable
           friction={2}

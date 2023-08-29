@@ -24,6 +24,7 @@ target 'SyncingSyllabi' do
 
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
   pod 'RNFS', :path => '../node_modules/react-native-fs'
+  # pod 'react-native-picker-weekday', :path => '../node_modules/react-native-picker-weekday'
 
 
   post_install do |installer|

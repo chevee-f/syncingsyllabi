@@ -28,6 +28,7 @@ const method = (setModalVisible) => {
        
     }, [user, error]);
 
+    const [notAvailableModalVisible, setNotAvailableModalVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState('');
     const [profile, setProfile] = useState({
@@ -45,25 +46,28 @@ const method = (setModalVisible) => {
     });
 
     const handleUpdateProfile = async() => {
-        setIsLoading(true)
         let userId = state.userId
         let token = state.token
-        await dispatch(updateUser(profile, userId, token))
-        if(hasError){
-            Alert.alert("Error", error,
-                [{ text: "OK", onPress: () => setIsLoading(false)}],
-                { cancelable: false }
-            );
-        }else{
-            Alert.alert(
-                "Profile",
-                "Your profile has been updated.",
-                [{ text: "OK", onPress: () =>  {setIsLoading(false)
-                                                setModalVisible(false)}}],
-                { cancelable: false }
-            );
+        if(userId) {
+            setIsLoading(true)
+            await dispatch(updateUser(profile, userId, token))
+            if(hasError){
+                Alert.alert("Error", error,
+                    [{ text: "OK", onPress: () => setIsLoading(false)}],
+                    { cancelable: false }
+                );
+            }else{
+                Alert.alert(
+                    "Profile",
+                    "Your profile has been updated.",
+                    [{ text: "OK", onPress: () =>  {setIsLoading(false)
+                                                    setModalVisible(false)}}],
+                    { cancelable: false }
+                );
+            }
+        } else {
+            setNotAvailableModalVisible(true);
         }
-      
     }
 
     const validateEmail = (email) => {
@@ -104,6 +108,8 @@ const method = (setModalVisible) => {
         isLoading,
         inputValidation,
         selectedDate,
+        notAvailableModalVisible,
+        setNotAvailableModalVisible,
         setSelectedDate,
         setProfile,
         handleUpdateProfile,
